@@ -39,16 +39,6 @@
 - [تمرین ۶: Weighted Vertex Cover](courses/optimization/hw6-weighted-vertex-cover) — نوت‌بوک و گزارش
 - [پروژهٔ پایانی: Cohesive Bin Packing](courses/optimization/cohesive-bin-packing) — پروژهٔ پایانی
 
-### پایگاه داده — Database Systems
-
-- [تمرین طراحی پایگاه داده](courses/database/design-practice) — طراحی تمرین آموزشی
-- [طراحی پروژهٔ سامانهٔ مسیریابی شهری](courses/database/urban-routing) — طراحی پروژهٔ آموزشی
-
-### داده‌کاوی — Data Mining
-
-- [تمرین ۳: Recommender Systems](courses/data-mining/hw3-recommenders) — صورت تمرین آموزشی
-- [قالب پروژهٔ سیستم توصیه‌گر کتاب](courses/data-mining/recommender-template) — قالب پروژه ـ ناتمام
-
 ### گراف‌کاوی — Graph Mining
 
 - [ارائهٔ Graph Data Preprocessing](courses/graph-mining/graph-preprocessing) — ارائه

@@ -20,18 +20,6 @@
       "description": "مدل‌سازی مسائل گسسته، Local Search، الگوریتم‌های تقریبی و آزمایش‌های محاسباتی."
     },
     {
-      "id": "database",
-      "title": "پایگاه داده",
-      "english": "Database Systems",
-      "description": "تمرین‌ها و مواد آموزشی طراحی پایگاه داده و مدل‌سازی سامانه‌ها."
-    },
-    {
-      "id": "data-mining",
-      "title": "داده‌کاوی",
-      "english": "Data Mining",
-      "description": "مواد آموزشی و قالب پروژه برای Recommender Systems."
-    },
-    {
       "id": "graph-mining",
       "title": "گراف‌کاوی",
       "english": "Graph Mining",
@@ -1321,105 +1309,6 @@
           "path": "courses/optimization/cohesive-bin-packing/tests/test_cohesive_bin_packing.py",
           "bytes": 2968,
           "sha256": "ad3f94e97bfdbf85de01b41eb4b6efe7028a1ec385d6a5ec59fa16e1d5a8a50b"
-        }
-      ]
-    },
-    {
-      "course": "database",
-      "slug": "design-practice",
-      "title": "تمرین طراحی پایگاه داده",
-      "description": "متن آموزشی تمرین طراحی و مدل‌سازی پایگاه داده.",
-      "kind": "طراحی تمرین آموزشی",
-      "topics": [
-        "Database Design",
-        "Modeling"
-      ],
-      "note": "",
-      "files": [
-        {
-          "name": "database_design_practice.tex",
-          "path": "courses/database/design-practice/database_design_practice.tex",
-          "bytes": 8376,
-          "sha256": "8ef1cf3575b2b6a435188d877ce28ffb622c2e4a305c6957e1788c39f24de9e7"
-        }
-      ]
-    },
-    {
-      "course": "database",
-      "slug": "urban-routing",
-      "title": "طراحی پروژهٔ سامانهٔ مسیریابی شهری",
-      "description": "صورت پروژه و پرسش‌های ارائه برای طراحی پایگاه دادهٔ سامانهٔ مسیریابی.",
-      "kind": "طراحی پروژهٔ آموزشی",
-      "topics": [
-        "Database Design",
-        "Urban Routing"
-      ],
-      "note": "این بخش طراحی صورت پروژه و پرسش‌های آموزشی است؛ پیاده‌سازی کامل یک سامانهٔ مسیریابی معرفی نمی‌شود. همکار درج‌شده در سند: یگانه راد.",
-      "files": [
-        {
-          "name": "project.tex",
-          "path": "courses/database/urban-routing/project.tex",
-          "bytes": 13835,
-          "sha256": "2a71e9a6220e20f20c8d0dca2f53dadc4d8c05a9e4a7b113a12f45793b0715ca"
-        },
-        {
-          "name": "presentation_questions.md",
-          "path": "courses/database/urban-routing/presentation_questions.md",
-          "bytes": 9951,
-          "sha256": "464317f5c6e55447fcd29259bb1093a1076422959049b8dfe8e947ccdbbd3218"
-        },
-        {
-          "name": "presentation_questions.tex",
-          "path": "courses/database/urban-routing/presentation_questions.tex",
-          "bytes": 11258,
-          "sha256": "ed741c0456b4eec54fe3acf3e4754e4e498b5fa0e650b225a0a4477ec932cbc1"
-        }
-      ]
-    },
-    {
-      "course": "data-mining",
-      "slug": "hw3-recommenders",
-      "title": "تمرین ۳: Recommender Systems",
-      "description": "صورت تمرین محاسبهٔ Collaborative Filtering و ارزیابی سیستم توصیه‌گر.",
-      "kind": "صورت تمرین آموزشی",
-      "topics": [
-        "Collaborative Filtering",
-        "Recommender Systems"
-      ],
-      "note": "",
-      "files": [
-        {
-          "name": "HW3.tex",
-          "path": "courses/data-mining/hw3-recommenders/HW3.tex",
-          "bytes": 7206,
-          "sha256": "183ec0009c54a2f41b2573bf80da29378ceaf2e819559048535116f13e403fe1"
-        }
-      ]
-    },
-    {
-      "course": "data-mining",
-      "slug": "recommender-template",
-      "title": "قالب پروژهٔ سیستم توصیه‌گر کتاب",
-      "description": "اسکلت نوت‌بوک EDA، نمایش ویژگی‌ها و مدل‌های توصیه‌گر؛ دارای بخش‌های TODO.",
-      "kind": "قالب پروژه ـ ناتمام",
-      "topics": [
-        "Recommender Systems",
-        "Word2Vec",
-        "TF-IDF"
-      ],
-      "note": "این فایل قالب آموزشی با ۴۶ نشانگر TODO است و به‌عنوان پروژهٔ تکمیل‌شده یا آزمایش موفق معرفی نمی‌شود.",
-      "files": [
-        {
-          "name": "Advanced_Recommender_Systems_Project.ipynb",
-          "path": "courses/data-mining/recommender-template/Advanced_Recommender_Systems_Project.ipynb",
-          "bytes": 43366,
-          "sha256": "fcb2a11cf11701fa83cce358fbef8597bbb866ec28bebc671be0f42bd8f43546"
-        },
-        {
-          "name": "Advanced_Recommender_Systems_Project_notebook.py",
-          "path": "courses/data-mining/recommender-template/Advanced_Recommender_Systems_Project_notebook.py",
-          "bytes": 21589,
-          "sha256": "11fa059bb06336ecaa0bf21da7e9c0c95e9b6b3d3d073f6b3bc37616eefafa77"
         }
       ]
     },
