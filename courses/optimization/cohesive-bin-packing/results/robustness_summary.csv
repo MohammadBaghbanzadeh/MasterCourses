@@ -1,0 +1,7 @@
+instance,group,n,runs,lower_bound,initial_mean,initial_std,final_mean,final_std,best,worst,mean_improvement_bins,mean_time_sec,std_time_sec
+n=50_C=200_pairs=15.txt,medium,50,30,9,9.067,0.254,9.0,0.0,9,9,0.067,6.4e-05,0.000134
+n=100_C=200_pairs=30.txt,medium,100,30,17,17.067,0.254,17.0,0.0,17,17,0.067,0.000131,0.000291
+n=150_C=200_pairs=45.txt,medium,150,30,27,28.2,0.407,27.0,0.0,27,27,1.2,0.012961,0.002883
+hard_n=50_C=200_pairs=10.txt,hard_medium,50,30,17,18.333,0.661,17.0,0.0,17,17,1.333,0.001408,0.000472
+hard_n=100_C=200_pairs=20.txt,hard_medium,100,30,33,36.2,0.714,33.433,0.504,33,34,2.767,0.045864,0.024845
+hard_n=150_C=200_pairs=30.txt,hard_medium,150,30,49,53.533,0.776,50.0,0.0,50,50,3.533,0.170312,0.01374

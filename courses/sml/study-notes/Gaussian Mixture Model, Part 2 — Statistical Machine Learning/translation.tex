@@ -1,0 +1,227 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\geometry{a4paper, margin=1in}
+
+\title{\lr{Gaussian Mixture Model, Part 2} \\ (مدل مخلوط گاوسی، بخش ۲)}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{فهرست مطالب}
+\begin{itemize}
+    \item مروری بر الگوریتم \lr{K-means}
+    \item مراحل الگوریتم \lr{K-means}
+    \item الگوریتم \lr{K-means}
+    \item خوشه‌بندی \lr{Expectation-Maximization} (امید ریاضی-بیشینه‌سازی)
+    \item الگوریتم \lr{Expectation-Maximization} برای \lr{Gaussian Mixture Models}
+    \item الگوریتم خوشه‌بندی \lr{Expectation-Maximization}
+\end{itemize}
+
+\newpage
+
+\section*{مروری بر الگوریتم \lr{K-means}}
+تابع امتیازدهی مجموع خطاهای مربعات (\lr{sum of squared errors} یا \lr{SSE}) به صورت زیر تعریف می‌شود:
+\[
+\text{\lr{SSE}}(C) = \sum_{i=1}^{k} \sum_{x_j \in C_i} \|x_j - \mu_i\|^2
+\]
+هدف، یافتن خوشه‌بندی است که امتیاز \lr{SSE} را کمینه کند:
+\[
+C^* = \arg\min_{C} \{ \text{\lr{SSE}}(C) \}
+\]
+
+الگوریتم \lr{K-means} از یک رویکرد حریصانه تکرارشونده برای یافتن خوشه‌بندی استفاده می‌کند که هدف \lr{SSE} را کمینه سازد. به همین دلیل، می‌تواند به جای یک خوشه‌بندی بهینه سراسری، به یک بهینه محلی (\lr{local optimum}) همگرا شود.
+
+\section*{مراحل الگوریتم \lr{K-means}}
+\lr{K-means} میانگین‌های خوشه‌ها را با تولید تصادفی $k$ نقطه در فضای داده مقداردهی اولیه می‌کند. هر تکرار شامل دو مرحله است:
+\begin{enumerate}
+    \item \textbf{تخصیص خوشه (\lr{Cluster Assignment}):} هر نقطه $x_j \in D$ به نزدیک‌ترین میانگین تخصیص داده می‌شود و خوشه‌بندی را با خوشه‌های $C_i$ شامل نقاط نزدیک به $\mu_i$ القا می‌کند:
+    \[
+    i^* = \arg\min_{i=1}^{k} \{ \|x_j - \mu_i\|^2 \}
+    \]
+    \item \textbf{به‌روزرسانی مرکز ثقل (\lr{Centroid Update}):} مقادیر میانگین جدید برای هر خوشه از نقاط موجود در $C_i$ محاسبه می‌شود.
+\end{enumerate}
+این مراحل تا زمان همگرایی به یک نقطه ثابت یا مینیمم محلی تکرار می‌شوند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_2_1.png}
+  \caption{مراحل گام‌به‌گام تخصیص نقاط و به‌روزرسانی میانگین‌ها در الگوریتم خوشه‌بندی K-means}
+\end{figure}
+
+
+
+
+\section*{خوشه‌بندی \lr{Expectation-Maximization}}
+فرض کنید $X_a$ نشان‌دهنده متغیر تصادفی مربوط به ویژگی $a$-ام باشد. فرض کنید $X = (X_1, X_2, \dots, X_d)$ نشان‌دهنده بردار متغیر تصادفی در میان $d$ ویژگی باشد، که $x_j$ یک نمونه داده از $X$ است.
+
+ما فرض می‌کنیم هر خوشه $C_i$ با یک توزیع نرمال چندمتغیره (\lr{multivariate normal distribution}) توصیف می‌شود:
+\[
+f_i(x) = f(x|\mu_i, \Sigma_i) = \frac{1}{(2\pi)^{d/2} |\Sigma_i|^{1/2}} \exp \left\{ -\frac{(x - \mu_i)^T \Sigma_i^{-1} (x - \mu_i)}{2} \right\}
+\]
+که در آن $\mu_i \in \mathbb{R}^d$ میانگین خوشه و $\Sigma_i \in \mathbb{R}^{d \times d}$ ماتریس کوواریانس (\lr{covariance matrix}) است.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_7_1.png}
+  \caption{برازش یک مدل مخلوط گوسی دوبعدی با استفاده از کوواریانس‌های نامحدود (Full Covariance)}
+\end{figure}
+
+
+
+
+تابع چگالی احتمال $X$ به عنوان یک مدل مخلوط گاوسی (\lr{Gaussian mixture model}) روی تمام خوشه‌ها به صورت زیر داده می‌شود:
+\[
+f(x) = \sum_{i=1}^{k} f_i(x) P(C_i) = \sum_{i=1}^{k} f(x|\mu_i, \Sigma_i) P(C_i)
+\]
+که در آن احتمالات پیشین $P(C_i)$ پارامترهای مخلوط (\lr{mixture parameters}) نامیده می‌شوند که باید شرط زیر را برآورده کنند:
+\[
+\sum_{i=1}^{k} P(C_i) = 1
+\]
+
+\subsection*{تخمین بیشینه درست‌نمایی (\lr{Maximum Likelihood Estimation})}
+ما مجموعه تمام پارامترهای مدل را به طور فشرده به صورت زیر می‌نویسیم:
+\[
+\theta = \{ \mu_1, \Sigma_1, P(C_1), \dots, \mu_k, \Sigma_k, P(C_k) \}
+\]
+با توجه به مجموعه داده $D$، درست‌نمایی $\theta$ برابر است با:
+\[
+P(D|\theta) = \prod_{j=1}^{n} f(x_j)
+\]
+
+روش \lr{MLE} پارامترهای $\theta$ را برای بیشینه‌سازی درست‌نمایی انتخاب می‌کند:
+\[
+\theta^* = \arg\max_{\theta} \{ \ln P(D|\theta) \}
+\]
+که در آن تابع لگاریتم درست‌نمایی (\lr{log-likelihood function}) عبارت است از:
+\[
+\ln P(D|\theta) = \sum_{j=1}^{n} \ln f(x_j) = \sum_{j=1}^{n} \ln \left( \sum_{i=1}^{k} f(x_j|\mu_i, \Sigma_i) P(C_i) \right)
+\]
+
+\subsection*{بیشینه‌سازی لگاریتم درست‌نمایی با \lr{Expectation-Maximization (EM)}}
+بیشینه‌سازی مستقیم لگاریتم درست‌نمایی روی $\theta$ به دلیل وجود جمع در داخل لگاریتم دشوار است:
+\[
+\ln P(D|\theta) = \sum_{j=1}^{n} \ln \left( \sum_{i=1}^{k} f(x_j|\mu_i, \Sigma_i) P(C_i) \right)
+\]
+
+اگر تابع درست‌نمایی فقط شامل یک تک گاوسی بود، مشتق‌گیری مستقیم ساده بود. با این حال، در یک مدل مخلوط گاوسی، حضور چندین گاوسی در داخل جمع، مشتق‌گیری را پیچیده می‌کند. از آنجا که هر نقطه داده $x_j$ به طور قطعی به یک خوشه تعلق ندارد بلکه در عوض احتمال تعلق به چندین خوشه را دارد، حل پارامترها به صورت تحلیلی دشوار است.
+
+\subsubsection*{الگوریتم \lr{EM} چگونه کمک می‌کند؟}
+الگوریتم \lr{Expectation-Maximization} یک رویکرد ساختاریافته برای بیشینه‌سازی غیرمستقیم درست‌نمایی با معرفی متغیرهای پنهان (\lr{latent variables}) — یعنی تخصیص‌های خوشه $w_{ij} = P(C_i|x_j)$ — ارائه می‌دهد. مرحله امید ریاضی (\lr{Expectation step}) این احتمالات را محاسبه می‌کند و به طور موثر عضویت‌های پنهان را تخمین می‌زند، در حالی که مرحله بیشینه‌سازی (\lr{Maximization step}) پارامترها را با استفاده از این وزن‌ها به‌روزرسانی می‌کند.
+
+با تکرار بین این مراحل، \lr{EM} از پیچیدگی مشتق‌گیری مستقیم عبارت لگاریتم مجموع تودرتو جلوگیری می‌کند و تخمین پارامترها را امکان‌پذیر می‌سازد.
+
+\section*{\lr{Expectation-Maximization} برای مدل‌های مخلوط گاوسی}
+
+\subsection*{حالت یک‌بعدی: خوشه‌بندی نرمال تک‌متغیره}
+فرض کنید $D$ شامل یک ویژگی واحد $X$ باشد، که در آن هر نقطه $x_j \in \mathbb{R}$ یک نمونه تصادفی از $X$ است.
+مدل مخلوط از توزیع‌های نرمال تک‌متغیره (\lr{univariate normal distributions}) برای هر خوشه استفاده می‌کند:
+\[
+fi(x) = f(x|\mu_i, \sigma_i^2) = \frac{1}{\sqrt{2\pi}\sigma_i} \exp \left\{ -\frac{(x - \mu_i)^2}{2\sigma_i^2} \right\}
+\]
+که در آن پارامترهای خوشه شامل $\mu_i$ (میانگین)، $\sigma_i^2$ (واریانس) و $P(C_i)$ (احتمال پیشین) هستند.
+
+\subsubsection*{مقداردهی اولیه (\lr{Initialization})}
+هر خوشه $C_i$ (برای $i = 1, 2, \dots, k$) به طور تصادفی با پارامترهای $\mu_i$، $\sigma_i^2$ و $P(C_i)$ مقداردهی اولیه می‌شود.
+
+\subsubsection*{مرحله امید ریاضی (\lr{Expectation Step})}
+با داشتن میانگین $\mu_i$، واریانس $\sigma_i^2$ و احتمال پیشین $P(C_i)$ برای هر خوشه، احتمال پسین خوشه با استفاده از قضیه بیز محاسبه می‌شود:
+\[
+w_{ij} = P(C_i|x_j) = \frac{f(x_j|\mu_i, \sigma_i^2) \cdot P(C_i)}{\sum_{a=1}^{k} f(x_j|\mu_a, \sigma_a^2) \cdot P(C_a)}
+\]
+
+\subsubsection*{مرحله بیشینه‌سازی (\lr{Maximization Step})}
+با استفاده از $w_{ij}$، پارامترهای به‌روزرسانی شده خوشه به صورت زیر محاسبه می‌شوند:
+\begin{itemize}
+    \item \textbf{به‌روزرسانی میانگین} (میانگین وزنی نقاط):
+    \[
+    \mu_i = \frac{\sum_{j=1}^{n} w_{ij} \cdot x_j}{\sum_{j=1}^{n} w_{ij}}
+    \]
+    \item \textbf{به‌روزرسانی واریانس} (واریانس وزنی نقاط):
+    \[
+    \sigma_i^2 = \frac{\sum_{j=1}^{n} w_{ij} (x_j - \mu_i)^2}{\sum_{j=1}^{n} w_{ij}}
+    \]
+    \item \textbf{به‌روزرسانی احتمال پیشین} (کسری از وزن‌ها که به خوشه کمک می‌کنند):
+    \[
+    P(C_i) = \frac{\sum_{j=1}^{n} w_{ij}}{n}
+    \]
+\end{itemize}
+
+\subsection*{حالت چندمتغیره: مدل مخلوط گاوسی با کوواریانس کامل}
+در حالت چندمتغیره، هر خوشه $C_i$ با یک توزیع نرمال چندمتغیره مدل‌سازی می‌شود که فراتر از حالت یک‌بعدی گسترش می‌یابد:
+\[
+f_i(x) = f(x|\mu_i, \Sigma_i) = \frac{1}{(2\pi)^{d/2} |\Sigma_i|^{1/2}} \exp \left\{ -\frac{(x - \mu_i)^T \Sigma_i^{-1} (x - \mu_i)}{2} \right\}
+\]
+که در آن $\mu_i \in \mathbb{R}^d$ میانگین خوشه و $\Sigma_i \in \mathbb{R}^{d \times d}$ ماتریس کوواریانس است.
+
+\subsubsection*{مرحله امید ریاضی (چندمتغیره)}
+مشابه حالت تک‌متغیره، احتمال پسین خوشه با استفاده از قضیه بیز محاسبه می‌شود:
+\[
+w_{ij} = P(C_i|x_j) = \frac{f_i(x_j) \cdot P(C_i)}{\sum_{a=1}^{k} f_a(x_j) \cdot P(C_a)}
+\]
+
+\subsubsection*{مرحله بیشینه‌سازی (چندمتغیره)}
+\begin{itemize}
+    \item \textbf{به‌روزرسانی میانگین} (میانگین وزنی نقاط):
+    \[
+    \mu_i = \frac{\sum_{j=1}^{n} P(C_i|x_j) \cdot x_j}{\sum_{j=1}^{n} P(C_i|x_j)}
+    \]
+    \item \textbf{به‌روزرسانی کوواریانس} (ماتریس کوواریانس وزنی در میان ابعاد):
+    \[
+    \Sigma_i = \frac{\sum_{j=1}^{n} P(C_i|x_j)(x_j - \mu_i)(x_j - \mu_i)^T}{\sum_{j=1}^{n} P(C_i|x_j)}
+    \]
+    \item \textbf{به‌روزرسانی احتمال پیشین} (کسری از کل مشارکت در خوشه):
+    \[
+    P(C_i) = \frac{\sum_{j=1}^{n} P(C_i|x_j)}{n}
+    \]
+\end{itemize}
+
+\section*{\lr{K-Means} به عنوان حالت خاصی از \lr{Expectation-Maximization (EM)}}
+الگوریتم \lr{K-means} را می‌توان به عنوان یک نسخه ساده‌شده از الگوریتم \lr{EM} در نظر گرفت، که در آن تخصیص‌های خوشه به جای احتمالی، قطعی هستند. به طور خاص، در کی-مینز، هر نقطه داده $x_j$ منحصراً بر اساس حداقل فاصله مربعات تا مرکز خوشه، به یک خوشه تعلق دارد:
+\[
+P(x_j|C_i) = \begin{cases} 1 & \text{if } C_i = \arg\min_{C_a} \{ \|x_j - \mu_a\|^2 \} \\ 0 & \text{otherwise} \end{cases}
+\]
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_9_1.png}
+  \caption{مراحل الگوریتم امید ریاضی - بیشینه‌سازی (EM) در خوشه‌بندی توزیع‌های مخلوط گوسی}
+\end{figure}
+
+
+
+
+احتمال پسین تخصیص خوشه با استفاده از قضیه بیز محاسبه می‌شود:
+\[
+P(C_i|x_j) = \frac{P(x_j|C_i)P(C_i)}{\sum_{a=1}^{k} P(x_j|C_a)P(C_a)}
+\]
+
+از آنجا که کی-مینز به طور قطعی هر نقطه را به دقیقاً یک خوشه اختصاص می‌دهد، این به حالت‌های زیر ساده می‌شود:
+\begin{itemize}
+    \item اگر $P(x_j|C_i) = 0$ باشد، آنگاه $P(C_i|x_j) = 0$.
+    \item اگر $P(x_j|C_i) = 1$ باشد، آنگاه برای همه $a \neq i$ داریم $P(x_j|C_a) = 0$، بنابراین:
+    \[
+    P(C_i|x_j) = \frac{1 \cdot P(C_i)}{1 \cdot P(C_i)} = 1
+    \]
+\end{itemize}
+
+بنابراین، در کی-مینز، عضویت خوشه باینری است:
+\[
+P(C_i|x_j) = \begin{cases} 1 & \text{if } x_j \in C_i, \text{ i.e., if } C_i = \arg\min_{C_a} \{ \|x_j - \mu_a\|^2 \} \\ 0 & \text{otherwise} \end{cases}
+\]
+
+بر خلاف \lr{EM} که ماتریس‌های کوواریانس را برای مدل‌سازی توزیع‌های خوشه در نظر می‌گیرد، کی-مینز فقط مرکز خوشه‌ها $\mu_i$ و نسبت‌های خوشه $P(C_i)$ را تخمین می‌زند.
+
+\section*{خلاصه}
+\begin{itemize}
+    \item \lr{Gaussian Mixture Model} چارچوبی قوی برای خوشه‌بندی نرم ارائه می‌دهد.
+    \item الگوریتم \lr{EM} به طور موثر پارامترها را با تکرار بین مراحل امید ریاضی و بیشینه‌سازی تخمین می‌زند.
+    \item الگوریتم \lr{K-means} یک مورد خاص و سخت (\lr{hard case}) از الگوریتم \lr{EM} است.
+\end{itemize}
+
+\end{document}

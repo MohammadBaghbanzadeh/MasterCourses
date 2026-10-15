@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.safetensors
+*.pth
+*.pt
+node_modules/

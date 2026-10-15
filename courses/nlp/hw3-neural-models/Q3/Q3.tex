@@ -1,0 +1,209 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۳} \\[0.4cm] \small محاسبه گرادیان نسبت به بردارهای \en{Embedding}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: \en{Backpropagation} تا لایه \en{Embedding}}
+
+بر اساس بخش‌های \textbf{\en{۶-۵}} و \textbf{\en{۶-۶}} کتاب، برای به‌روزرسانی بردارهای \en{Embedding} باید گرادیان تابع هزینه را نسبت به آن‌ها محاسبه کنیم. در این سوال، وزن‌های شبکه (\(W^{(1)}\) و \(W^{(2)}\)) ثابت فرض شده‌اند و فقط \en{Embedding}ها به‌روزرسانی می‌شوند.
+
+\separator
+\section{داده‌های مسأله (از سوال قبل)}
+
+\subsection{ماتریس \en{Embedding} (E)}
+\[
+E = 
+\begin{bmatrix}
+0.2 & -0.1 \\
+0.5 & 0.3 \\
+-0.4 & 0.2 \\
+0.1 & 0.0
+\end{bmatrix}
+\]
+
+\subsection{وزن‌های شبکه}
+\[
+W^{(1)} = 
+\begin{bmatrix}
+0.8 & -0.2 \\
+0.1 & 0.6
+\end{bmatrix}
+\quad,\quad
+W^{(2)} = 
+\begin{bmatrix}
+0.5 \\
+-0.3
+\end{bmatrix}
+\]
+
+\subsection{ایندکس کلمات و \en{Embedding} سند (از سوال قبل)}
+\begin{align*}
+\text{:کلمه ۱ (ایندکس ۱)} &\quad e_1 = [0.5, 0.3] \\
+\text{:کلمه ۲ (ایندکس ۲)} &\quad e_2 = [-0.4, 0.2] \\
+\text{:\en{Embedding} سند (میانگین)} &\quad e_{\text{doc}} = [0.05, 0.25]
+\end{align*}
+
+\subsection{نتایج \en{Forward Pass} (از سوال قبل)}
+\begin{align*}
+h_{\text{net}} &= [-0.01, 0.155] \\
+h &= [0, 0.155] \\
+y_{\text{net}} &= -0.0465 \\
+\hat{y} &\approx 0.4884
+\end{align*}
+
+\separator
+\section{فرض برچسب واقعی}
+
+مانند سوال قبل، فرض می‌کنیم برچسب واقعی \(y = 1\) است.
+
+\separator
+\section{گام ۱: محاسبه سیگنال خطا در لایه خروجی}
+
+بر اساس بخش \textbf{\en{۶-۶-۴}} کتاب (معادله \en{۶-۴۳})، مشتق تابع هزینه نسبت به \(y_{\text{net}}\) برای تابع سیگموئید و کراس-آنتروپی به صورت زیر است:
+
+\[
+\delta^{(2)} = \frac{\partial L}{\partial y_{\text{net}}} = \hat{y} - y
+\]
+
+\[
+\delta^{(2)} = 0.4884 - 1 = -0.5116
+\]
+
+\separator
+\section{گام ۲: انتشار خطا به لایه پنهان}
+
+سیگنال خطا برای هر نورون لایه پنهان به صورت زیر محاسبه می‌شود:
+
+\[
+\delta^{(1)}_j = \delta^{(2)} \cdot W^{(2)}_j \cdot \text{ReLU}'(h_{\text{net},j})
+\]
+
+که در آن \(\text{ReLU}'(x)\) مشتق تابع \en{ReLU} است (بخش \en{۶-۶-۴} کتاب، معادله \en{۶-۴۰}):
+
+\[
+\text{ReLU}'(x) = 
+\begin{cases} 
+1 if  x > 0 \\
+0 if  x \le 0
+\end{cases}
+\]
+
+\begin{align*}
+\text{برای } j=1: &\quad h_{\text{net},1} = -0.01 \le 0 \quad \Rightarrow \quad \text{ReLU}'(h_{\text{net},1}) = 0 \\
+&\quad \delta^{(1)}_1 = (-0.5116) \times 0.5 \times 0 = 0
+\end{align*}
+
+\begin{align*}
+\text{برای } j=2: &\quad h_{\text{net},2} = 0.155 > 0 \quad \Rightarrow \quad \text{ReLU}'(h_{\text{net},2}) = 1 \\
+&\quad \delta^{(1)}_2 = (-0.5116) \times (-0.3) \times 1 = 0.15348
+\end{align*}
+
+\[
+\delta^{(1)} = [0, \; 0.15348]
+\]
+
+\separator
+\section{گام ۳: انتشار خطا به لایه ورودی (\en{Embedding} سند)}
+
+گرادیان تابع هزینه نسبت به \en{Embedding} سند (\(e_{\text{doc}}\)) به صورت زیر محاسبه می‌شود:
+
+\[
+\frac{\partial L}{\partial e_{\text{doc}}} = (\delta^{(1)})^T \cdot W^{(1)}
+\]
+
+\[
+\frac{\partial L}{\partial e_{\text{doc}}} = 
+\begin{bmatrix}
+0 & 0.15348
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+0.8 & -0.2 \\
+0.1 & 0.6
+\end{bmatrix}
+\]
+
+\[
+\frac{\partial L}{\partial e_{\text{doc},1}} = 0 \times 0.8 + 0.15348 \times 0.1 = 0.015348
+\]
+
+\[
+\frac{\partial L}{\partial e_{\text{doc},2}} = 0 \times (-0.2) + 0.15348 \times 0.6 = 0.092088
+\]
+
+\[
+\frac{\partial L}{\partial e_{\text{doc}}} = [0.015348, \; 0.092088]
+\]
+
+\separator
+\section{گام ۴: انتشار خطا به \en{Embedding} هر کلمه}
+
+از آنجا که \(e_{\text{doc}}\) میانگین \en{Embedding} دو کلمه است:
+
+\[
+e_{\text{doc}} = \frac{1}{2}(e_1 + e_2)
+\]
+
+بنابراین با استفاده از قانون زنجیره:
+
+\[
+\frac{\partial L}{\partial e_1} = \frac{\partial L}{\partial e_{\text{doc}}} \cdot \frac{\partial e_{\text{doc}}}{\partial e_1} = \frac{\partial L}{\partial e_{\text{doc}}} \cdot \frac{1}{2}
+\]
+
+\[
+\frac{\partial L}{\partial e_2} = \frac{\partial L}{\partial e_{\text{doc}}} \cdot \frac{\partial e_{\text{doc}}}{\partial e_2} = \frac{\partial L}{\partial e_{\text{doc}}} \cdot \frac{1}{2}
+\]
+
+\begin{align*}
+\frac{\partial L}{\partial e_1} &= \frac{1}{2} \times [0.015348, \; 0.092088] = [0.007674, \; 0.046044] \\[4pt]
+\frac{\partial L}{\partial e_2} &= \frac{1}{2} \times [0.015348, \; 0.092088] = [0.007674, \; 0.046044]
+\end{align*}
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{center}
+\fbox{\parbox{0.9\linewidth}{\centering
+\textbf{پاسخ نهایی:}
+\begin{itemize}
+    \item \textbf{گرادیان نسبت به \en{Embedding} کلمه ۱ (ایندکس ۱):}
+    \[
+    \frac{\partial L}{\partial e_1} = [0.007674, \; 0.046044]
+    \]
+    \item \textbf{گرادیان نسبت به \en{Embedding} کلمه ۲ (ایندکس ۲):}
+    \[
+    \frac{\partial L}{\partial e_2} = [0.007674, \; 0.046044]
+    \]
+\end{itemize}
+\textbf{تفسیر:} از آنجا که روش \en{pooling} میانگین گیری بوده، گرادیان به دو کلمه به طور مساوی تقسیم شده است. همچنین به دلیل صفر بودن مشتق \en{ReLU} برای نورون اول لایه پنهان، گرادیان فقط از نورون دوم عبور کرده است.
+}}
+\end{center}
+
+\thickseparator
+
+\end{document}

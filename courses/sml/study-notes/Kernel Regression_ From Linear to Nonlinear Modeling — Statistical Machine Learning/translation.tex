@@ -1,0 +1,272 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\geometry{a4paper, margin=1in}
+
+\title{\lr{Kernel Regression: From Linear to Nonlinear Modeling} \\ (رگرسیون هسته: از مدل‌سازی خطی به غیرخطی)}
+\author{}
+\date{}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_7_1.png}
+  \caption{نتایج برازش رگرسیون غیرخطی با استفاده از هسته گوسی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_8_1.png}
+  \caption{تاثیر تغییرات منظم‌سازی و سطح نویز بر روی هموارسازی رگرسیون هسته}
+\end{figure}
+
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\section*{فهرست مطالب}
+\begin{enumerate}
+    \item پایه‌ی رگرسیون خطی (\lr{Linear Regression})
+    \item رگرسیون هسته (\lr{Kernel Regression}): ایده اصلی
+    \item آموزش: حل برای $\alpha$
+    \item پیش‌بینی روی داده‌های جدید
+    \item ارتباط با شبه‌معکوس (\lr{Pseudoinverse})
+    \item تاثیرات منظم‌سازی (\lr{regularization}) و سطوح نویز بر رگرسیون هسته
+    \item دیدگاه نخستین (\lr{Primal}) در مقابل دوگان (\lr{Dual})
+    \item نکات کلیدی
+\end{enumerate}
+
+\newpage
+
+\section*{۱. پایه‌ی رگرسیون خطی}
+هدف رگرسیون پیش‌بینی یک خروجی پیوسته $y$ از ویژگی‌های ورودی $x=(x_1, x_2, \dots, x_d)^T$ با استفاده از یک تابع یادگرفته‌شده $f$ است:
+\[
+y = f(x) + \varepsilon
+\]
+که در آن $\varepsilon$ نشان‌دهنده نویز تصادفی است.
+
+در رگرسیون خطی (\lr{linear regression})، ما فرض می‌کنیم $f$ خطی است:
+\[
+f(x) = w^T x
+\]
+(جمله بایاس را می‌توان با افزودن یک مقدار ثابت $1$ به $x$ در $w$ ادغام کرد.)
+
+پارامترهای $w$ مجموع خطاهای مربعات (\lr{sum of squared errors}) را کمینه می‌کنند:
+\[
+\min_{w} \sum_{i=1}^{n} (y_i - w^T x_i)^2
+\]
+
+\section*{۲. رگرسیون هسته: ایده اصلی}
+
+\subsection*{چرا هسته‌ها؟}
+داده‌های دنیای واقعی اغلب دارای الگوهای غیرخطی هستند که مدل‌های خطی نمی‌توانند آنها را ثبت کنند. راه حل: نگاشت هر ورودی $x$ به یک فضای ویژگی با ابعاد بالاتر $\phi(x)$ است که در آن رابطه خطی می‌شود:
+\[
+f(x) = w^T \phi(x)
+\]
+
+\textbf{چالش:} محاسبه صریح $\phi(x)$ ممکن است از نظر محاسباتی بسیار سنگین یا حتی دارای ابعاد نامتناهی باشد.
+
+\textbf{ترفند هسته (\lr{Kernel Trick}):} استفاده از یک تابع هسته که ضرب‌های داخلی را در فضای ویژگی بدون ساخت صریح $\phi(x)$ محاسبه می‌کند:
+\[
+K(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle
+\]
+
+\subsection*{فرمولاسیون دوگان (\lr{Dual Formulation})}
+با استفاده از ترفند هسته، تابع رگرسیون به مجموع وزنی شباهت‌های هسته با هر نقطه آموزشی تبدیل می‌شود:
+\[
+\hat{y}(x) = \sum_{i=1}^{n} \alpha_i K(x, x_i)
+\]
+که در آن:
+\begin{itemize}
+    \item $\alpha_i$ وزن‌های یادگرفته‌شده از داده‌ها هستند.
+    \item $K(x, x_i)$ شباهت بین نقطه تست $x$ و نقطه آموزشی $x_i$ را اندازه‌گیری می‌کند.
+\end{itemize}
+
+\textbf{تفسیر:} پیش‌بینی یک میانگین وزن‌دهی‌شده بر اساس شباهت خروجی‌های آموزشی است، که در آن وزن‌های $\alpha_i$ یاد گرفته می‌شوند و میانگین‌های ساده نیستند.
+
+\section*{۳. آموزش: حل برای $\alpha$}
+
+\subsection*{مسئله بهینه‌سازی}
+ما $\alpha$ را با برازش داده‌های آموزشی یاد می‌گیریم:
+\[
+\min_{\alpha} \sum_{j=1}^{n} \left( y_j - \sum_{i=1}^{n} \alpha_i K(x_j, x_i) \right)^2
+\]
+
+\subsection*{فرمولاسیون ماتریسی}
+تعریف کنید:
+\begin{itemize}
+    \item ماتریس هسته (\lr{Kernel matrix}) (اندازه $n \times n$): $K_{ij} = K(x_i, x_j)$
+    \item بردار وزن: $\alpha = [\alpha_1, \dots, \alpha_n]^T$
+    \item بردار خروجی: $y = [y_1, \dots, y_n]^T$
+\end{itemize}
+برای تمام نقاط آموزشی، پیش‌بینی‌ها عبارتند از: $\hat{y} = K \alpha$. مجموع خطاهای مربعات به صورت زیر در می‌آید: $\|y - K \alpha\|^2$.
+
+\subsection*{راه حل}
+گرفتن مشتق و قرار دادن آن برابر صفر:
+\[
+\frac{\partial}{\partial \alpha} \|y - K \alpha\|^2 = -2 K^T(y - K \alpha) = 0
+\]
+از آنجا که $K$ متقارن است ($K^T = K$):
+\[
+K(y - K \alpha) = 0 \implies K y = K^2 \alpha
+\]
+اگر $K$ وارون‌پذیر باشد (هسته معین مثبت با نقاط متمایز)، در $K^{-1}$ ضرب می‌کنیم:
+\[
+y = K \alpha \implies \alpha = K^{-1} y
+\]
+
+\textbf{بینش کلیدی:} وزن‌های $\alpha$ به گونه‌ای انتخاب می‌شوند که پیش‌بینی‌های آموزشی کاملاً با خروجی‌های آموزشی مطابقت داشته باشند ($\hat{y}_{\text{train}} = y$). این درون‌یابی دقیق (\lr{exact interpolation}) است.
+
+\section*{۴. پیش‌بینی روی داده‌های جدید}
+
+\subsection*{تک نقطه تست}
+برای یک نقطه تست جدید $x_{\text{test}}$ (که در مجموعه آموزشی نیست):
+\begin{itemize}
+    \item \textbf{مرحله ۱:} محاسبه شباهت‌های هسته بین $x_{\text{test}}$ و تمام نقاط آموزشی:
+    \[
+    k_{\text{test}} = [K(x_{\text{test}}, x_1), K(x_{\text{test}}, x_2), \dots, K(x_{\text{test}}, x_n)]^T \quad (\text{اندازه } n \times 1)
+    \]
+    \item \textbf{مرحله ۲:} انجام پیش‌بینی با استفاده از همان فرمول:
+    \[
+    \hat{y}_{\text{test}} = \sum_{i=1}^{n} \alpha_i K(x_{\text{test}}, x_i) = k_{\text{test}}^T \alpha
+    \]
+\end{itemize}
+
+\subsection*{نقاط تست متعدد}
+برای $m$ نقطه تست $\{x^{(1)}_{\text{test}}, \dots, x^{(m)}_{\text{test}}\}$:
+ماتریس $K_{\text{test}}$ را با اندازه $m \times n$ تعریف کنید:
+\[
+[K_{\text{test}}]_{pj} = K(x^{(p)}_{\text{test}}, x_j)
+\]
+سپس پیش‌بینی‌ها:
+\[
+\hat{y}_{\text{test}} = K_{\text{test}} \alpha
+\]
+
+\subsection*{خلاصه آموزش در مقابل تست}
+مهم: ویژگی درون‌یابی $\hat{y}_{\text{train}} = y$ فقط برای داده‌های آموزشی برقرار است. برای نقاط تست، پیش‌بینی‌ها بر اساس شباهت به نقاط آموزشی تعیین می‌شوند، نه مطابقت دقیق.
+\begin{itemize}
+    \item \textbf{آموزش:} ورودی $K_{n \times n}$، پیش‌بینی $\hat{y}_{\text{train}} = K \alpha$، برابر با مقدار واقعی؟ بله (برازش دقیق)
+    \item \textbf{تست:} ورودی $k_{\text{test}}$ با اندازه $n \times 1$، پیش‌بینی $\hat{y}_{\text{test}} = k_{\text{test}}^T \alpha$، برابر با مقدار واقعی؟ خیر (تعمیم)
+\end{itemize}
+
+\section*{۵. ارتباط با شبه‌معکوس}
+به یاد آورید که شبه‌معکوس $X^+$ معادله $X w = y$ را به طور بهینه حل می‌کند. برای رگرسیون هسته، ما $K \alpha = y$ را حل می‌کنیم، بنابراین:
+\[
+\alpha = K^+ y
+\]
+وقتی $K$ وارون‌پذیر باشد، $K^+ = K^{-1}$. وقتی $K$ منفرد یا بدحالت باشد، از منظم‌سازی (\lr{regularization}) استفاده می‌کنیم.
+
+\subsection*{منظم‌سازی (رگرسیون ستیغی هسته - \lr{Kernel Ridge Regression})}
+در عمل، با داده‌های نویزدار، درون‌یابی دقیق منجر به بیش‌برازش (\lr{overfitting}) می‌شود. یک جریمه ستیغی $\lambda \|f\|^2$ اضافه کنید:
+\[
+\min_{\alpha} \|y - K \alpha\|^2 + \lambda \alpha^T K \alpha
+\]
+راه حل به صورت زیر در می‌آید:
+\[
+\alpha = (K + \lambda I)^{-1} y
+\]
+
+این تخمین‌گر رگرسیون ستیغی هسته است. اصطلاح منظم‌سازی:
+\begin{itemize}
+    \item پایداری عددی (\lr{numerical stability}) را بهبود می‌بخشد (وارون‌پذیری $K + \lambda I$ را تضمین می‌کند).
+    \item با کوچک کردن وزن‌ها از بیش‌برازش جلوگیری می‌کند.
+    \item همواری تابع پیش‌بینی را کنترل می‌کند.
+\end{itemize}
+
+\section*{۶. تاثیر منظم‌سازی و سطح نویز در رگرسیون هسته}
+\begin{itemize}
+    \item \textbf{نویز $\sigma = 0$ (بدون نویز):}
+    \begin{itemize}
+        \item $\lambda = 0$: برازش کامل ($\text{MSE} \approx 0$) - مدل دقیقاً درون‌یابی می‌کند.
+        \item $\lambda > 0$: انحراف جزئی ایجاد می‌شود، اما همچنان برازش خوبی است.
+    \end{itemize}
+    \item \textbf{نویز $\sigma = 0.1$ (نویز کم):}
+    \begin{itemize}
+        \item $\lambda = 0$: ممکن است تا حدی بیش‌برازش رخ دهد و الگوهای نویز را ثبت کند.
+        \item $\lambda = 10^{-6}$: تعادلی بین برازش و همواری برقرار می‌کند.
+        \item $\lambda = 0.1$: ممکن است کم‌برازش (\lr{underfit}) رخ دهد (بسیار هموار).
+    \end{itemize}
+    \item \textbf{بینش‌های کلیدی:}
+    \begin{itemize}
+        \item نویز بیشتر $\to$ نیاز به منظم‌سازی قوی‌تر ($\lambda$ بزرگتر).
+        \item بدون نویز $\to$ $\lambda=0$ درون‌یابی دقیق می‌دهد.
+        \item منظم‌سازی بیش از حد $\to$ کم‌برازش (انحراف یا \lr{bias}).
+        \item منظم‌سازی بسیار کم $\to$ بیش‌برازش (واریانس).
+    \end{itemize}
+\end{itemize}
+
+\section*{۷. دیدگاه نخستین (\lr{Primal}) در مقابل دوگان (\lr{Dual})}
+
+\subsection*{دو شکل راه حل}
+در رگرسیون خطی استاندارد با ویژگی‌های $X$، بردار وزن را می‌توان به دو روش معادل بیان کرد:
+\begin{itemize}
+    \item \textbf{فرم نخستین (\lr{Primal Form}) (فضای ویژگی):}
+    \[
+    w = (X^T X)^{-1} X^T y
+    \]
+    \item \textbf{فرم دوگان (\lr{Dual Form}) (فضای نمونه):}
+    \[
+    w = X^T (X X^T)^{-1} y
+    \]
+\end{itemize}
+هر دو در صورتی که $X$ دارای رتبه ستونی کامل باشد، پیش‌بینی‌های یکسانی را ارائه می‌دهند.
+
+\subsection*{چرا فرم دوگان برای هسته‌ها اهمیت دارد}
+فرم دوگان نشان می‌دهد که $w$ یک ترکیب خطی از نمونه‌های آموزشی است:
+\[
+w = \sum_{i=1}^{n} \alpha_i x_i \quad \text{که در آن} \quad \alpha = (X X^T)^{-1} y
+\]
+وقتی به فضای ویژگی $\phi(x)$ نگاشت می‌کنیم، این به صورت زیر در می‌آید:
+\[
+w = \sum_{i=1}^{n} \alpha_i \phi(x_i) \quad \text{با} \quad \alpha = K^{-1} y
+\]
+که در آن $K_{ij} = \phi(x_i)^T \phi(x_j) = K(x_i, x_j)$ است.
+
+\textbf{بینش کلیدی:} پیش‌بینی برای یک نقطه جدید به صورت زیر در می‌آید:
+\[
+\hat{y}(x) = w^T \phi(x) = \sum_{i=1}^{n} \alpha_i \phi(x_i)^T \phi(x) = \sum_{i=1}^{n} \alpha_i K(x_i, x)
+\]
+ما هرگز به طور صریح به $\phi(x)$ نیاز نداریم — فقط ارزیابی‌های هسته $K(x_i, x)$ مورد نیاز است!
+
+\subsection*{موازنه‌های محاسباتی}
+\begin{itemize}
+    \item \textbf{سناریوی $n \ll d$ (نمونه‌های کم، ویژگی‌های زیاد):} فرم نخستین کند (معکوس کردن $d \times d$) و فرم دوگان سریع (معکوس کردن $n \times n$) است.
+    \item \textbf{سناریوی $n \gg d$ (نمونه‌های زیاد، ویژگی‌های کم):} فرم نخستین سریع (معکوس کردن $d \times d$) و فرم دوگان کند (معکوس کردن $n \times n$) است.
+    \item \textbf{هسته‌های غیرخطی (RBF، چندجمله‌ای):} فرم نخستین غیرقابل اعمال و فرم دوگان مورد نیاز است (ترفند هسته).
+\end{itemize}
+
+مثال: هسته \lr{RBF} با $n=1000$ نمونه به طور موثر از ویژگی‌های بی‌نهایت بعدی ($d=\infty$) استفاده می‌کند:
+\begin{itemize}
+    \item فرم نخستین غیرممکن است (نمی‌توان $\phi(x)$ را صراحتاً محاسبه کرد).
+    \item فرم دوگان با ماتریس هسته $1000 \times 1000$ کار می‌کند.
+\end{itemize}
+
+\section*{۸. نکات کلیدی}
+\begin{enumerate}
+    \item رگرسیون هسته برازش غیرخطی را با نگاشت ضمنی داده‌ها به فضاهای با ابعاد بالا امکان‌پذیر می‌کند.
+    \item فرمولاسیون دوگان پیش‌بینی‌ها را به عنوان مجموع‌های وزنی از شباهت‌های هسته بیان می‌کند: $\hat{y}(x) = \sum_{i=1}^{n} \alpha_i K(x, x_i)$.
+    \item آموزش معادله $\alpha = K^{-1} y$ (بدون منظم‌سازی) یا $\alpha = (K + \lambda I)^{-1} y$ (منظم‌شده) را حل می‌کند.
+    \item تست از فرمول $\hat{y}_{\text{test}} = k_{\text{test}}^T \alpha$ استفاده می‌کند، که در آن $k_{\text{test}}$ شامل شباهت‌های بین نقاط تست و آموزشی است.
+    \item منظم‌سازی ($\lambda > 0$) برای موارد زیر ضروری است:
+    \begin{itemize}
+        \item پایداری عددی (تضمین اینکه $K + \lambda I$ وارون‌پذیر است).
+        \item جلوگیری از بیش‌برازش به نویز.
+    \end{itemize}
+    \item انتخاب هسته انعطاف‌پذیری مدل را کنترل می‌کند:
+    \begin{itemize}
+        \item هسته خطی $\to$ رگرسیون خطی استاندارد.
+        \item هسته \lr{RBF} $\to$ تقریب هموار و محلی.
+        \item هسته چندجمله‌ای $\to$ جملات متقابل تا درجه $d$.
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

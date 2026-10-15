@@ -1,0 +1,262 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\geometry{a4paper, margin=1in}
+
+\title{\lr{Principal Component Analysis, Part 2} \\ (تحلیل مولفه‌های اصلی، بخش ۲)}
+\author{}
+\date{}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_2_1.png}
+  \caption{تعریف بردارهای پایه و دستگاه مختصات در فضای دوبعدی هندسی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_7_1.png}
+  \caption{تغییر پایه و دوران دستگاه مختصات برای تراز کردن داده‌ها بر روی جهت‌های اصلی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_8_1.png}
+  \caption{مثال دوران داده‌ها روی پایه‌های جدید حاصل از تحلیل مولفه‌های اصلی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_15_1.png}
+  \caption{مراحل کارکرد الگوریتم PCA برای کاهش ابعاد}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_22_1.png}
+  \caption{تصویر داده‌ها روی بردارهای ویژه اصلی برای کاهش بعد از ۲ بعد به ۱ بعد}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\section*{فهرست مطالب}
+\begin{enumerate}
+    \item مقدمه
+    \item پایه‌های جبر خطی
+    \item تصویر کردن بردارها (\lr{Vector Projections})
+    \item تبدیل پایه (\lr{Basis Transformation})
+    \item ماتریس دوران (\lr{Rotation Matrix})
+    \item پایه ریاضی \lr{PCA} و مسئله بیشینه‌سازی واریانس
+    \item بهینه‌سازی مقید از طریق ضرایب لاگرانژ (\lr{Lagrange Multipliers})
+    \item الگوریتم \lr{PCA}
+    \item تصویر و بازسازی داده‌ها (\lr{Projection \& Reconstruction})
+    \item هم‌ارزی دو دیدگاه بهینه‌سازی در \lr{PCA}
+    \item تحلیل خطا در \lr{PCA}
+    \item خلاصه
+\end{enumerate}
+
+\newpage
+
+\section*{۱. مقدمه}
+تحلیل مولفه‌های اصلی (\lr{Principal Component Analysis} یا \lr{PCA}) یک روش بنیادی کاهش ابعاد (\lr{dimensionality reduction}) است که یک زیرفضای $r$-بعدی بهینه را شناسایی می‌کند که بیشترین واریانس را در داده‌ها ثبت می‌کند. پایه‌های ریاضی آن بر یافتن جهت‌های متعامد — به نام مولفه‌های اصلی (\lr{principal components}) — تکیه دارد که به طور متوالی واریانس تصویرشده را بیشینه می‌کنند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_23_1.png}
+  \caption{نمودار خطای بازسازی داده‌ها در فرآیند کاهش بعد با حفظ مولفه‌های اصلی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_24_1.png}
+  \caption{مقایسه نتایج کاهش بعد PCA پیاده‌سازی شده با کتابخانه scikit-learn}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_25_1.png}
+  \caption{نمونه‌هایی از کاربردهای PCA در بازسازی تصاویر و کاهش ابعاد مجموعه داده‌های بزرگ}
+\end{figure}
+
+
+
+
+
+
+
+
+با داشتن یک ماتریس داده مرکزی‌شده $X$، ما به دنبال بردارهای واحد $u$ هستیم که واریانس داده‌های تصویرشده $Xu$ را بیشینه کنند. این بهینه‌سازی به مسئله مقادیر ویژه کلیدی زیر منجر می‌شود:
+\[
+Cu = \lambda u
+\]
+که در آن $C$ یک ماتریس کوواریانس است.
+
+\section*{۲. پایه‌های جبر خطی}
+\subsection*{نمایش ماتریس داده‌ها}
+ماتریس داده $X$ با $n$ سطر (نمونه‌ها) و $d$ ستون (ویژگی‌ها) به صورت زیر است:
+\[
+\mathbf{X} = \begin{bmatrix} 
+x_{11} & x_{12} & \cdots & x_{1d} \\
+x_{21} & x_{22} & \cdots & x_{2d} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{n1} & x_{n2} & \cdots & x_{nd} 
+\end{bmatrix}
+\]
+هر سطر $x_i = [x_{i1}, \dots, x_{id}]^T$ نشان‌دهنده یک نمونه در فضای $d$-بعدی است.
+
+\subsection*{عملیات برداری}
+\begin{itemize}
+    \item \textbf{ضرب داخلی (\lr{Dot Product}):} $a^T b = \sum_{i=1}^m a_i b_i$
+    \item \textbf{طول بردار (\lr{Norm}):} $\|a\| = \sqrt{a^T a} = \sqrt{\sum a_i^2}$
+    \item \textbf{بردار واحد (\lr{Unit Vector}):} $u = \frac{a}{\|a\|}$
+    \item \textbf{فاصله بین بردارها:} $\|a-b\| = \sqrt{\sum (a_i - b_i)^2}$
+    \item \textbf{زاویه بین بردارها:} $\cos\theta = \frac{a^T b}{\|a\|\|b\|}$
+\end{itemize}
+
+\section*{۳. تصویر کردن بردارها}
+ضرب داخلی و زاویه رابطه زیر را دارند:
+\[
+a^T b = \|a\| \|b\| \cos\theta
+\]
+
+طول سایه بردار $b$ در امتداد $a$ (تصویر اسکالر) برابر است با:
+\[
+\text{Scalar projection} = \|b\| \cos\theta = \frac{a^T b}{\|a\|}
+\]
+برای بردار واحد، این مقدار به $a^T b$ ساده می‌شود.
+
+برای به دست آوردن شکل برداری تصویر، تصویر اسکالر را در بردار واحد $a$ ضرب می‌کنیم:
+\[
+b_{\parallel} = \left( \frac{a^T b}{\|a\|^2} \right) a
+\]
+اگر $\|a\|=1$ باشد، $b_{\parallel} = (a^T b) a$ می‌شود.
+
+مولفه عمود (باقیمانده) به صورت زیر تعریف می‌شود:
+\[
+b_{\perp} = b - b_{\parallel}
+\]
+که بر $a$ عمود است.
+
+\section*{۴. تبدیل پایه}
+تغییر پایه به ما امکان می‌دهد هر بردار $x$ را بر حسب پایه‌های متعامد جدید $\{u_1, \dots, u_d\}$ بیان کنیم:
+\[
+x = a_1 u_1 + \dots + a_d u_d = U a
+\]
+که در آن $U = [u_1 | \dots | u_d]$ ماتریس پایه‌های جدید و $a$ مختصات $x$ در پایه جدید است:
+\[
+a = U^T x
+\]
+این به دلیل متعامد بودن است: $a_i = u_i^T x$.
+
+\section*{۵. ماتریس دوران}
+یک ماتریس دوران بردارها را با زاویه مشخص $\theta$ می‌چرخاند در حالی که طول آنها را حفظ می‌کند. برای دوران ۴۵ درجه در صفحه دو‌بعدی، ماتریس دوران به صورت زیر است:
+\[
+R = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} & 0 \\ \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\]
+ستون‌های $R$ نشان می‌دهند که هر محور پس از دوران به کجا منتقل می‌شود که به عنوان پایه‌های جدید استفاده می‌شوند.
+
+\section*{۶. پایه ریاضی \lr{PCA} و مسئله بیشینه‌سازی واریانس}
+\lr{PCA} به دنبال یک پایه متعامد $\{u_1, \dots, u_r\}$ است که بیشترین واریانس داده‌ها را در جهت‌های تصویرشده ثبت کند.
+
+برای اولین مولفه اصلی، به دنبال بردار واحد $u$ هستیم که واریانس داده‌های تصویرشده را بیشینه کند:
+\[
+\max_{\|u\|=1} Var(X u)
+\]
+فرض کنید $z_i = x_i - \bar{x}$ نقاط داده مرکزی‌شده باشند. واریانس تصویرشده برابر است با:
+\[
+\sigma^2_u = \frac{1}{n} \sum_{i=1}^n (u^T z_i)^2 = \frac{1}{n} \sum_{i=1}^n (u^T z_i)(z_i^T u) = u^T \left( \frac{1}{n} \sum_{i=1}^n z_i z_i^T \right) u = u^T C u
+\]
+که در آن $C$ ماتریس کوواریانس نمونه است. با استفاده از ماتریس داده‌های مرکزی‌شده $Z$:
+\[
+\sigma^2_u = u^T C u = \frac{1}{n} \|Z u\|^2
+\]
+
+\section*{۷. بهینه‌سازی مقید از طریق ضرایب لاگرانژ}
+ما $\sigma^2_u = u^T C u$ را تحت قید $\|u\|=1$ بیشینه می‌کنیم. با معرفی ضریب لاگرانژ $\lambda$، تابع لاگرانژ عبارت است از:
+\[
+J(u) = u^T C u - \lambda(u^T u - 1)
+\]
+با گرفتن گرادیان نسبت به $u$ و قرار دادن آن برابر صفر:
+\[
+2 C u - 2 \lambda u = 0 \implies C u = \lambda u
+\]
+این نشان می‌دهد $u$ باید بردار ویژه ماتریس کوواریانس $C$ باشد.
+
+واریانس تصویرشده برابر با مقدار ویژه $\lambda$ است:
+\[
+\sigma^2_u = u^T C u = u^T \lambda u = \lambda
+\]
+برای بیشینه‌سازی واریانس، ما بزرگترین مقدار ویژه $\lambda_1$ را انتخاب می‌کنیم. بردار ویژه متناظر $u_1$ اولین مولفه اصلی را تعریف می‌کند.
+
+\section*{۸. الگوریتم \lr{PCA}}
+\begin{enumerate}
+    \item مرکزی‌سازی داده‌ها: $Z = X - \mathbf{1}\mu^T$.
+    \item محاسبه ماتریس کوواریانس: $C = \frac{1}{n} Z^T Z$.
+    \item محاسبه مقادیر ویژه و بردارهای ویژه ماتریس $C$.
+    \item مرتب‌سازی مقادیر ویژه به صورت نزولی.
+    \item انتخاب $r$ بردار ویژه برتر به عنوان مولفه‌های اصلی ($U_r$).
+    \item تصویر داده‌ها: $Z' = Z U_r$.
+\end{enumerate}
+
+\section*{۹. تصویر و بازسازی داده‌ها}
+\begin{itemize}
+    \item \textbf{تصویر (کاهش ابعاد):} $a_i = U_r^T z_i$ که در آن $a$ بردار مختصات در فضای کاهش‌یافته است.
+    \item \textbf{بازسازی (تقریب):} $z'_i = \sum_{j=1}^r a_{ij} u_j = U_r a_i$. بازگشت به فضای اصلی: $x_{\text{recon}} = z'_i + \mu$.
+    \item \textbf{در فرم ماتریسی:} تصویر $A = Z U_r$ و بازسازی $Z' = A U_r^T$ و بازگشت به فضای اصلی $X_{\text{recon}} = Z' + \mathbf{1} \mu^T$.
+\end{itemize}
+بازسازی یک تقریب است و خطای بازسازی $\|z - z'\|$ ناشی از کنار گذاشتن مولفه‌های اصلی دیگر است.
+
+\section*{۱۰. هم‌ارزی دو دیدگاه بهینه‌سازی در \lr{PCA}}
+\lr{PCA} را می‌توان از دو دیدگاه هم‌ارز فرموله کرد:
+\begin{enumerate}
+    \item بیشینه‌سازی واریانس تصویرشده.
+    \item کمینه‌سازی خطای بازسازی.
+\end{enumerate}
+
+\textbf{اثبات هم‌ارزی:}
+با بسط دادن خطای بازسازی داریم:
+\[
+\|z_j - (u^T z_j)u\|^2 = \|z_j\|^2 - (u^T z_j)^2
+\]
+بنابراین میانگین خطای مربعات (\lr{MSE}) برابر است با:
+\[
+\text{\lr{MSE}} = \frac{1}{n} \sum_{j=1}^n \|z_j\|^2 - \frac{1}{n} \sum_{j=1}^n (u^T z_j)^2
+\]
+چون جمله اول کل واریانس داده‌ها و مقداری ثابت است، کمینه کردن \lr{MSE} معادل با بیشینه کردن جمله دوم (واریانس تصویرشده) است.
+
+\section*{۱۱. تحلیل خطا در \lr{PCA}}
+برای داده‌های با ابعاد $d$ و بازسازی با $r$ مولفه، بردار خطا برابر است با:
+\[
+e_j = z_j - z'_j = \sum_{i=r+1}^d (u_i^T z_j) u_i
+\]
+میانگین خطای مربعات کل برابر با مجموع مقادیر ویژه کنار گذاشته شده است:
+\[
+\text{\lr{MSE}} = \sum_{i=r+1}^d \lambda_i
+\]
+کنار گذاشتن مولفه‌های اصلی $r+1$ تا $d$ دقیقاً به اندازه مجموع مقادیر ویژه آنها باعث از دست رفتن واریانس داده‌ها می‌شود.
+
+\section*{۱۲. خلاصه}
+\begin{itemize}
+    \item بیشینه‌سازی واریانس و کمینه‌سازی خطای بازسازی در \lr{PCA} هم‌ارز هستند.
+    \item مقادیر ویژه نشان‌دهنده مقدار واریانس ثبت‌شده در امتداد هر مولفه هستند.
+    \item خطای \lr{MSE} بازسازی برابر با مجموع مقادیر ویژه کنار گذاشته شده است.
+\end{itemize}
+
+\end{document}

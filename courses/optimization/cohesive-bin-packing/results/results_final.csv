@@ -1,0 +1,18 @@
+instance,group,instance_type,n,capacity,cohesion_edges,components,lower_bound,exact_bins,exact_status,exact_time_sec,reference_value,reference_type,ffd_bins,tabu_bins,improvement_bins,gap_to_reference_pct,tabu_time_sec,iterations,valid
+n=10_C=100_pairs=3.txt,small,standard,10,100,3,7,2,2,Optimal,0.086525,2,ILP optimum,2,2,0,0.0,3.4e-05,0,True
+n=20_C=100_pairs=7.txt,small,standard,20,100,7,13,4,4,Optimal,0.027754,4,ILP optimum,4,4,0,0.0,3e-05,0,True
+n=30_C=100_pairs=10.txt,small,standard,30,100,10,20,6,6,Optimal,0.42239,6,ILP optimum,6,6,0,0.0,3.5e-05,0,True
+n=50_C=200_pairs=15.txt,medium,standard,50,200,15,35,9,,Not run (n>30),,9,lower bound,9,9,0,0.0,2.7e-05,0,True
+n=100_C=200_pairs=30.txt,medium,standard,100,200,30,70,17,,Not run (n>30),,17,lower bound,17,17,0,0.0,4.3e-05,0,True
+n=150_C=200_pairs=45.txt,medium,standard,150,200,45,105,27,,Not run (n>30),,27,lower bound,27,27,0,0.0,7.5e-05,0,True
+n=300_C=500_pairs=80.txt,large,standard,300,500,80,220,51,,Not run (n>30),,51,lower bound,51,51,0,0.0,0.000204,0,True
+n=500_C=500_pairs=120.txt,large,standard,500,500,120,380,85,,Not run (n>30),,85,lower bound,85,85,0,0.0,0.000583,0,True
+n=1000_C=1000_pairs=200.txt,large,standard,1000,1000,200,800,162,,Not run (n>30),,162,lower bound,162,162,0,0.0,0.001668,0,True
+hard_n=10_C=100_pairs=2.txt,hard_small,synthetic-hard,10,100,2,8,4,4,Optimal,0.04509,4,ILP optimum,4,4,0,0.0,9.1e-05,0,True
+hard_n=20_C=100_pairs=5.txt,hard_small,synthetic-hard,20,100,5,15,7,8,Optimal,18.897662,8,ILP optimum,8,8,0,0.0,3.3e-05,0,True
+hard_n=30_C=100_pairs=8.txt,hard_small,synthetic-hard,30,100,8,22,10,11,Optimal,120.035405,11,ILP optimum,11,11,0,0.0,3.8e-05,0,True
+hard_n=50_C=200_pairs=10.txt,hard_medium,synthetic-hard,50,200,10,40,17,,Not run (n>30),,17,lower bound,17,17,0,0.0,3.3e-05,0,True
+hard_n=100_C=200_pairs=20.txt,hard_medium,synthetic-hard,100,200,20,80,33,,Not run (n>30),,33,lower bound,33,33,0,0.0,6e-05,0,True
+hard_n=150_C=200_pairs=30.txt,hard_medium,synthetic-hard,150,200,30,120,49,,Not run (n>30),,49,lower bound,50,50,0,2.04,0.115243,150,True
+hard_n=300_C=500_pairs=50.txt,hard_large,synthetic-hard,300,500,50,250,99,,Not run (n>30),,99,lower bound,100,99,1,0.0,0.013039,4,True
+hard_n=500_C=500_pairs=80.txt,hard_large,synthetic-hard,500,500,80,420,166,,Not run (n>30),,166,lower bound,167,166,1,0.0,0.316624,35,True

@@ -1,0 +1,169 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۱} \\[0.4cm] \small مقایسه مدل \en{Naive Bayes} و رگرسیون لجستیک}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: دو دسته مدل‌های تولیدی و تفکیکی}
+
+در یادگیری ماشین نظارت‌شده، مدل‌های طبقه‌بندی به دو دسته کلی تقسیم می‌شوند:
+
+\begin{itemize}
+    \item \textbf{مدل‌های تولیدی (\en{Generative Models})}: این مدل‌ها توزیع توأم \(P(x,y)\) را یاد می‌گیرند و سپس با استفاده از قانون بیز، \(P(y|x)\) را محاسبه می‌کنند.
+    \item \textbf{مدل‌های تفکیکی (\en{Discriminative Models})}: این مدل‌ها مستقیماً توزیع شرطی \(P(y|x)\) را مدل می‌کنند و سعی در بهینه‌سازی آن دارند.
+\end{itemize}
+
+\separator
+\section{مدل \en{Naive Bayes} (مدل تولیدی)}
+
+\subsection{فرض استقلال شرطی}
+مدل \en{Naive Bayes} یک مدل تولیدی است که بر اساس قانون بیز عمل می‌کند:
+
+\[
+P(y|x) = \frac{P(y) P(x|y)}{P(x)} \propto P(y) \prod_{i=1}^{n} P(x_i|y)
+\]
+
+فرض اساسی در این مدل، \textbf{استقلال شرطی} ویژگی‌ها (\(x_i\)) به شرط برچسب \(y\) است. یعنی:
+
+\[
+P(x|y) = \prod_{i=1}^{n} P(x_i|y)
+\]
+
+\newpage
+\subsection{بهینه‌سازی چه احتمالی؟}
+مدل \textbf{\en{Naive Bayes}} به عنوان یک مدل تولیدی (\en{Generative Model})، توزیع توأم \(P(x,y)\) را با بیشینه‌سازی درست‌نمایی (\en{Maximum Likelihood Estimation}) یاد می‌گیرد و سپس با استفاده از قانون بیز، \(P(y|x)\) را محاسبه می‌کند. معادل است با:
+
+\[
+\hat{y} = \arg\max_{y} P(y) \prod_{i=1}^{n} P(x_i|y)
+\]
+
+در عمل، مدل با استفاده از \textbf{بیشینه‌سازی درست‌نمایی (\en{MLE})} پارامترهای \(P(y)\) و \(P(x_i|y)\) را از روی داده‌های آموزشی تخمین می‌زند.
+
+\separator
+\section{رگرسیون لجستیک (مدل تفکیکی)}
+
+\subsection{فرمول مدل}
+بر اساس فصل \textbf{۴ کتاب} (بخش‌های \en{۴-۲} و \en{۴-۳})، رگرسیون لجستیک مستقیماً \(P(y|x)\) را مدل می‌کند:
+
+\[
+P(y=1|x) = \sigma(w \cdot x + b) = \frac{1}{1 + \exp(-(w \cdot x + b))}
+\]
+
+\[
+P(y=0|x) = 1 - \sigma(w \cdot x + b) = \sigma(-(w \cdot x + b))
+\]
+
+\subsection{بهینه‌سازی چه احتمالی؟}
+بر اساس بخش \textbf{\en{۴-۵} کتاب} (تابع هزینه کراس-آنتروپی)، رگرسیون لجستیک سعی در \textbf{بیشینه‌سازی احتمال شرطی \(P(y|x)\)} به صورت مستقیم دارد. تابع هزینه کراس-آنتروپی برای یک نمونه به صورت زیر است:
+
+\[
+L_{CE}(\hat{y}, y) = -[y \log \hat{y} + (1-y) \log(1-\hat{y})]
+\]
+
+که معادل \textbf{منفی لگاریتم درست‌نمایی شرطی (\en{Negative Conditional Log-Likelihood})} است. بنابراین مدل سعی در کمینه کردن این تابع هزینه (و در نتیجه بیشینه کردن \(P(y|x)\)) دارد.
+
+\separator
+\section{تفاوت کلیدی در بهینه‌سازی (بر اساس مقاله \en{Ng \& Jordan 2002})}
+
+\begin{itemize}
+    \item \textbf{\en{Naive Bayes}:} بیشینه‌سازی \textbf{احتمال توأم \(P(x,y)\)} (تحت فرض استقلال شرطی ویژگی‌ها)
+    \item \textbf{رگرسیون لجستیک:} بیشینه‌سازی \textbf{احتمال شرطی \(P(y|x)\)} به صورت مستقیم
+\end{itemize}
+
+این تفاوت اساسی، همان نکته کلیدی مقاله \en{Ng \& Jordan (2002)} است.
+
+\separator
+\section{مقایسه مدل‌ها بر اساس مقاله \en{Ng and Jordan 2002}}
+
+مقاله \en{Ng and Jordan (2002)} با عنوان \en{\en{On Discriminative vs. Generative Classifiers: A comparison of logistic regression and naive Bayes}} به مقایسه این دو مدل پرداخته است. نتایج اصلی مقاله به شرح زیر است:
+
+\subsection{عملکرد در حجم داده‌های کم}
+در حجم داده‌های آموزشی کم، مدل \en{Naive Bayes} (تولیدی) عملکرد بهتری نسبت به رگرسیون لجستیک (تفکیکی) دارد. دلیل آن این است که مدل‌های تولیدی با فرضیات قوی‌تر (مانند استقلال شرطی) به داده‌های کمتری برای تخمین پارامترها نیاز دارند و واریانس کمتری دارند.
+
+\subsection{عملکرد در حجم داده‌های زیاد}
+با افزایش حجم داده‌های آموزشی، \textbf{رگرسیون لجستیک عملکرد بهتری نسبت به \en{Naive Bayes} پیدا می‌کند}. دلیل این پدیده را در ادامه تحلیل می‌کنیم.
+
+\separator
+\section{دلیل عملکرد بهتر رگرسیون لجستیک با افزایش داده‌ها}
+
+\subsection{نقطه نظر ۱: فرضیات مدل}
+
+\begin{itemize}
+    \item \textbf{\en{Naive Bayes}:} فرض \textbf{استقلال شرطی} بین ویژگی‌ها را می‌کند. این فرض در بسیاری از مسائل دنیای واقعی (مانند تحلیل احساسات که کلمات با یکدیگر هم‌بستگی دارند) \textbf{نادرست} است. وقتی داده کم است، این فرض به مدل کمک می‌کند (کاهش واریانس)، اما با زیاد شدن داده، \textbf{بایاس} ناشی از فرض نادرست به یک مشکل جدی تبدیل می‌شود و مدل نمی‌تواند از داده‌های بیشتر برای بهبود عملکرد استفاده کند.
+
+    \item \textbf{رگرسیون لجستیک:} \textbf{هیچ فرض استقلالی} بین ویژگی‌ها نمی‌کند. مدل به داده اجازه می‌دهد تا وابستگی‌های بین ویژگی‌ها را خودش یاد بگیرد. با افزایش داده، مدل می‌تواند این وابستگی‌ها را دقیق‌تر تخمین بزند و \textbf{بایاس} آن کاهش یابد. از آنجا که واریانس مدل با افزایش داده کنترل می‌شود، در نهایت عملکرد آن بهتر می‌شود.
+\end{itemize}
+
+\subsection{نقطه نظر ۲: نرخ همگرایی ( \en{Convergence Rate})}
+
+مقاله \en{Ng and Jordan} نشان می‌دهد که:
+
+\begin{itemize}
+    \item نرخ همگرایی \en{Naive Bayes} از مرتبه \(O(\log m)\) است (نیاز به داده لگاریتمی)
+    \item نرخ همگرایی رگرسیون لجستیک از مرتبه \(O(m)\) است (نیاز به داده خطی)
+\end{itemize}
+
+بنابراین \en{Naive Bayes} \textbf{خیلی سریع‌تر همگرا می‌شود}، اما \textbf{خطای مجانبی (\en{Asymptotic Error}) آن بالاتر از رگرسیون لجستیک} است. به عبارت دیگر، برای رسیدن به یک خطای ثابت، \en{Naive Bayes} به داده بسیار کمتری نیاز دارد، اما \textbf{خطای مجانبی رگرسیون لجستیک کمتر} است. با \(m \to \infty\)، رگرسیون لجستیک به خطای بیز (بهینه‌ترین خطای ممکن) نزدیک می‌شود، در حالی که \en{Naive Bayes} به دلیل بایاس ناشی از فرض استقلال، به خطایی بزرگتر از خطای بیز همگرا می‌شود.
+
+\subsection{نقطه نظر ۳: انعطاف‌پذیری}
+
+رگرسیون لجستیک یک مدل \textbf{پارامتریک با مرز تصمیم خطی} است که می‌تواند با استفاده از \textbf{تبدیل ویژگی‌ها (\en{Feature Transformation})} و \textbf{تعامل ویژگی‌ها (\en{Feature Interactions})} مرزهای تصمیم غیرخطی را نیز تقریب بزند. \en{Naive Bayes} به دلیل فرض استقلال، قادر به مدل کردن تعاملات بین ویژگی‌ها نیست.
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{center}
+\fbox{\parbox{0.95\linewidth}{\centering
+\textbf{پاسخ خلاصه‌شده به سه پرسش سوال:}
+\begin{itemize}
+    \item \textbf{\en{Naive Bayes} چه احتمالی را بهینه می‌کند؟}  
+    بیشینه‌سازی \(P(y) \prod P(x_i|y)\) \textbf{تحت فرض استقلال شرطی ویژگی‌ها} که معادل بیشینه‌سازی \(P(x,y)\) است.
+    
+    \item \textbf{رگرسیون لجستیک چه احتمالی را بهینه می‌کند؟}  
+    بیشینه‌سازی مستقیم \(P(y|x)\) (احتمال شرطی) با استفاده از تابع سیگموئید و کمینه‌سازی کراس-آنتروپی.
+    
+    \item \textbf{دلیل عملکرد بهتر رگرسیون لجستیک با افزایش داده (بر اساس مقاله \en{Ng and Jordan 2002}) چیست؟}  
+    \begin{enumerate}
+        \item رگرسیون لجستیک فرض استقلال نادرست \en{Naive Bayes} را ندارد، بنابراین بایاس آن با افزایش داده به صفر میل می‌کند.
+        \item نرخ همگرایی رگرسیون لجستیک \(O(m)\) است در حالی که \en{Naive Bayes} به \(O(\log m)\) زودتر همگرا می‌شود اما خطای مجانبی بزرگتری دارد.
+        \item با \(m \to \infty\)، رگرسیون لجستیک به خطای بیز همگرا می‌شود، اما \en{Naive Bayes} به دلیل فرض استقلال به خطایی بزرگتر از خطای بیز محدود می‌ماند.
+    \end{enumerate}
+\end{itemize}
+}}
+\end{center}
+
+\thickseparator
+
+\section{منابع}
+\begin{itemize}
+    \item فصل ۴ کتاب: \en{Logistic Regression and Text Classification} (بخش‌های \en{۴-۲}، \en{۴-۳}، \en{۴-۵})
+    \item \en{Ng, A. Y., \& Jordan, M. I. (2002). On Discriminative vs. Generative Classifiers: A comparison of logistic regression and naive Bayes. In NIPS.}
+\end{itemize}
+
+\thickseparator
+
+\end{document}

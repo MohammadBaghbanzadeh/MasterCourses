@@ -1,0 +1,330 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۳} \\[0.4cm] \footnotesize دسته‌بندی فیلم به ژانر \en{Comedy} یا \en{Action} با استفاده از \en{Naive Bayes} و هموارسازی \en{Add-1}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: دسته‌بند \en{Naive Bayes} با هموارسازی \en{Add-1}}
+همان‌طور که در بخش‌های ۴.۱ و ۴.۲ کتاب اشاره شد، دسته‌بند \textbf{بیز ساده (\en{Naive Bayes})} بر اساس قانون بیز و فرض استقلال شرطی کلمات عمل می‌کند. فرمول اصلی برای یافتن بهترین کلاس به صورت زیر است:
+
+\[
+\hat{c} = \arg\max_{c \in \{\text{comedy},\text{action}\}} P(c) \prod_{i \in \text{positions}} P(w_i | c)
+\]
+
+برای جلوگیری از زیرریز محاسباتی (\en{underflow})، از لگاریتم استفاده می‌شود:
+\[
+\hat{c} = \arg\max_{c} \left[ \log P(c) + \sum_{i} \log P(w_i | c) \right]
+\]
+
+در این سوال، به طور مشخص از \textbf{هموارسازی \en{add-1} (\en{Laplace smoothing})} برای محاسبه احتمالات شرطی (\en{likelihood}) استفاده می‌شود. بر اساس بخش ۴.۲ کتاب، فرمول \en{add-1 smoothing} به صورت زیر است:
+
+\[
+\hat{P}(w_i|c) = \frac{\text{count}(w_i,c) + 1}{\sum_{w \in V} \text{count}(w,c) + |V|}
+\]
+
+که در آن $V$ دایره واژگان شامل \textbf{همه کلمات منحصربه‌فرد} در هر دو کلاس است.
+
+\separator
+\section{استخراج داده‌های آموزشی (\en{Training Data})}
+پنج نقد کوتاه با برچسب \en{comedy} یا \en{action} داده شده است:
+
+\begin{center}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{\#} & \textbf{متن نقد} & \textbf{برچسب} \\
+\hline
+1 & \en{fun, couple, love, love} & \en{comedy} \\
+\hline
+2 & \en{fast, furious, shoot} & \en{action} \\
+\hline
+3 & \en{couple, fly, fast, fun, fun} & \en{comedy} \\
+\hline
+4 & \en{furious, shoot, shoot, fun} & \en{action} \\
+\hline
+5 & \en{fly, fast, shoot, love} & \en{action} \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{نکته مهم}: در مدل \en{Naive Bayes} ترتیب کلمات اهمیت ندارد (\en{bag-of-words assumption}) و هر کلمه مستقل از بقیه در نظر گرفته می‌شود.
+
+\separator
+\section{محاسبه دایره واژگان $V$}
+ابتدا همه کلمات منحصربه‌فرد در کل داده‌های آموزشی را استخراج می‌کنیم:
+
+\begin{center}
+\en{fun, couple, love, fast, furious, shoot, fly}
+\end{center}
+
+بنابراین:
+\[
+|V| = 7
+\]
+
+\separator
+\section{محاسبه شمارش کلمات (\en{Word Counts}) به تفکیک هر کلاس}
+
+\subsection*{کلاس \en{comedy}}
+اسناد شماره ۱ و ۳ در کلاس \en{comedy} هستند:
+\begin{itemize}
+\item سند ۱: \en{fun(1), couple(1), love(2)}
+\item سند ۳: \en{couple(1), fly(1), fast(1), fun(2)}
+\end{itemize}
+جمع کل کلمات در کلاس \en{comedy}: $1+1+2+1+1+1+2 = 9$ کلمه
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش در کلاس \en{comedy}} \\
+\hline
+\en{fun} & $1 + 2 = 3$ \\
+\hline
+\en{couple} & $1 + 1 = 2$ \\
+\hline
+\en{love} & $2 + 0 = 2$ \\
+\hline
+\en{fast} & $0 + 1 = 1$ \\
+\hline
+\en{furious} & $0 + 0 = 0$ \\
+\hline
+\en{shoot} & $0 + 0 = 0$ \\
+\hline
+\en{fly} & $0 + 1 = 1$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{کلاس \en{action}}
+اسناد شماره ۲، ۴ و ۵ در کلاس \en{action} هستند:
+\begin{itemize}
+\item سند ۲: \en{fast(1), furious(1), shoot(1)}
+\item سند ۴: \en{furious(1), shoot(2), fun(1)}
+\item سند ۵: \en{fly(1), fast(1), shoot(1), love(1)}
+\end{itemize}
+جمع کل کلمات در کلاس \en{action}: $1+1+1+1+2+1+1+1+1+1 = 11$ کلمه
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش در کلاس \en{action}} \\
+\hline
+\en{fast} & $1 + 0 + 1 = 2$ \\
+\hline
+\en{furious} & $1 + 1 + 0 = 2$ \\
+\hline
+\en{shoot} & $1 + 2 + 1 = 4$ \\
+\hline
+\en{fly} & $0 + 0 + 1 = 1$ \\
+\hline
+\en{fun} & $0 + 1 + 0 = 1$ \\
+\hline
+\en{love} & $0 + 0 + 1 = 1$ \\
+\hline
+\en{couple} & $0 + 0 + 0 = 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{محاسبه احتمال پیشین (\en{Prior Probability})}
+با توجه به تعداد اسناد در هر کلاس:
+\[
+N_{\text{comedy}} = 2, \quad N_{\text{action}} = 3, \quad N_{\text{doc}} = 5
+\]
+\[
+P(\text{comedy}) = \frac{2}{5} = 0.4, \qquad P(\text{action}) = \frac{3}{5} = 0.6
+\]
+در فضای لگاریتم:
+\[
+\log P(\text{comedy}) = \log(0.4) \approx -0.9163, \quad \log P(\text{action}) = \log(0.6) \approx -0.5108
+\]
+
+\separator
+\section{محاسبه احتمالات شرطی (\en{Likelihood}) با استفاده از \en{Add-1 Smoothing}}
+بر اساس فرمول \en{add-1 smoothing}:
+
+\[
+\hat{P}(w_i|c) = \frac{\text{count}(w_i,c) + 1}{\left(\sum_{w \in V} \text{count}(w,c)\right) + |V|}
+\]
+
+\subsection*{کلاس \en{comedy}}
+مجموع شمارش‌ها در کلاس \en{comedy} = ۹، و $|V| = 7$:
+\[
+\text{مخرج} = 9 + 7 = 16
+\]
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{comedy})$ \\
+\hline
+\en{fun} & 3 & 4 & $4/16 = 0.25$ \\
+\hline
+\en{couple} & 2 & 3 & $3/16 = 0.1875$ \\
+\hline
+\en{love} & 2 & 3 & $3/16 = 0.1875$ \\
+\hline
+\en{fast} & 1 & 2 & $2/16 = 0.125$ \\
+\hline
+\en{fly} & 1 & 2 & $2/16 = 0.125$ \\
+\hline
+\en{furious} & 0 & 1 & $1/16 = 0.0625$ \\
+\hline
+\en{shoot} & 0 & 1 & $1/16 = 0.0625$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{کلاس \en{action}}
+مجموع شمارش‌ها در کلاس \en{action} = ۱۱، و $|V| = 7$:
+\[
+\text{مخرج} = 11 + 7 = 18
+\]
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{action})$ \\
+\hline
+\en{fast} & 2 & 3 & $3/18 = 0.1667$ \\
+\hline
+\en{furious} & 2 & 3 & $3/18 = 0.1667$ \\
+\hline
+\en{shoot} & 4 & 5 & $5/18 = 0.2778$ \\
+\hline
+\en{fly} & 1 & 2 & $2/18 = 0.1111$ \\
+\hline
+\en{fun} & 1 & 2 & $2/18 = 0.1111$ \\
+\hline
+\en{love} & 1 & 2 & $2/18 = 0.1111$ \\
+\hline
+\en{couple} & 0 & 1 & $1/18 = 0.0556$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{دسته‌بندی جمله تست}
+جمله تست:
+\begin{center}
+\textbf{\en{fast, couple, shoot, fly}}
+\end{center}
+
+این جمله شامل ۴ کلمه است: \en{fast, couple, shoot, fly}
+
+\subsection*{محاسبه برای کلاس \en{comedy}}
+\[
+\begin{aligned}
+P(\text{comedy}) \times \prod P(w|\text{comedy}) = 0.4 \times & P(\text{fast}|\text{comedy}) \times P(\text{couple}|\text{comedy}) \\
+& \times P(\text{shoot}|\text{comedy}) \times P(\text{fly}|\text{comedy})
+\end{aligned}
+\]
+\[
+= 0.4 \times 0.125 \times 0.1875 \times 0.0625 \times 0.125
+\]
+\[
+= 0.4 \times (0.125 \times 0.1875 = 0.0234375) \times (0.0625 \times 0.125 = 0.0078125)
+\]
+\[
+= 0.4 \times 0.0234375 \times 0.0078125
+\]
+\[
+= 0.4 \times 0.00018310546875
+\]
+\[
+= 7.32421875 \times 10^{-5}
+\]
+
+\subsection*{محاسبه برای کلاس \en{action}}
+\[
+\begin{aligned}
+P(\text{action}) \times \prod P(w|\text{action}) = 0.6 \times & P(\text{fast}|\text{action}) \times P(\text{couple}|\text{action}) \\
+& \times P(\text{shoot}|\text{action}) \times P(\text{fly}|\text{action})
+\end{aligned}
+\]
+\[
+= 0.6 \times 0.1667 \times 0.0556 \times 0.2778 \times 0.1111
+\]
+ابتدا ضرب دو به دو:
+\[
+0.1667 \times 0.0556 \approx 0.00926852
+\]
+\[
+0.2778 \times 0.1111 \approx 0.03086458
+\]
+\[
+0.00926852 \times 0.03086458 \approx 0.0002861
+\]
+در نهایت ضرب در ۰.۶:
+\[
+0.6 \times 0.0002861 = 1.7166 \times 10^{-4}
+\]
+
+\separator
+\section{مقایسه و نتیجه‌گیری نهایی}
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{کلاس} & \textbf{احتمال نهایی} \\
+\hline
+\en{Comedy} & $7.32 \times 10^{-5}$ \\
+\hline
+\en{Action} & $1.72 \times 10^{-4}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+از آنجا که:
+\[
+1.72 \times 10^{-4} > 7.32 \times 10^{-5}
+\]
+
+بنابراین:
+\[
+\boxed{\text{فیلم با کلمات \en{«fast, couple, shoot, fly»} به کلاس \textbf{اکشن (\en{action})} تعلق می‌گیرد.}}
+\]
+
+\separator
+\section{تحلیل شهودی}
+نکات قابل توجه در این محاسبه:
+
+\begin{enumerate}
+\item \textbf{تأثیر کلمات قوی (\en{Strong Words})}: کلماتی مانند \en{shoot} و \en{fast} در کلاس \en{action} احتمالات بالایی دارند (به ترتیب ۰.۲۷۷۸ و ۰.۱۶۶۷) در حالی که در کلاس \en{comedy} احتمال پایین‌تری دارند.
+
+\item \textbf{تأثیر هموارسازی \en{add-1}}: کلمه \en{couple} که در کلاس \en{action} دیده نشده بود، با \en{add-1 smoothing} احتمال غیرصفر $1/18 \approx 0.0556$ دریافت کرد. بدون هموارسازی، این کلمه احتمال صفر می‌داد و کل احتمال کلاس \en{action} صفر می‌شد.
+
+\item \textbf{تأثیر کلمه \en{fly}}: این کلمه در هر دو کلاس احتمال نسبتاً نزدیکی دارد (۰.۱۲۵ در \en{comedy} و ۰.۱۱۱۱ در \en{action}) و تأثیر تعیین‌کننده‌ای ندارد.
+
+\item \textbf{تأثیر احتمال پیشین}: احتمال پیشین کلاس \en{action} (۰.۶) بیشتر از \en{comedy} (۰.۴) است که به نفع کلاس \en{action} تمام می‌شود.
+\end{enumerate}
+
+این سوال به خوبی نشان می‌دهد که چگونه \textbf{هموارسازی \en{add-1}} مشکل صفر شدن احتمالات را حل می‌کند و مدل \en{Naive Bayes} می‌تواند با وجود کلمات دیده‌نشده در داده‌های آموزشی، دسته‌بندی معقولی انجام دهد.
+
+\thickseparator
+
+\end{document}

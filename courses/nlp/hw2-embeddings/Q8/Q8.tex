@@ -1,0 +1,260 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۲} \\[0.4cm] \small آموزش رگرسیون لجستیک با \en{Regularization} های \en{L1} و \en{L2}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: \en{Regularization} در رگرسیون لجستیک (بخش \en{۴-۱۴} کتاب)}
+
+در بخش \textbf{\en{۴-۱۴}} کتاب (\en{Advanced: Regularization})، مفهوم \textbf{منظم‌سازی (\en{Regularization})} به عنوان راهکاری برای جلوگیری از \textbf{بیش‌برازش (\en{overfitting})} معرفی شده است. زمانی که مدل بیش از حد به داده‌های آموزشی منطبق می‌شود، ممکن است نویزهای تصادفی را نیز یاد بگیرد و در نتیجه عملکرد خوبی روی داده‌های تست نداشته باشد. برای حل این مشکل، یک عبارت منظم‌سازی \(R(\theta)\) به تابع هزینه اضافه می‌شود.
+
+بر اساس معادله \en{۴-۴۹} کتاب، تابع هزینه با \en{Regularization} به صورت زیر است (به صورت کمینه‌سازی تابع هزینه منفی لگاریتم درست‌نمایی):
+
+\[
+\hat{\theta} = \arg\min_{\theta} \left( -\sum_{i=1}^{m} \log P(y^{(i)}|x^{(i)};\theta) + \alpha R(\theta) \right)
+\]
+
+دو نوع رایج منظم‌سازی در کتاب معرفی شده است:
+
+\subsection{منظم‌سازی \en{L2} ( \en{Ridge} )}
+طبق معادله \en{۴-۵۰} و \en{۴-۵۱} کتاب:
+
+\[
+R(\theta) = \|\theta\|_2^2 = \sum_{j=1}^{n} w_j^2
+\]
+
+تابع هزینه منظم‌شده:
+\[
+\hat{\theta} = \arg\min_{\theta} \left( -\sum_{i=1}^{m} \log P(y^{(i)}|x^{(i)};\theta) + \alpha \sum_{j=1}^{n} w_j^2 \right)
+\]
+
+مشتق عبارت منظم‌سازی نسبت به \(w_j\):
+\[
+\frac{\partial}{\partial w_j} (\alpha w_j^2) = 2\alpha w_j
+\]
+
+\newpage
+\subsection{منظم‌سازی \en{L1} ( \en{LASSO} )}
+طبق معادله \en{۴-۵۲} و \en{۴-۵۳} کتاب:
+
+\[
+R(\theta) = \|\theta\|_1 = \sum_{j=1}^{n} |w_j|
+\]
+
+تابع هزینه منظم‌شده:
+\[
+\hat{\theta} = \arg\min_{\theta} \left( -\sum_{i=1}^{m} \log P(y^{(i)}|x^{(i)};\theta) + \alpha \sum_{j=1}^{n} |w_j| \right)
+\]
+
+مشتق عبارت منظم‌سازی نسبت به \(w_j\) (به جز در نقطه صفر):
+\[
+\frac{\partial}{\partial w_j} (\alpha |w_j|) = \alpha \cdot \text{sign}(w_j)
+\]
+
+که در آن تابع علامت به صورت زیر تعریف می‌شود:
+\[
+\text{sign}(w_j) = 
+\begin{cases} 
++1 & \text{\en{if }} w_j > 0 \\
+-1 & \text{\en{if }} w_j < 0 \\
+\text{تعریف‌نشده} & \text{\en{if }} w_j = 0
+\end{cases}
+\]
+
+\separator
+\section{داده‌های مسأله}
+
+\begin{align*}
+\text{:بردار ویژگی} &\quad x = [2,\; -1] \\
+\text{:برچسب واقعی} &\quad y = 1 \\
+\text{:وزن‌های فعلی} &\quad w = [0.5,\; -0.25] \\
+\text{:مقدار بایاس} &\quad b = 0 \\
+\text{:پارامتر منظم‌سازی} &\quad \lambda = \alpha = 0.1
+\end{align*}
+
+\separator
+\section{گام ۱: محاسبه خروجی مدل و خطا}
+
+ابتدا مقدار \(z = w \cdot x + b\) را محاسبه می‌کنیم:
+
+\[
+z = (0.5 \times 2) + (-0.25 \times -1) + 0 = 1 + 0.25 = 1.25
+\]
+
+سپس خروجی مدل (احتمال کلاس مثبت) را با تابع سیگموئید محاسبه می‌کنیم:
+
+\[
+\hat{y} = \sigma(z) = \frac{1}{1 + e^{-1.25}}
+\]
+
+مقدار \(e^{-1.25} \approx 0.2865\)، بنابراین:
+
+\[
+\hat{y} \approx \frac{1}{1 + 0.2865} = \frac{1}{1.2865} \approx 0.7773
+\]
+
+خطای مدل (تفاوت بین خروجی و برچسب واقعی):
+
+\[
+\hat{y} - y = 0.7773 - 1 = -0.2227
+\]
+
+\separator
+\section{گام ۲: محاسبه گرادیان بدون \en{Regularization}}
+
+بر اساس بخش \textbf{\en{۴-۶-۱} کتاب} (معادله \en{۴-۲۶})، گرادیان تابع هزینه کراس-آنتروپی نسبت به هر وزن \(w_j\) به صورت زیر است:
+
+\[
+\frac{\partial L}{\partial w_j} = (\hat{y} - y) \cdot x_j
+\]
+
+بنابراین:
+
+\[
+\frac{\partial L}{\partial w_1} = (\hat{y} - y) \cdot x_1 = (-0.2227) \times 2 = -0.4454
+\]
+
+\[
+\frac{\partial L}{\partial w_2} = (\hat{y} - y) \cdot x_2 = (-0.2227) \times (-1) = 0.2227
+\]
+
+\begin{center}
+\fbox{\parbox{0.7\linewidth}{\centering
+\textbf{گرادیان بدون \en{Regularization}:} \\
+\[
+\nabla L = [-0.4454,\; 0.2227]
+\]
+}}
+\end{center}
+
+\separator
+\section{گام ۳: محاسبه گرادیان با \en{L2 Regularization} ( \en{Ridge} )}
+
+در منظم‌سازی \en{L2}، عبارت منظم‌سازی به صورت \(\lambda \sum w_j^2\) به تابع هزینه اضافه می‌شود. مشتق این عبارت نسبت به \(w_j\) برابر با \(2\lambda w_j\) است. بنابراین گرادیان کل به صورت زیر محاسبه می‌شود:
+
+\[
+\frac{\partial L_{L2}}{\partial w_j} = \frac{\partial L}{\partial w_j} + 2\lambda w_j
+\]
+
+\begin{align*}
+\frac{\partial L_{L2}}{\partial w_1} &= -0.4454 + 2 \times 0.1 \times 0.5 = -0.4454 + 0.1 = -0.3454 \\[4pt]
+\frac{\partial L_{L2}}{\partial w_2} &= 0.2227 + 2 \times 0.1 \times (-0.25) = 0.2227 - 0.05 = 0.1727
+\end{align*}
+
+\begin{center}
+\fbox{\parbox{0.7\linewidth}{\centering
+\textbf{گرادیان با \en{L2 Regularization}:} \\
+\[
+\nabla L_{L2} = [-0.3454,\; 0.1727]
+\]
+}}
+\end{center}
+
+\separator
+\section{گام ۴: محاسبه گرادیان با \en{L1 Regularization} ( \en{LASSO} )}
+
+در منظم‌سازی \en{L1}، عبارت منظم‌سازی به صورت \(\lambda \sum |w_j|\) به تابع هزینه اضافه می‌شود. مشتق این عبارت نسبت به \(w_j\) برابر با \(\lambda \cdot \text{sign}(w_j)\) است. بنابراین گرادیان کل به صورت زیر محاسبه می‌شود:
+
+\[
+\frac{\partial L_{L1}}{\partial w_j} = \frac{\partial L}{\partial w_j} + \lambda \cdot \text{sign}(w_j)
+\]
+
+برای \(w_1 = 0.5 > 0\)، علامت \(w_1\) برابر \(+1\) است.
+برای \(w_2 = -0.25 < 0\)، علامت \(w_2\) برابر \(-1\) است.
+
+\begin{align*}
+\frac{\partial L_{L1}}{\partial w_1} &= -0.4454 + 0.1 \times (+1) = -0.4454 + 0.1 = -0.3454 \\[4pt]
+\frac{\partial L_{L1}}{\partial w_2} &= 0.2227 + 0.1 \times (-1) = 0.2227 - 0.1 = 0.1227
+\end{align*}
+
+\begin{center}
+\fbox{\parbox{0.7\linewidth}{\centering
+\textbf{گرادیان با \en{L1 Regularization}:} \\
+\[
+\nabla L_{L1} = [-0.3454,\; 0.1227]
+\]
+}}
+\end{center}
+
+\separator
+\section{مقایسه سه گرادیان محاسبه‌شده}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{وزن} & \textbf{بدون \en{Reg}} & \textbf{\en{L2 Ridge}} & \textbf{\en{L1 LASSO}} \\
+\hline
+\(w_1 = 0.5\) & \(-0.4454\) & \(-0.3454\) & \(-0.3454\) \\
+\hline
+\(w_2 = -0.25\) & \(0.2227\) & \(0.1727\) & \(0.1227\) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{تحلیل مقایسه‌ای}
+
+\begin{enumerate}
+    \item \textbf{تأثیر روی \(w_1\) (وزن مثبت):}
+    \begin{itemize}
+        \item هر دو نوع منظم‌سازی، مقدار گرادیان را \textbf{افزایش} دادند (از \(-0.4454\) به \(-0.3454\)).
+        \item دلیل: عبارت منظم‌سازی \(2\lambda w_1\) برای \en{L2} و \(\lambda\) برای \en{L1} هر دو مثبت هستند و به گرادیان منفی اضافه می‌شوند.
+        \item در این مثال خاص، هر دو منظم‌سازی مقدار یکسانی برای \(w_1\) تولید کردند.
+    \end{itemize}
+    
+    \item \textbf{تأثیر روی \(w_2\) (وزن منفی):}
+    \begin{itemize}
+        \item در \en{L2}: گرادیان از \(0.2227\) به \(0.1727\) \textbf{کاهش} یافت (چون \(2\lambda w_2\) منفی بود).
+        \item در \en{L1}: گرادیان از \(0.2227\) به \(0.1227\) \textbf{کاهش بیشتری} یافت (چون \(\lambda \cdot \text{sign}(w_2) = -0.1\)).
+        \item \textbf{نکته مهم:} در منظم‌سازی \en{L1}، تأثیر روی وزن‌های منفی بیشتر است زیرا علامت \(\text{sign}(w_2) = -1\) است.
+    \end{itemize}
+    
+    \item \textbf{تفاوت کلیدی بین \en{L1} و \en{L2}:}
+    \begin{itemize}
+        \item مطابق با بخش \textbf{\en{۴-۱۴} کتاب}: منظم‌سازی \en{L2} وزن‌ها را به سمت صفر میل می‌دهد اما به ندرت دقیقاً صفر می‌کند (وزن‌های کوچک اما غیرصفر).
+        \item منظم‌سازی \en{L1} می‌تواند وزن‌ها را \textbf{دقیقاً صفر} کند و راه‌حل‌های \textbf{پراکنده (\en{sparse})} ایجاد کند.
+        \item در این مثال، \(\nabla L_{L1}\) برای \(w_2\) کوچک‌تر از \(\nabla L_{L2}\) است، که نشان می‌دهد \en{L1} فشار بیشتری برای کاهش وزن‌های منفی اعمال می‌کند.
+    \end{itemize}
+\end{enumerate}
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{center}
+\fbox{\parbox{0.95\linewidth}{\centering
+\textbf{پاسخ نهایی:}
+\begin{itemize}
+    \item \textbf{گرادیان بدون \en{Regularization}:} \(\nabla L = [-0.4454,\; 0.2227]\)
+    \item \textbf{گرادیان با \en{L2} (\en{Ridge}):} \(\nabla L_{L2} = [-0.3454,\; 0.1727]\)
+    \item \textbf{گرادیان با \en{L1} (\en{LASSO}):} \(\nabla L_{L1} = [-0.3454,\; 0.1227]\)
+\end{itemize}
+\textbf{مقایسه:} هر دو نوع منظم‌سازی باعث کاهش قدر مطلق گرادیان شدند. تأثیر \en{L1} روی وزن منفی \(w_2\) قوی‌تر از \en{L2} بود، که این امر با خاصیت \textbf{پراکندگی (\en{sparsity})} منظم‌سازی \en{L1} همخوانی دارد و در بلندمدت می‌تواند برخی وزن‌ها را دقیقاً به صفر برساند.
+}}
+\end{center}
+
+\thickseparator
+
+\end{document}

@@ -1,0 +1,166 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۳} \\[0.4cm] \small مدل Skip-Gram با نمونه‌گیری منفی (SGNS)}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: مدل Skip-Gram با نمونه‌گیری منفی (SGNS)}
+
+\subsection{معرفی مدل Word2vec و Skip-Gram}
+در بخش \textbf{۵.۵ کتاب}، مدل \textbf{word2vec} به عنوان روشی برای تولید بردارهای کلمه (embeddings) با ابعاد کم و متراکم معرفی شده است. برخلاف روش‌های مبتنی بر شمارش ساده (بخش ۵.۳) که بردارهای بسیار طویل و پراکنده (sparse) تولید می‌کنند، word2vec بردارهایی با ابعاد \(d\) (معمولاً بین ۵۰ تا ۱۰۰۰) تولید می‌کند که مقادیر آنها حقیقی و می‌توانند منفی باشند.
+
+الگوریتم \textbf{Skip-Gram} یکی از دو الگوریتم موجود در word2vec است. ایده اصلی آن به این صورت است:
+
+\begin{itemize}
+    \item به ازای هر کلمه هدف \(w\)، کلمات همسایه آن در پنجره‌ای به طول \(L\) را به عنوان \textbf{نمونه‌های مثبت} در نظر می‌گیریم.
+    \item کلمات تصادفی از دایره واژگان را به عنوان \textbf{نمونه‌های منفی} انتخاب می‌کنیم.
+    \item یک طبقه‌بند Logistic Regression آموزش می‌دهیم تا بین این دو دسته تمایز قائل شود.
+    \item وزن‌های یادگرفته شده توسط این طبقه‌بند، همان بردارهای کلمه (embeddings) خواهند بود.
+\end{itemize}
+
+\subsection{نمونه‌گیری منفی \en{(Negative Sampling)}}
+در بخش \textbf{۵.۵.۲ کتاب}، روش \textbf{نمونه‌گیری منفی \en{(Negative Sampling)}} توضیح داده شده است. به ازای هر نمونه مثبت \((w, c_{pos})\)، تعداد \(k\) نمونه منفی \((w, c_{neg})\) از دایره واژگان نمونه‌برداری می‌شود. احتمال انتخاب هر کلمه به عنوان نمونه منفی، متناسب با بسامد آن کلمه به توان \(\alpha = 0.75\) است:
+
+\[
+P_\alpha(w) = \frac{\text{count}(w)^\alpha}{\sum_{w'} \text{count}(w')^\alpha}
+\]
+
+\subsection{تابع هزینه \en{(Loss Function)}}
+طبق \textbf{معادله \en{۵-۲۱} کتاب}، تابع هزینه برای یک جفت \((w, c_{pos})\) و \(k\) نمونه منفی \(c_{neg_1}, ..., c_{neg_k}\) به صورت زیر تعریف می‌شود:
+
+\[
+L(w, c_{pos}, c_{neg_1..k}) = -\log P(+|w, c_{pos}) - \sum_{i=1}^{k} \log P(-|w, c_{neg_i})
+\]
+
+با جایگذاری تعاریف \(P(+|w,c) = \sigma(c \cdot w)\) و \(P(-|w,c) = \sigma(-c \cdot w)\):
+
+\[
+\boxed{L = -\log \sigma(c_{pos} \cdot w) - \sum_{i=1}^{k} \log \sigma(-c_{neg_i} \cdot w)}
+\]
+
+هدف الگوریتم، کمینه کردن این تابع هزینه است؛ یعنی بیشینه کردن تشابه (دترمین داخلی) بین بردار کلمه هدف و بردار کلمات زمینه واقعی، و کمینه کردن تشابه بین بردار کلمه هدف و بردار نمونه‌های منفی.
+
+\thickseparator
+
+\section{حل گام‌به‌گام مسأله}
+
+\subsection{داده‌های مسأله}
+\begin{align*}
+\text{:بردار کلمه هدف \en{(Target word)}} \quad v_w &= [0.4, \; 0.3] \\
+\text{:بردار کلمه زمینه واقعی \en{(True Context)}} \quad v_c &= [0.5, \; 0.5] \\
+\text{:نمونه منفی ۱} \quad v_{n_1} &= [0.2, \; 0.1] \\
+\text{:نمونه منفی ۲} \quad v_{n_2} &= [0.1, \; -0.3] \\
+\text{:تعداد نمونه‌های منفی} \quad k &= 2
+\end{align*}
+
+\subsection{گام ۱: محاسبه دترمین داخلی \en{(Dot Product)} برای هر جفت}
+دترمین داخلی دو بردار \(a = [a_1, a_2]\) و \(b = [b_1, b_2]\) به صورت \(a \cdot b = a_1b_1 + a_2b_2\) محاسبه می‌شود.
+
+\begin{align*}
+v_c \cdot v_w &= (0.5 \times 0.4) + (0.5 \times 0.3) = 0.20 + 0.15 = 0.35 \\[4pt]
+v_{n_1} \cdot v_w &= (0.2 \times 0.4) + (0.1 \times 0.3) = 0.08 + 0.03 = 0.11 \\[4pt]
+v_{n_2} \cdot v_w &= (0.1 \times 0.4) + (-0.3 \times 0.3) = 0.04 - 0.09 = -0.05
+\end{align*}
+
+\subsection{گام ۲: اعمال تابع سیگموئید \(\sigma(x) = \frac{1}{1+e^{-x}}\)}
+برای محاسبه \(\sigma(c_{pos} \cdot w) = \sigma(0.35)\) و \(\sigma(-c_{neg} \cdot w)\) به مقادیر زیر نیاز داریم:
+
+ابتدا \(e^{-0.35}\) و \(e^{0.35}\) را تقریب می‌زنیم (\(e^{0.35} \approx 1.419\) و \(e^{-0.35} \approx 0.7047\)):
+
+\[
+\sigma(0.35) = \frac{1}{1 + e^{-0.35}} = \frac{1}{1 + 0.7047} = \frac{1}{1.7047} \approx 0.5866
+\]
+
+برای \(\sigma(-v_{n_1} \cdot v_w) = \sigma(-0.11)\) و \(\sigma(-v_{n_2} \cdot v_w) = \sigma(0.05)\):
+
+\[
+\sigma(-0.11) = \frac{1}{1 + e^{0.11}} \quad,\quad e^{0.11} \approx 1.1163 \quad,\quad \sigma(-0.11) = \frac{1}{2.1163} \approx 0.4725
+\]
+
+\[
+\sigma(0.05) = \frac{1}{1 + e^{-0.05}} \quad,\quad e^{-0.05} \approx 0.9512 \quad,\quad \sigma(0.05) = \frac{1}{1.9512} \approx 0.5125
+\]
+
+\subsection{گام ۳: محاسبه لگاریتم طبیعی \en{(Natural Logarithm)}}
+با استفاده از \(\log\) طبیعی (مبنای \(e\)):
+
+\[
+\log \sigma(0.35) = \log(0.5866) \approx -0.5335
+\]
+
+\[
+\log \sigma(-0.11) = \log(0.4725) \approx -0.7495
+\]
+
+\[
+\log \sigma(0.05) = \log(0.5125) \approx -0.6685
+\]
+
+\subsection{گام ۴: محاسبه نهایی \en{Loss} با استفاده از فرمول معادله \en{۵-۲۱}}
+\begin{align*}
+L &= -\log \sigma(c_{pos} \cdot w) - \sum_{i=1}^{k} \log \sigma(-c_{neg_i} \cdot w) \\
+&= -(\log \sigma(0.35)) - \big[ \log \sigma(-0.11) + \log \sigma(0.05) \big] \\
+&= -(-0.5335) - \big[ (-0.7495) + (-0.6685) \big] \\
+&= 0.5335 - \big[ -1.4180 \big] \\
+&= 0.5335 + 1.4180 \\
+&= 1.9515
+\end{align*}
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{itemize}
+    \item \textbf{دترمین داخلی‌ها:} \(v_c \cdot v_w = 0.35\)، \(v_{n_1} \cdot v_w = 0.11\)، \(v_{n_2} \cdot v_w = -0.05\)
+    \item \textbf{مقادیر سیگموئید:} \(\sigma(0.35) \approx 0.5866\)، \(\sigma(-0.11) \approx 0.4725\)، \(\sigma(0.05) \approx 0.5125\)
+    \item \textbf{لگاریتم مقادیر:} \(\log\sigma(0.35) \approx -0.5335\)، \(\log\sigma(-0.11) \approx -0.7495\)، \(\log\sigma(0.05) \approx -0.6685\)
+\end{itemize}
+
+\thickseparator
+\begin{center}
+\fbox{\parbox{0.85\linewidth}{\centering
+\textbf{پاسخ نهایی:} \\
+مقدار \en{Loss} برای این نمونه آموزشی برابر است با:
+\[
+\boxed{L \approx 1.9515}
+\]
+}}
+\end{center}
+
+\thickseparator
+
+\section{نکته: ارتباط با فرمول کتاب}
+طبق \textbf{معادله \en{۵-۲۱}} در کتاب:
+
+\[
+L(w, c_{pos}, c_{neg_1..k}) = -\log \sigma(c_{pos} \cdot w) - \sum_{i=1}^{k} \log \sigma(-c_{neg_i} \cdot w)
+\]
+
+همانطور که مشاهده می‌شود، جمله اول (\(-\log \sigma(c_{pos} \cdot w)\)) سعی می‌کند تشابه بین \(v_w\) و \(v_c\) را بیشینه کند (زیرا هرچه این تشابه بیشتر باشد، \(\sigma\) به ۱ نزدیک‌تر و \(-\log\sigma\) به صفر نزدیک‌تر می‌شود). جمله دوم (\(-\sum \log \sigma(-c_{neg} \cdot w)\)) سعی می‌کند تشابه بین \(v_w\) و نمونه‌های منفی را کمینه کند (زیرا هرچه این تشابه کمتر باشد، \(-c_{neg} \cdot w\) بزرگتر، \(\sigma\) به ۱ نزدیک‌تر و \(-\log\sigma\) به صفر نزدیک‌تر می‌شود). مقدار محاسبه‌شده \(L \approx 1.95\) نشان‌دهنده این است که مدل هنوز فاصله زیادی با وضعیت بهینه دارد.
+
+\thickseparator
+
+\end{document}

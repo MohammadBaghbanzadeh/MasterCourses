@@ -1,0 +1,182 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۲} \\[0.4cm] \small رگرسیون لجستیک برای تحلیل احساسات}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: رگرسیون لجستیک برای تحلیل احساسات}
+
+\subsection{رگرسیون لجستیک و تابع سیگموئید}
+در مسائل رده‌بندی دودویی (مانند تشخیص مثبت یا منفی بودن احساسات یک متن)، مدل رگرسیون لجستیک احتمال تعلق نمونه به کلاس مثبت (معمولاً \(y=1\)) را محاسبه می‌کند. این کار با استفاده از \textbf{تابع سیگموئید} انجام می‌شود:
+
+\[
+\sigma(z) = \frac{1}{1 + e^{-z}}
+\]
+
+که در آن \(z\) ترکیب خطی ویژگی‌ها و وزن‌ها به اضافهٔ بایاس است:
+
+\[
+z = w \cdot x + b = \sum_{j=1}^{n} w_j x_j + b
+\]
+
+بنابراین خروجی مدل (احتمال کلاس مثبت) برابر است با:
+
+\[
+\hat{y} = P(y=1|x) = \sigma(w \cdot x + b)
+\]
+
+\subsection{آستانه تصمیم‌گیری \en{(Decision Boundary)}}
+برای تبدیل این احتمال به یک تصمیم رده‌بندی، از یک \textbf{آستانه} استفاده می‌شود. رایج‌ترین مقدار آستانه، \(0.5\) است:
+
+\[
+\text{کلاس پیش‌بینی‌شده} = 
+\begin{cases} 
+1 & \text{\en{if }} \hat{y} \ge 0.5 \\
+0 & \text{\en{if }} \hat{y} < 0.5
+\end{cases}
+\]
+
+این قاعده در بخش \textbf{۴.۳ کتاب} تحت عنوان \en{Classification with Logistic Regression} توضیح داده شده است. در مثال کتاب (شکل ۴.۲)، برای یک نمونه با \(\hat{y}=0.70\)، تصمیم به کلاس \(1\) (احساس مثبت) گرفته شده است.
+
+\subsection{تابع هزینهٔ کراس-آنتروپی \en{(Cross-Entropy Loss)}}
+برای اندازه‌گیری خطای مدل، از \textbf{تابع هزینهٔ کراس-آنتروپی} استفاده می‌شود. این تابع در بخش \textbf{۴.۵ کتاب} به تفصیل معرفی شده است. فرمول آن برای یک نمونه \((x, y)\) به صورت زیر است:
+
+\[
+L_{CE}(\hat{y}, y) = -[y \log \hat{y} + (1-y) \log(1-\hat{y})]
+\]
+
+\begin{itemize}
+    \item اگر \(y=1\) (نمونه مثبت)، فرمول ساده می‌شود به \(L = -\log \hat{y}\)
+    \item اگر \(y=0\) (نمونه منفی)، فرمول ساده می‌شود به \(L = -\log(1-\hat{y})\)
+\end{itemize}
+
+همان‌طور که در مثال کتاب دیده می‌شود، هرچه \(\hat{y}\) به \(y\) نزدیک‌تر باشد، مقدار loss کوچک‌تر خواهد بود. برای نمونهٔ کتاب با \(\hat{y}=0.70\) و \(y=1\)، مقدار loss برابر \(-\log(0.70) \approx 0.36\) محاسبه شده است.
+
+\thickseparator
+
+\section{حل گام‌به‌گام مسأله}
+
+\subsection{داده‌های مسأله}
+\begin{align*}
+w &= [1.2,\ -0.8,\ 2.5,\ -1.1] \\
+b &= 0.3 \\
+x &= [2,\ 1,\ 0,\ 3] \quad \text{(شمارش وقوع کلمات: \en{terrible, masterpiece, excellent, boring})}
+\end{align*}
+
+\subsection{گام ۱: محاسبهٔ خروجی مدل (احتمال کلاس مثبت)}
+ابتدا مقدار \(z\) را محاسبه می‌کنیم:
+
+\[
+z = w \cdot x + b = (1.2 \times 2) + (-0.8 \times 1) + (2.5 \times 0) + (-1.1 \times 3) + 0.3
+\]
+
+\[
+z = 2.4 - 0.8 + 0 - 3.3 + 0.3 = (2.4 - 0.8) = 1.6, \quad 1.6 - 3.3 = -1.7, \quad -1.7 + 0.3 = -1.4
+\]
+
+\[
+z = -1.4
+\]
+
+حال تابع سیگموئید را اعمال می‌کنیم:
+
+\[
+\hat{y} = \sigma(-1.4) = \frac{1}{1 + e^{-(-1.4)}} = \frac{1}{1 + e^{1.4}}
+\]
+
+مقدار \(e^{1.4}\) را تقریب می‌زنیم (\(e^{1.4} \approx 4.0552\)):
+
+\[
+\hat{y} \approx \frac{1}{1 + 4.0552} = \frac{1}{5.0552} \approx 0.1978
+\]
+
+\subsection{گام ۲: تعیین کلاس نمونه با آستانه \(0.5\)}
+از آنجا که \(\hat{y} \approx 0.1978\) و این مقدار از \(0.5\) کوچک‌تر است، طبق قاعدهٔ تصمیم‌گیری:
+
+\[
+\text{کلاس پیش‌بینی‌شده} = 0
+\]
+
+بنابراین مدل این سند را به \textbf{کلاس منفی (احساس منفی)} تعلق می‌دهد.
+
+\separator
+\subsection{گام ۳: محاسبهٔ مقدار Loss با فرض برچسب واقعی منفی (\(y=0\))}
+در سوال گفته شده: «اگر برچسب واقعی این سند منفی است». بنابراین \(y = 0\).
+
+برای \(y=0\)، فرمول کراس-آنتروپی ساده می‌شود به:
+
+\[
+L_{CE}(\hat{y}, y=0) = -\log(1-\hat{y})
+\]
+
+مقدار \(\hat{y} \approx 0.1978\) را جایگذاری می‌کنیم:
+
+\[
+1 - \hat{y} = 1 - 0.1978 = 0.8022
+\]
+
+\[
+L = -\log(0.8022)
+\]
+
+با استفاده از لگاریتم طبیعی (همان‌طور که در مثال کتاب از \(\log\) طبیعی استفاده شده است):
+
+\[
+\log(0.8022) \approx -0.2204
+\]
+
+بنابراین:
+
+\[
+L = -(-0.2204) = 0.2204
+\]
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{itemize}
+    \item \textbf{کلاس پیش‌بینی‌شده برای نمونه \(x = [2,1,0,3]\):}  
+    با توجه به \(\hat{y} \approx 0.1978 < 0.5\)، نمونه به \textbf{کلاس ۰ (منفی)} تعلق دارد.
+    
+    \item \textbf{مقدار Loss با فرض برچسب واقعی \(y = 0\):}  
+    \[
+    L_{CE} \approx 0.2204
+    \]
+\end{itemize}
+
+% \thickseparator
+% \begin{center}
+% \fbox{\parbox{0.9\linewidth}{\centering
+% \textbf{پاسخ نهایی:} \\
+% ۱) کلاس پیش‌بینی‌شده: \(0\) (منفی) \\
+% ۲) مقدار \en{Loss}: \(0.2204\)
+% }}
+% \end{center}
+
+\thickseparator
+
+\end{document}

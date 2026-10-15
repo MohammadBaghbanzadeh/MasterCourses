@@ -1,0 +1,220 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۲} \\[0.4cm] \small شبکه عصبی برای تحلیل احساسات با \en{Embedding}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: معماری شبکه عصبی با \en{Embedding} (فصل \en{۶} کتاب)}
+
+بر اساس بخش‌های \textbf{\en{۶-۱}}، \textbf{\en{۶-۳}}، \textbf{\en{۶-۴}} و \textbf{\en{۶-۵}} کتاب، شبکه عصبی ارائه شده در سوال دارای معماری زیر است:
+
+\begin{itemize}
+    \item \textbf{لایه \en{Embedding}}: تبدیل ایندکس کلمات به بردارهای با ابعاد \(d=2\)
+    \item \textbf{لایه پنهان (\en{Hidden Layer})}: دو نورون با تابع فعال‌سازی \textbf{\en{ReLU}}
+    \item \textbf{لایه خروجی (\en{Output Layer})}: یک نورون با تابع فعال‌سازی \textbf{\en{Sigmoid}}
+    \item \textbf{بایاس‌ها}: تمام بایاس‌ها صفر در نظر گرفته شده‌اند
+\end{itemize}
+
+\separator
+\section{داده‌های مسأله}
+
+\subsection{ماتریس \en{Embedding} (E)}
+\[
+E = 
+\begin{bmatrix}
+0.2 & -0.1 \\
+0.5 & 0.3 \\
+-0.4 & 0.2 \\
+0.1 & 0.0
+\end{bmatrix}
+\]
+به طوری که:
+\begin{itemize}
+    \item \en{index 0}: \( [0.2, -0.1] \)
+    \item \en{index 1}: \( [0.5, 0.3] \)
+    \item \en{index 2}: \( [-0.4, 0.2] \)
+    \item \en{index 3}: \( [0.1, 0.0] \)
+\end{itemize}
+
+\subsection{وزن‌های شبکه}
+
+\[
+W^{(1)} = 
+\begin{bmatrix}
+0.8 & -0.2 \\
+0.1 & 0.6
+\end{bmatrix}
+\quad,\quad
+W^{(2)} = 
+\begin{bmatrix}
+0.5 \\
+-0.3
+\end{bmatrix}
+\]
+
+\separator
+\section{فرض: انتخاب روش \en{Pooling} و ایندکس کلمات}
+
+برای ادامه حل، فرض می‌کنیم:
+
+\[
+\text{ایندکس کلمه اول} = 1 \quad,\quad \text{ایندکس کلمه دوم} = 2
+\]
+
+همچنین برای محاسبه \en{Embedding} سند، از روش \textbf{میانگین گیری (\en{Mean Pooling})} استفاده می‌کنیم (بخش \en{۶-۵} کتاب، معادله \en{۶-۲۱}).
+
+\separator
+\section{گام ۱: استخراج \en{Embedding} کلمات از ماتریس E}
+
+\begin{align*}
+e_{\text{word}_1} &= E[1] = [0.5, 0.3] \\
+e_{\text{word}_2} &= E[2] = [-0.4, 0.2]
+\end{align*}
+
+\separator
+\section{گام ۲: محاسبه \en{Embedding} سند با روش میانگین گیری}
+
+\[
+e_{\text{doc}} = \frac{1}{2} \left( e_{\text{word}_1} + e_{\text{word}_2} \right) = \frac{1}{2} \left( [0.5, 0.3] + [-0.4, 0.2] \right)
+\]
+
+\[
+e_{\text{doc}} = \frac{1}{2} \left( [0.5 - 0.4,\; 0.3 + 0.2] \right) = \frac{1}{2} [0.1, 0.5] = [0.05, 0.25]
+\]
+
+\separator
+\section{گام ۳: محاسبه \en{Forward Pass} شبکه}
+
+\subsection{محاسبه لایه پنهان \(h\)}
+
+\[
+h_{\text{net}} = W^{(1)} \cdot e_{\text{doc}}^T = 
+\begin{bmatrix}
+0.8 & -0.2 \\
+0.1 & 0.6
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+0.05 \\
+0.25
+\end{bmatrix}
+\]
+
+\begin{align*}
+h_{\text{net},1} &= 0.8 \times 0.05 + (-0.2) \times 0.25 = 0.04 - 0.05 = -0.01 \\
+h_{\text{net},2} &= 0.1 \times 0.05 + 0.6 \times 0.25 = 0.005 + 0.15 = 0.155
+\end{align*}
+
+اعمال تابع \en{ReLU} (بخش \en{۶-۱} کتاب، معادله \en{۶-۶}):
+
+\[
+\text{ReLU}(x) = 
+\begin{cases} 
+x & if x > 0 \\
+0 & if x \le 0
+\end{cases}
+\]
+
+\[
+h_1 = \text{ReLU}(-0.01) = 0
+\]
+\[
+h_2 = \text{ReLU}(0.155) = 0.155
+\]
+
+\[
+h = [0, \; 0.155]
+\]
+
+\subsection{محاسبه لایه خروجی \(y\)}
+
+\[
+y_{\text{net}} = W^{(2)} \cdot h^T = 
+\begin{bmatrix}
+0.5 & -0.3
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+0 \\
+0.155
+\end{bmatrix}
+= 0 \times 0.5 + 0.155 \times (-0.3) = -0.0465
+\]
+
+اعمال تابع \en{Sigmoid} (بخش \en{۶-۱} کتاب، معادله \en{۶-۳}):
+
+\[
+\hat{y} = \sigma(y_{\text{net}}) = \frac{1}{1 + e^{-(-0.0465)}} = \frac{1}{1 + e^{0.0465}}
+\]
+
+مقدار \(e^{0.0465} \approx 1.0476\)، بنابراین:
+
+\[
+\hat{y} \approx \frac{1}{1 + 1.0476} = \frac{1}{2.0476} \approx 0.4884
+\]
+
+\separator
+\section{گام ۴: محاسبه مقدار \en{Loss}}
+
+از آنجا که برچسب واقعی در سوال مشخص نشده، فرض می‌کنیم \(y = 1\) (کلاس مثبت). تابع هزینه از نوع \textbf{باینری کراس-آنتروپی} است (بخش \en{۶-۶-۱} کتاب، معادله \en{۶-۲۵}):
+
+\[
+L(\hat{y}, y) = -[y \log \hat{y} + (1-y) \log(1-\hat{y})]
+\]
+
+با \(y = 1\):
+
+\[
+L = -\log(\hat{y}) = -\log(0.4884)
+\]
+
+\[
+\log(0.4884) \approx -0.7169
+\]
+
+\[
+L \approx -(-0.7169) = 0.7169
+\]
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{center}
+\fbox{\parbox{0.9\linewidth}{\centering
+\textbf{پاسخ نهایی:}
+\begin{itemize}
+    \item \textbf{\en{Embedding} سند (با میانگین گیری):} \(e_{\text{doc}} = [0.05, 0.25]\)
+    \item \textbf{خروجی لایه پنهان:} \(h = [0, 0.155]\)
+    \item \textbf{خروجی نهایی مدل:} \(\hat{y} \approx 0.4884\)
+    \item \textbf{مقدار \en{Loss} (با فرض \(y=1\)):} \(L \approx 0.7169\)
+\end{itemize}
+}}
+\end{center}
+
+\thickseparator
+
+\end{document}

@@ -1,0 +1,48 @@
+\documentclass[a4paper,12pt]{article}
+
+% --- Essential Packages ---
+\usepackage{geometry}
+\geometry{top=3cm, bottom=3cm, left=2.5cm, right=2.5cm}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{booktabs} % T5.2: booktabs
+\usepackage[ruled,linesnumbered]{algorithm2e} % T5.2: algorithm2e
+\usepackage{pgfplots} % T5.2: pgfplots
+\pgfplotsset{compat=1.18}
+\usepackage{hyperref}
+\usepackage{cite}
+
+% --- Persian Support (MUST be the last package) ---
+\usepackage{xepersian} % T5.2: xepersian
+\settextfont{XB Niloofar}
+\setlatintextfont{Times New Roman}
+\setdigitfont{XB Niloofar}
+\renewcommand{\thesection}{\lr{\arabic{section}}}
+\renewcommand{\thesubsection}{\lr{\arabic{section}.\arabic{subsection}}}
+
+\title{گزارش پروژه نهایی: مسئله بسته‌بندی در سطل‌ها با اقلام چسبنده}
+\author{محمد باغبان‌زاده\\شماره دانشجویی: شناسهٔ دانشجو}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% فایل‌های بخش‌های مختلف در اینجا فراخوانی خواهند شد
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/problem_model}
+\input{sections/applications}
+\input{sections/algorithm}
+\input{sections/results}
+\input{sections/conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,198 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۵} \\[0.4cm] \footnotesize اهمیت استفاده از نماد پایان \en{</s>} در مدل‌های زبانی \en{N-gram}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: نمادهای شروع و پایان در مدل‌های \en{N-gram}}
+بر اساس بخش ۳.۱ کتاب، هنگام آموزش مدل‌های زبانی \en{N-gram}، به طور استاندارد از دو نماد ویژه استفاده می‌شود:
+
+\begin{itemize}
+\item \textbf{نماد شروع} \en{<s>}: برای محاسبه احتمال اولین کلمه جمله به کار می‌رود. به عنوان مثال، احتمال دیدن کلمه \en{I} در ابتدای جمله به صورت $P(\text{I}|\text{<s>})$ محاسبه می‌شود.
+
+\item \textbf{نماد پایان} \en{</s>}: برای محاسبه احتمال پایان جمله و ایجاد یک توزیع احتمال معتبر (مجموع احتمالات برابر ۱) استفاده می‌شود.
+\end{itemize}
+
+کتاب به طور صریح اشاره می‌کند (در پانویس شماره ۲ صفحه ۳۵):
+
+\begin{quote}
+\en{We need the end-symbol to make the bigram grammar a true probability distribution. Without an end-symbol, instead of the sentence probabilities of all sentences summing to one, the sentence probabilities for all sentences of a given length would sum to one. This model would define an infinite set of probability distributions, with one distribution per sentence length.}
+\end{quote}
+
+\separator
+\section{مشکل عدم استفاده از نماد پایان \en{</s>}}
+اگر از نماد پایان \en{</s>} استفاده نکنیم، دو مشکل اساسی ایجاد می‌شود:
+
+\subsection*{مشکل اول: نقض اصل مجموع احتمالات}
+در یک مدل زبانی معتبر، مجموع احتمالات همه جملات ممکن (با هر طولی) باید برابر ۱ باشد. بدون نماد پایان، مدل نمی‌تواند به درستی بین جملات با طول‌های مختلف تمایز قائل شود و مجموع احتمالات جملات با طول‌های نامتناهی واگرا می‌شود.
+
+\subsection*{مشکل دوم: مقایسه ناعادلانه جملات با طول‌های مختلف}
+در یک مدل \en{bigram} بدون نماد پایان، احتمال یک جمله به صورت زیر محاسبه می‌شود:
+\[
+P_{\text{بدون پایان}}(w_1, w_2, ..., w_n) = P(w_1|\text{<s>}) \times \prod_{i=2}^{n} P(w_i|w_{i-1})
+\]
+در حالی که مدل صحیح با نماد پایان:
+\[
+P_{\text{با پایان}}(w_1, w_2, ..., w_n) = P(w_1|\text{<s>}) \times \prod_{i=2}^{n} P(w_i|w_{i-1}) \times P(\text{</s>}|w_n)
+\]
+
+از آنجا که $P(\text{</s>}|w_n) < 1$ (معمولاً مقدار کوچکی دارد)، جملات کوتاه‌تر در مدل بدون نماد پایان به طور نامتناسبی احتمال بیشتری دریافت می‌کنند.
+
+\separator
+\section{مثال عددی}
+فرض کنید یک پیکره کوچک از سه جمله زیر داریم (همان پیکره مثال کتاب در صفحه ۳۵):
+
+\begin{center}
+\en{<s> I am Sam </s>} \\
+\en{<s> Sam I am </s>} \\
+\en{<s> I do not like green eggs and ham </s>}
+\end{center}
+
+ابتدا احتمالات \en{bigram} را از این پیکره محاسبه می‌کنیم (با استفاده از تخمین \en{Maximum Likelihood Estimation}):
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{\en{Bigram}} & \textbf{احتمال} \\
+\hline
+$P(\text{I}|\text{<s>})$ & $2/3 = 0.6667$ \\
+\hline
+$P(\text{am}|\text{I})$ & $2/3 = 0.6667$ \\
+\hline
+$P(\text{Sam}|\text{am})$ & $1/2 = 0.5$ \\
+\hline
+$P(\text{</s>}|\text{Sam})$ & $1/2 = 0.5$ \\
+\hline
+$P(\text{do}|\text{I})$ & $1/3 = 0.3333$ \\
+\hline
+$P(\text{not}|\text{do})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{like}|\text{not})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{green}|\text{like})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{eggs}|\text{green})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{and}|\text{eggs})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{ham}|\text{and})$ & $1/1 = 1.0$ \\
+\hline
+$P(\text{</s>}|\text{ham})$ & $1/1 = 1.0$ \\
+\hline
+\end{tabular}
+\end{center}
+\newpage
+\subsection*{مقایسه دو جمله با طول متفاوت}
+
+\textbf{جمله کوتاه:} \en{<s> I am Sam </s>}
+\begin{itemize}
+\item \textbf{با نماد پایان}:
+\[
+P = P(\text{I}|\text{<s>}) \times P(\text{am}|\text{I}) \times P(\text{Sam}|\text{am}) \times P(\text{</s>}|\text{Sam})
+\]
+\[
+P = 0.6667 \times 0.6667 \times 0.5 \times 0.5 = 0.1111
+\]
+
+\item \textbf{بدون نماد پایان}:
+\[
+P = P(\text{I}|\text{<s>}) \times P(\text{am}|\text{I}) \times P(\text{Sam}|\text{am})
+\]
+\[
+P = 0.6667 \times 0.6667 \times 0.5 = 0.2222
+\]
+\end{itemize}
+
+\textbf{جمله بلند:} \en{<s> I do not like green eggs and ham </s>}
+\begin{itemize}
+\item \textbf{با نماد پایان}:
+\[
+\begin{aligned}
+P = & P(\text{I}|\text{<s>}) \times P(\text{do}|\text{I}) \times P(\text{not}|\text{do}) \times P(\text{like}|\text{not}) \\
+& \times P(\text{green}|\text{like}) \times P(\text{eggs}|\text{green}) \times P(\text{and}|\text{eggs}) \times P(\text{ham}|\text{and}) \\
+& \times P(\text{</s>}|\text{ham})
+\end{aligned}
+\]
+\[
+P = 0.6667 \times 0.3333 \times 1.0 \times 1.0 \times 1.0 \times 1.0 \times 1.0 \times 1.0 \times 1.0 = 0.2222
+\]
+
+\item \textbf{بدون نماد پایان}:
+\[
+\begin{aligned}
+P = & P(\text{I}|\text{<s>}) \times P(\text{do}|\text{I}) \times P(\text{not}|\text{do}) \times P(\text{like}|\text{not}) \\
+& \times P(\text{green}|\text{like}) \times P(\text{eggs}|\text{green}) \times P(\text{and}|\text{eggs}) \times P(\text{ham}|\text{and})
+\end{aligned}
+\]
+\[
+P = 0.6667 \times 0.3333 \times 1.0 \times 1.0 \times 1.0 \times 1.0 \times 1.0 \times 1.0 = 0.2222
+\]
+\end{itemize}
+
+\separator
+\section{جدول مقایسه نتایج}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{جمله} & \textbf{با \en{</s>}} & \textbf{بدون \en{</s>}} \\
+\hline
+\en{<s> I am Sam </s>} & 0.1111 & 0.2222 \\
+\hline
+\en{<s> I do not like green eggs and ham </s>} & 0.2222 & 0.2222 \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\newpage
+\section{تحلیل نتایج}
+
+\begin{enumerate}
+\item \textbf{در مدل صحیح (با نماد پایان)}: جمله بلندتر احتمال بیشتری دارد (\en{۰.۲۲۲۲} در مقابل \en{۰.۱۱۱۱}). این منطقی است زیرا جمله بلندتر در پیکره آموزشی یک بار دیده شده (سند سوم) در حالی که جمله کوتاه دو بار دیده شده (اسناد اول و دوم). مدل با نماد پایان به درستی فراوانی وقوع جملات را منعکس می‌کند.
+
+\item \textbf{در مدل بدون نماد پایان}: هر دو جمله احتمال یکسان (\en{۰.۲۲۲۲}) دارند. این در حالی است که جمله کوتاه واقعاً دو برابر بیشتر در پیکره دیده شده است. مدل بدون نماد پایان نمی‌تواند این تفاوت را تشخیص دهد.
+
+\item \textbf{نتیجه مهم}: همان‌طور که در کتاب اشاره شده، بدون نماد پایان، مدل یک توزیع احتمال مجزا برای هر طول جمله ایجاد می‌کند و مجموع احتمالات همه جملات با طول‌های مختلف برابر ۱ نخواهد بود. این موضوع باعث می‌شود مدل نتواند جملات کوتاه و بلند را به درستی مقایسه کند.
+\end{enumerate}
+
+\separator
+\section{نتیجه‌گیری نهایی}
+\[
+\boxed{\begin{array}{r}
+\text{بدون استفاده از نماد پایان \en{</s>}، مجموع احتمالات همه جملات برابر ۱ نمی‌شود و مدل} \\
+\text{نمی‌تواند جملات با طول‌های مختلف را به درستی مقایسه کند. در مثال عددی نشان داده} \\
+\text{شد که دو جمله با فراوانی‌های متفاوت در پیکره، در مدل بدون \en{</s>} احتمال یکسان} \\
+\text{دریافت می‌کنند. بنابراین استفاده از \en{</s>} برای ایجاد یک توزیع احتمال معتبر و} \\
+\text{نرمال‌شده ضروری است.}
+\end{array}}
+\]
+
+\thickseparator
+
+\end{document}

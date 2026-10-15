@@ -1,0 +1,180 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۷} \\[0.4cm] \footnotesize محاسبه \en{Linear Interpolation} بین مدل بای‌گرام و یونی‌گرم}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: \en{Linear Interpolation}}
+بر اساس بخش ۳.۶.۳ کتاب، در روش \en{linear interpolation}، تخمین نهایی احتمال یک n-gram به صورت ترکیب وزنی از Probabilities سطوح مختلف (یونی‌گرم، بای‌گرام، ترای‌گرم و ...) محاسبه می‌شود. در این سوال، از ترکیب مدل بای‌گرام و یونی‌گرم با ضرایب مساوی استفاده می‌کنیم:
+
+\[
+\hat{P}(w_n|w_{n-1}) = \lambda_1 P(w_n) + \lambda_2 P(w_n|w_{n-1})
+\]
+
+که در آن $\lambda_1 = \lambda_2 = \frac{1}{2}$.
+
+\separator
+\section{داده‌های مسأله}
+پیکره شامل چهار جمله زیر است (جمله سوم تکراری است):
+
+\begin{center}
+\begin{tabular}{l}
+\en{<s> I am Sam </s>} \\
+\en{<s> Sam I am </s>} \\
+\en{<s> I am Sam </s>} \\
+\en{<s> I do not like green eggs and Sam </s>}
+\end{tabular}
+\end{center}
+
+\textbf{نکته مهم}: بر اساس صورت سوال، نمادهای \en{<s>} و \en{</s>} دقیقاً مانند سایر توکن‌ها در شمارش‌ها لحاظ می‌شوند.
+
+\separator
+\newpage
+\section{محاسبه شمارش‌های مورد نیاز}
+
+\subsection*{شمارش بای‌گرام \en{am Sam}}
+جملاتی که شامل \en{am Sam} هستند:
+\begin{itemize}
+\item جمله ۱: \en{<s> I am Sam </s>} → یک بار
+\item جمله ۲: \en{<s> Sam I am </s>} → ندارد (\en{am} قبل از \en{Sam} نیست)
+\item جمله ۳: \en{<s> I am Sam </s>} → یک بار
+\item جمله ۴: \en{<s> I do not like green eggs and Sam </s>} → ندارد (\en{am} وجود ندارد)
+\end{itemize}
+\[
+C(\text{am Sam}) = 2
+\]
+
+\subsection*{شمارش یونی‌گرم \en{Sam}}
+تعداد دفعات حضور کلمه \en{Sam} در کل پیکره:
+\begin{itemize}
+\item جمله ۱: یک \en{Sam}
+\item جمله ۲: یک \en{Sam}
+\item جمله ۳: یک \en{Sam}
+\item جمله ۴: یک \en{Sam} (در انتها)
+\end{itemize}
+\[
+C(\text{Sam}) = 4
+\]
+
+\subsection*{شمارش یونی‌گرم \en{am}}
+تعداد دفعات حضور کلمه \en{am} در کل پیکره:
+\begin{itemize}
+\item جمله ۱: یک \en{am}
+\item جمله ۲: یک \en{am}
+\item جمله ۳: یک \en{am}
+\item جمله ۴: \en{am} وجود ندارد
+\end{itemize}
+\[
+C(\text{am}) = 3
+\]
+
+\subsection*{شمارش کل توکن‌ها (برای یونی‌گرم)}
+برای محاسبه $P(\text{Sam})$، باید کل تعداد توکن‌های پیکره (شامل \en{<s>} و \en{</s>}) را بشماریم:
+\begin{itemize}
+\item جمله ۱: \en{<s>, I, am, Sam, </s>} → ۵ توکن
+\item جمله ۲: \en{<s>, Sam, I, am, </s>} → ۵ توکن
+\item جمله ۳: \en{<s>, I, am, Sam, </s>} → ۵ توکن
+\item جمله ۴: \en{<s>, I, do, not, like, green, eggs, and, Sam, </s>} → ۱۰ توکن
+\end{itemize}
+\[
+N = 5 + 5 + 5 + 10 = 25
+\]
+
+\separator
+\section{محاسبه احتمالات \en{Maximum Likelihood Estimation (MLE)}}
+
+\subsection*{احتمال بای‌گرام $P(\text{Sam}|\text{am})$}
+\[
+P_{\text{MLE}}(\text{Sam}|\text{am}) = \frac{C(\text{am Sam})}{C(\text{am})} = \frac{2}{3} \approx 0.6667
+\]
+
+\subsection*{احتمال یونی‌گرم $P(\text{Sam})$}
+\[
+P_{\text{MLE}}(\text{Sam}) = \frac{C(\text{Sam})}{N} = \frac{4}{25} = 0.16
+\]
+
+\separator
+\section{محاسبه \en{Linear Interpolation}}
+با استفاده از فرمول درون‌یابی خطی با $\lambda_1 = \lambda_2 = \frac{1}{2}$:
+
+\[
+\begin{aligned}
+\hat{P}(\text{Sam}|\text{am}) &= \lambda_1 P(\text{Sam}) + \lambda_2 P(\text{Sam}|\text{am}) \\
+&= \frac{1}{2} \times 0.16 + \frac{1}{2} \times 0.6667 \\
+&= 0.08 + 0.33335 \\
+&= 0.41335
+\end{aligned}
+\]
+
+\separator
+\section{جدول خلاصه محاسبات}
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{مقدار} & \textbf{عدد} \\
+\hline
+$C(\text{am Sam})$ & ۲ \\
+\hline
+$C(\text{am})$ & ۳ \\
+\hline
+$C(\text{Sam})$ & ۴ \\
+\hline
+$N$ (کل توکن‌ها) & ۲۵ \\
+\hline
+$P_{\text{MLE}}(\text{Sam}|\text{am})$ & $2/3 \approx 0.6667$ \\
+\hline
+$P_{\text{MLE}}(\text{Sam})$ & $4/25 = 0.16$ \\
+\hline
+$\lambda_1 = \lambda_2$ & $1/2 = 0.5$ \\
+\hline
+$\hat{P}(\text{Sam}|\text{am})$ & $0.08 + 0.33335 = 0.41335$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{نتیجه‌گیری نهایی}
+\[
+\boxed{\hat{P}(\text{Sam}|\text{am}) = 0.41335 \approx \frac{41335}{100000}}
+\]
+
+به عبارت دیگر، احتمال اینکه بعد از کلمه \en{am} کلمه \en{Sam} بیاید، با استفاده از درون‌یابی خطی بین مدل بای‌گرام و یونی‌گرم با وزن‌های مساوی، تقریباً \en{۰.۴۱۳۳۵} محاسبه می‌شود.
+
+\separator
+\section{تحلیل نتایج}
+\begin{itemize}
+\item مدل بای‌گرام به تنهایی احتمال $0.6667$ را تخمین می‌زد (چون از ۳ بار دیده شدن \en{am}، ۲ بار با \en{Sam} همراه بوده است).
+\item مدل یونی‌گرم به تنهایی احتمال $0.16$ را تخمین می‌زند (چون \en{Sam} از کل ۲۵ توکن، ۴ بار دیده شده است).
+\item ترکیب خطی این دو با وزن مساوی، عددی بین این دو مقدار تولید می‌کند: $0.41335$.
+\item این روش به مدل کمک می‌کند تا برای \en{n-gram}هایی که کمتر دیده شده‌اند، تخمین نرم‌تری داشته باشد و احتمال صفر ندهد.
+\end{itemize}
+
+\thickseparator
+
+\end{document}

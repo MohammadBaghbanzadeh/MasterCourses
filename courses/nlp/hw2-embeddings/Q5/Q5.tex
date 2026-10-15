@@ -1,0 +1,162 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۵} \\[0.4cm] \small تحلیل احساسات با استفاده از \en{Word2Vec Embeddings} و رگرسیون لجستیک}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: ترکیب \en{Embeddings} و رگرسیون لجستیک برای تحلیل احساسات}
+
+\subsection{نمایش کلمات با \en{Word2Vec Embeddings} (بخش \en{۵-۵} کتاب)}
+در بخش \textbf{\en{۵-۵}} کتاب، مدل \en{Word2Vec} معرفی شده است که برای هر کلمه، یک بردار با ابعاد کم و متراکم (\en{dense vector}) تولید می‌کند. در این سوال، چنین بردارهایی برای کلمات زیر به صورت از پیش آموزش‌دیده داده شده است:
+
+\begin{align*}
+\text{\en{amazing}} &\rightarrow [0.7,\; 0.3,\; -0.1,\; 0.2] \\
+\text{\en{film}} &\rightarrow [0.2,\; 0.1,\; 0.3,\; 0.1] \\
+\text{\en{but}} &\rightarrow [0.0,\; 0.0,\; 0.0,\; 0.0] \quad \text{(کلمات توقف، بردار صفر)} \\
+\text{\en{slow}} &\rightarrow [-0.4,\; 0.1,\; 0.2,\; -0.3] \\
+\text{\en{boring}} &\rightarrow [-0.6,\; 0.0,\; 0.1,\; 0.1] \\
+\text{\en{plot}} &\rightarrow [0.1,\; 0.2,\; 0.1,\; 0.0]
+\end{align*}
+
+\subsection{نمایش یک سند با میانگین بردارهای کلمات (بخش \en{۵-۳} کتاب)}
+در بخش \textbf{\en{۵-۳}} کتاب (\en{Simple count-based embeddings})، روش میانگین گرفتن از بردارهای کلمات برای نمایش یک سند توضیح داده شده است. طبق صورت سوال، بردار سند به صورت \textbf{میانگین حسابی} بردارهای کلمات آن سند (پس از حذف کلمات توقف) محاسبه می‌شود.
+
+\subsection{رده‌بندی با رگرسیون لجستیک (بخش \en{۴-۳} کتاب)}
+در بخش \textbf{\en{۴-۳}} کتاب (\en{Classification with Logistic Regression})، فرمول محاسبه احتمال تعلق یک نمونه به کلاس مثبت به صورت زیر معرفی شده است:
+
+\[
+P(\text{\en{positive}}|x) = \sigma(w \cdot x + b) = \frac{1}{1 + e^{-(w \cdot x + b)}}
+\]
+
+که در آن \(x\) بردار ویژگی‌های نمونه (در اینجا بردار سند)، \(w\) بردار وزن‌های مدل و \(b\) مقدار بایاس است.
+
+\thickseparator
+
+\section{حل گام‌به‌گام مسأله}
+
+\subsection{داده‌های مسأله}
+\begin{align*}
+\text{:جمله مورد نظر} &\quad \text{\en{``amazing film but slow boring plot''}} \\
+\text{:بردار وزن‌های مدل} &\quad w = [0.6,\; -0.2,\; 0.3,\; 0.1] \\
+\text{:مقدار بایاس} &\quad b = -0.05
+\end{align*}
+
+\subsection{گام ۱: حذف کلمات توقف (\en{Stop Words Removal})}
+طبق صورت سوال، کلمه \en{but} (که بردار آن صفر است) به عنوان کلمه توقف محسوب می‌شود و باید حذف گردد. بنابراین کلمات مؤثر در جمله عبارتند از:
+
+\[
+\text{\en{amazing}},\; \text{\en{film}},\; \text{\en{slow}},\; \text{\en{boring}},\; \text{\en{plot}}
+\]
+
+\subsection{گام ۲: محاسبه بردار سند با روش میانگین حسابی}
+برای هر بعد \(i\) از بردار سند، میانگین مقادیر آن بعد را در بین تمام کلمات محاسبه می‌کنیم:
+
+\[
+v_{\text{doc}}[i] = \frac{1}{n} \sum_{j=1}^{n} v_{\text{word}_j}[i]
+\]
+
+که در اینجا \(n = 5\) (تعداد کلمات پس از حذف کلمات توقف).
+
+\textbf{بعد اول:}
+\[
+\frac{0.7 + 0.2 + (-0.4) + (-0.6) + 0.1}{5} = \frac{0.7 + 0.2 - 0.4 - 0.6 + 0.1}{5} = \frac{0.0}{5} = 0.0
+\]
+
+\textbf{بعد دوم:}
+\[
+\frac{0.3 + 0.1 + 0.1 + 0.0 + 0.2}{5} = \frac{0.7}{5} = 0.14
+\]
+
+\textbf{بعد سوم:}
+\[
+\frac{-0.1 + 0.3 + 0.2 + 0.1 + 0.1}{5} = \frac{0.6}{5} = 0.12
+\]
+
+\textbf{بعد چهارم:}
+\[
+\frac{0.2 + 0.1 + (-0.3) + 0.1 + 0.0}{5} = \frac{0.2 + 0.1 - 0.3 + 0.1 + 0.0}{5} = \frac{0.1}{5} = 0.02
+\]
+
+بنابراین بردار سند برابر است با:
+
+\[
+x = v_{\text{doc}} = [0.0,\; 0.14,\; 0.12,\; 0.02]
+\]
+
+\subsection{گام ۳: محاسبه مقدار خطی \(z = w \cdot x + b\)}
+
+\[
+w \cdot x = (0.6 \times 0.0) + (-0.2 \times 0.14) + (0.3 \times 0.12) + (0.1 \times 0.02)
+\]
+
+\[
+w \cdot x = 0.0 + (-0.028) + 0.036 + 0.002 = 0.010
+\]
+
+\[
+z = w \cdot x + b = 0.010 + (-0.05) = -0.04
+\]
+
+\subsection{گام ۴: اعمال تابع سیگموئید برای محاسبه احتمال}
+
+\[
+P(\text{\en{positive}}|x) = \sigma(z) = \frac{1}{1 + e^{-z}} = \frac{1}{1 + e^{-(-0.04)}} = \frac{1}{1 + e^{0.04}}
+\]
+
+مقدار \(e^{0.04}\) را تقریب می‌زنیم (\(e^{0.04} \approx 1.0408\)):
+
+\[
+P(\text{\en{positive}}|x) = \frac{1}{1 + 1.0408} = \frac{1}{2.0408} \approx 0.4900
+\]
+
+\separator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{itemize}
+    \item \textbf{بردار سند (پس از میانگین گرفتن):} \(x = [0.0,\; 0.14,\; 0.12,\; 0.02]\)
+    \item \textbf{مقدار خطی \(z = w \cdot x + b\):} \(z = -0.04\)
+    \item \textbf{احتمال مثبت بودن سند:} \(P(\text{\en{positive}}|x) \approx 0.4900\)
+\end{itemize}
+
+\thickseparator
+\begin{center}
+\fbox{\parbox{0.85\linewidth}{\centering
+\textbf{پاسخ نهایی:} \\
+\[
+\boxed{P(\text{positive} | \text{amazing film but slow boring plot}) \approx 0.4900}
+\]
+}}
+\end{center}
+
+\thickseparator
+
+\section{تفسیر نتیجه}
+مقدار احتمال محاسبه‌شده \((\approx 0.49)\) کمی کمتر از آستانه \(0.5\) است. بنابراین اگر بخواهیم با آستانه \(0.5\) تصمیم‌گیری کنیم (طبق بخش \en{۴-۳} کتاب)، این سند به کلاس \textbf{منفی (\en{negative})} تعلق خواهد گرفت. این نتیجه با توجه به حضور کلمات منفی مانند \en{slow} و \en{boring} در جمله، منطقی به نظر می‌رسد.
+
+\thickseparator
+
+\end{document}

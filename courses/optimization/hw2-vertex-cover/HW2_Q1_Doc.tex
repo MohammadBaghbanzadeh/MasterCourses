@@ -1,0 +1,192 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+
+\title{پاسخ تمرین بهینه‌سازی ترکیبیاتی: پوشش رأسی (\en{Vertex Cover})}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{\today}
+
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section*{تعریف مسئله پوشش رأس (\en{Vertex Cover})}
+در یک گراف بدون جهت \( G = (V, E) \)، یک پوشش رأس، زیرمجموعه‌ای از رئوس \( C \subseteq V \) است به طوری که هر یال \( e \in E \) حداقل به یک رأس در \( C \) متصل باشد. هدف، یافتن پوشش رأس با کمترین تعداد رأس است.
+\[
+\min |C| \quad \text{s.t.} \quad \forall (u,v)\in E: \; u\in C \text{ یا } v\in C
+\]
+
+\separator
+
+\section{الف) مدل برنامه‌ریزی عدد صحیح (\en{ILP})}
+برای هر رأس \( v \in V \) یک متغیر دودویی \( x_v \) تعریف می‌کنیم:
+\[
+x_v = \begin{cases}
+1 & \text{اگر رأس \( v \) در پوشش انتخاب شود} \\
+0 & \text{در غیر این صورت}
+\end{cases}
+\]
+
+مدل \en{ILP} به صورت زیر است:
+\begin{align}
+\min \quad & \sum_{v \in V} x_v \label{eq:obj}\\
+\text{s.t.} \quad & x_u + x_v \geq 1 \quad \forall (u,v) \in E \label{eq:cons}\\
+& x_v \in \{0,1\} \quad \forall v \in V \label{eq:binary}
+\end{align}
+
+\separator
+
+\section{ب) اجرای مدل \en{ILP}}
+مدل بالا با استفاده از کتابخانه \en{PuLP} در پایتون و حل‌کننده \en{CBC} پیاده‌سازی شده است. نتایج برای سه گراف نمونه در جدول \ref{tab:ilp} آورده شده است.
+
+\begin{table}[h!]
+\centering
+\caption{نتایج حل \en{ILP} برای گراف‌های نمونه}
+\label{tab:ilp}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{نام گراف} & \textbf{تعداد رأس} & \textbf{تعداد یال} & \textbf{اندازه پوشش بهینه \en{ILP}} \\
+\hline
+\en{G1} & 4 & 4 & 2 \\
+\en{G2} (\en{K}$_{3,3}$) & 6 & 9 & 3 \\
+\en{G3} (چرخه ۵) & 5 & 5 & 3 \\
+\hline
+\end{tabular}
+\end{table}
+
+در گراف \en{G1}، پوشش بهینه شامل رئوس \{0, 2\} است. در \en{G2}، پوشش بهینه شامل \{3,4,5\} (یک طرف دو بخش) و در \en{G3} پوشش بهینه \{1,3,4\} می‌باشد.
+
+\separator
+
+\section{ج) طراحی الگوریتم حریصانه}
+الگوریتم حریصانه ساده‌ای که در اینجا استفاده شده است، در هر مرحله یک یال دلخواه را انتخاب کرده و هر دو رأس آن را به پوشش می‌افزاید. سپس آن رئوس و تمام یال‌های متصل به آنها را از گراف حذف می‌کند. این روند تا زمانی که گراف بدون یال شود ادامه می‌یابد.
+
+\begin{center}
+\fbox{\parbox{0.85\textwidth}{
+\textbf{الگوریتم حریصانه برای پوشش رأس} \\
+1. \( C \gets \emptyset \) \\
+2. \textbf{تا زمانی که} \( E \neq \emptyset \) \textbf{انجام بده:} \\
+\phantom{2.} \hspace{0.5cm} یک یال \( (u,v) \) را به دلخواه انتخاب کن \\
+\phantom{2.} \hspace{0.5cm} \( C \gets C \cup \{u, v\} \) \\
+\phantom{2.} \hspace{0.5cm} همه یال‌های مجاور به \( u \) یا \( v \) را حذف کن \\
+3. \textbf{برگردان} \( C \)
+}}
+\end{center}
+
+این الگوریتم از نظر پیچیدگی زمانی \( O(|E|) \) با پیاده‌سازی مناسب است و ضریب تقریب ۲ را تضمین می‌کند (یعنی اندازه پوشش یافت شده حداکثر دو برابر اندازه بهینه است).
+
+\separator
+\newpage
+
+\section{د) اجرای الگوریتم حریصانه}
+الگوریتم حریصانه روی همان سه گراف نمونه اجرا شده و نتایج در جدول \ref{tab:greedy} نشان داده شده است.
+
+\begin{table}[h!]
+\centering
+\caption{نتایج الگوریتم حریصانه}
+\label{tab:greedy}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{گراف} & \textbf{اندازه پوشش حریصانه} & \textbf{مجموعه پوشش} \\
+\hline
+\en{G1} & 4 & \{0,1,2,3\} \\
+\en{G2} & 6 & \{0,1,2,3,4,5\} \\
+\en{G3} & 4 & \{0,1,2,3\} \\
+\hline
+\end{tabular}
+\end{table}
+
+\separator
+
+\section{ه) مقایسه و تحلیل جواب‌های \en{ILP} و الگوریتم حریصانه}
+جدول \ref{tab:compare} مقایسه نتایج دو روش را نشان می‌دهد.
+
+\begin{table}[h!]
+\centering
+\caption{مقایسه اندازه پوشش بهینه (\en{ILP}) و حریصانه}
+\label{tab:compare}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{گراف} & \textbf{\en{ILP} (بهینه)} & \textbf{\en{Greedy}} & \textbf{نسبت تقریب} \\
+\hline
+\en{G1} & 2 & 4 & 2.0 \\
+\en{G2} & 3 & 6 & 2.0 \\
+\en{G3} & 3 & 4 & 1.33 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{تحلیل:}
+\begin{itemize}
+\item در گراف \en{G1} (مثلث به اضافه یک یال)، الگوریتم حریصانه بدترین حالت ممکن را نشان می‌دهد و همه رئوس را بر می‌گرداند. علت آن است که در اولین قدم یال (0,1) یا (0,2) انتخاب می‌شود و هر دو رأس حذف می‌شوند، اما رأس ۳ جدا می‌ماند و در گام بعدی یال (2,3) دوباره انتخاب می‌شود که رأس ۳ را هم اضافه می‌کند. در حالی که جواب بهینه با انتخاب \{0,2\} حاصل می‌شد.
+\item در گراف \en{G2} (کامل دو بخشی \( K_{3,3} \))، الگوریتم حریصانه هر بار یک یال از دو بخش انتخاب می‌کند و در نهایت همه ۶ رأس را برمی‌دارد، در حالی که جواب بهینه ۳ رأس از یک بخش است. این مثال نشان می‌دهد که ضریب تقریب ۲ برای این الگوریتم قابل دستیابی است.
+\item در گراف \en{G3} (چرخه ۵ رأس)، جواب حریصانه ۴ و بهینه ۳ است. نسبت تقریب ۱.۳۳ است که بهتر از حد بالای نظری ۲ می‌باشد.
+\end{itemize}
+نتیجه می‌گیریم که الگوریتم حریصانه بسیار سریع است اما تضمین بهینگی ندارد و در بدترین حالت دو برابر بهینه عمل می‌کند.
+
+\separator
+
+\section{و) \en{Relax} کردن مدل (\en{LP Relaxation}) و مقایسه}
+در مدل \en{LP relaxation}، شرط صحیح بودن متغیرها (\( x_v \in \{0,1\} \)) را با محدودیت \( 0 \leq x_v \leq 1 \) جایگزین می‌کنیم. بدین ترتیب مدل به یک برنامه‌ریزی خطی تبدیل می‌شود که می‌تواند جواب‌های کسری داشته باشد.
+\[
+\min \sum_{v \in V} x_v \quad \text{s.t.} \quad x_u+x_v \geq 1, \quad 0 \leq x_v \leq 1
+\]
+
+این مدل یک کران پایین (\en{lower bound}) برای جواب بهینه \en{ILP} فراهم می‌کند. نتایج \en{LP} و گرد کردن ساده با شرط \( x_v \ge 0.5 \) (که همواره یک پوشش معتبر می‌سازد) در جدول \ref{tab:lp} مطابق با خروجی کد ارائه شده است.
+
+\begin{table}[h!]
+\centering
+\caption{نتایج \en{LP relaxation} و \en{rounding} با شرط \( \ge 0.5 \)}
+\label{tab:lp}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{گراف} & \textbf{مقدار \en{LP}} & \textbf{مقادیر کسری \( x_v \)} & \textbf{پوشش \en{rounded}} & \textbf{اندازه \en{rounded}} \\
+\hline
+\en{G1} & 2.00 & همه 0.5 & \{0,1,2,3\} & 4 \\
+\en{G2} & 3.00 & \{0,1,2:0,  3,4,5:1\} & \{3,4,5\} & 3 \\
+\en{G3} & 2.50 & همه 0.5 & \{0,1,2,3,4\} & 5 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{تحلیل:}
+\begin{itemize}
+\item گرد کردن با آستانه \( \ge 0.5 \) همیشه یک پوشش رأس معتبر می‌دهد؛ زیرا برای هر یال \( (u,v) \) داریم \( x_u + x_v \ge 1 \)، بنابراین دست‌کم یکی از متغیرها بزرگ‌تر یا مساوی 0.5 است و در مجموعه انتخاب می‌شود.
+\item این روش یک الگوریتم ۲-تقریبی است: اندازه پوشش گردشده \( \le 2 \times \text{Opt}_{\text{LP}} \le 2 \times \text{Opt}_{\text{ILP}} \). در مثال‌های \en{G1} و \en{G3}، با وجود کسری بودن جواب \en{LP}، پوشش‌های گردشده به ترتیب اندازه ۴ و ۵ دارند که نسبت به بهینه (۲ و ۳) تقریب‌های ۲ و ۱.۶۷ هستند و همچنان در محدوده‌ی ضمانت ۲ قرار می‌گیرند.
+\item \textbf{\en{Integrality gap}}: شکاف بین مقدار \en{LP} و \en{ILP}. در \en{G3}، \en{ILP}=3 و \en{LP}=2.5، بنابراین \en{gap} برابر \( \frac{3}{2.5}=1.2 \) است. در بدترین حالت، این شکاف برای مسأله پوشش رأس به ۲ نزدیک می‌شود (مانند گراف‌های کامل \( K_n \) که \en{ILP}=n-1 و \en{LP}=n/2). این نشان می‌دهد که \en{LP relaxation} به تنهایی کران پایین خوبی فراهم می‌کند ولی برای رسیدن به جواب صحیح نیاز به گرد کردن دارد.
+\end{itemize}
+
+\separator
+
+\subsection*{نتیجه‌گیری نهایی}
+مدل \en{ILP} جواب دقیق اما با پیچیدگی نمایی می‌دهد. الگوریتم حریصانه سریع و با ضریب تقریب ۲ است. \en{LP relaxation} کران پایین مفیدی می‌دهد و با گرد کردن مناسب می‌توان یک الگوریتم ۲-تقریبی ساخت.
+
+\appendix
+\section{ضمیمه: کد پایتون}
+کد کامل پیاده‌سازی در فایل جداگانه \en{Q1.ipynb} ضمیمه شده است.
+
+\thickseparator
+
+\end{document}

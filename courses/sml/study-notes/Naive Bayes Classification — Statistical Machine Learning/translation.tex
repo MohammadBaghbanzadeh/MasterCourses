@@ -1,0 +1,249 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\geometry{a4paper, margin=1in}
+
+\title{\lr{Naive Bayes Classification} \\ (دسته‌بندی نایو بیز)}
+\author{}
+\date{}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_4_1.png}
+  \caption{نمودار احتمال شرطی کلاس برای کلاس‌های مختلف}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_5_1.png}
+  \caption{نمودار احتمال پسین و تعیین کلاس نهایی}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_5_2.png}
+  \caption{تعیین مرز تصمیم بر اساس توابع چگالی احتمال}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_6_1.png}
+  \caption{توزیع احتمالات ویژگی‌ها در ویژگی‌های مختلف}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_7_1.png}
+  \caption{نمایش فرضیه ساده‌لوحانه استقلال ویژگی‌ها}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_8_1.png}
+  \caption{مرز تصمیم‌گیری غیرخطی طبقه‌بند بیز ساده روی داده‌های شبیه‌سازی‌شده}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_12_1.png}
+  \caption{توزیع احتمال گوسی برای متغیرهای پیوسته در دسته‌بند بیز}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_12_2.png}
+  \caption{توزیع احتمال چندجمله‌ای برای متغیرهای گسسته}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_14_1.png}
+  \caption{ساختار گرافیکی شبکه‌ای ساده‌لوحانه بیز (Naive Bayes Graph)}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_27_1.png}
+  \caption{ارزیابی و بررسی صحت طبقه‌بند بر روی داده‌های آزمون}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_29_1.png}
+  \caption{مزایا و محدودیت‌های الگوریتم بیز ساده}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\section*{فهرست مطالب}
+\begin{enumerate}
+    \item مقدمه
+    \item قضیه بیز (\lr{Bayes' Theorem})
+    \item دسته‌بندی‌کننده‌های بیز (\lr{Bayes Classifiers})
+    \item نایو بیز با ویژگی‌های متعدد (\lr{Naive Bayes with Multiple Features})
+    \item مدل‌های زایشی (\lr{Generative Models})
+    \item نایو بیز گاوسی (\lr{Gaussian Naive Bayes})
+    \item نایو بیز چندجمله‌ای (\lr{Multinomial Naive Bayes})
+    \item چه زمانی از نایو بیز استفاده کنیم؟
+\end{enumerate}
+
+\newpage
+
+\section*{۱. مقدمه}
+مدل‌های نایو بیز (\lr{Naive Bayes}) گروهی از الگوریتم‌های دسته‌بندی فوق‌العاده سریع و ساده هستند که اغلب برای مجموعه‌داده‌های با ابعاد بسیار بالا مناسب می‌باشند. به دلیل سرعت بالا و پارامترهای قابل تنظیم بسیار کم، این مدل‌ها به عنوان یک مدل پایه (\lr{baseline}) ساده و سریع برای مسائل دسته‌بندی بسیار مفید هستند.
+
+\section*{۲. قضیه بیز}
+قضیه بیز (\lr{Bayes' Theorem}) یک اصل اساسی در تئوری احتمال است که نحوه به‌روزرسانی باورهای ما درباره یک رویداد را بر اساس شواهد جدید توصیف می‌کند. فرمول ریاضی قضیه بیز به صورت زیر بیان می‌شود:
+\[
+P(A|B) = \frac{P(B|A) \times P(A)}{P(B)}
+\]
+که در آن:
+\begin{itemize}
+    \item $P(A|B)$ احتمال پسین (\lr{posterior probability}) است: احتمال وقوع رویداد A به شرط برقرار بودن B.
+    \item $P(B|A)$ درست‌نمایی (\lr{likelihood}) است: احتمال وقوع رویداد B به شرط برقرار بودن A.
+    \item $P(A)$ احتمال پیشین (\lr{prior probability}) است: احتمال اولیه وقوع رویداد A.
+    \item $P(B)$ احتمال حاشیه‌ای (\lr{marginal probability}) است: احتمال کل وقوع رویداد B.
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_2_1.jpeg}
+  \caption{مدل مفهومی طبقه‌بندی ایمیل‌های اسپم و غیر اسپم بر اساس کلمات}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_9_1.png}
+  \caption{طبقه‌بندی بیز با ویژگی‌های چندگانه گسسته و پیوسته}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_22_1.png}
+  \caption{توزیع‌های نرمال چندمتغیره در طبقه‌بند بیز گوسی}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_22_2.png}
+  \caption{مرزهای تصمیم حاصل از طبقه‌بند بیز گوسی}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\subsection*{مثال با تاس}
+فرض کنید دو تاس داریم: یکی معمولی (با احتمال برابر برای آوردن اعداد ۱ تا ۶) و دیگری غیرمعمولی (که همیشه ۶ می‌آورد). به طور تصادفی یکی از تاس‌ها را انتخاب کرده و می‌اندازیم و عدد ۶ می‌آید. احتمال اینکه تاس غیرمعمولی را انتخاب کرده باشیم چقدر است؟
+
+تعریف رویدادها:
+\begin{itemize}
+    \item رویداد A: انتخاب تاس غیرمعمولی
+    \item رویداد B: آمدن عدد ۶
+\end{itemize}
+احتمالات داده شده:
+\begin{itemize}
+    \item $P(A) = \frac{1}{2}$ (احتمال یکسان برای انتخاب هر تاس)
+    \item $P(B|A) = 1$ (تاس غیرمعمولی همیشه ۶ می‌آورد)
+    \item $P(B|A^c) = \frac{1}{6}$ (تاس معمولی با احتمال ۱/۶ عدد ۶ می‌آورد)
+\end{itemize}
+اعمال قضیه بیز:
+\[
+P(B) = P(B|A)P(A) + P(B|A^c)P(A^c) = 1 \times \frac{1}{2} + \frac{1}{6} \times \frac{1}{2} = \frac{7}{12}
+\]
+\[
+P(A|B) = \frac{P(B|A)P(A)}{P(B)} = \frac{1 \times 1/2}{7/12} = \frac{6}{7} \approx 85.7\%
+\]
+بنابراین، احتمال اینکه تاس انتخابی غیرمعمولی باشد، تقریباً ۸۵.۷ درصد است.
+
+\section*{۳. دسته‌بندی‌کننده‌های بیز}
+برای دسته‌بندی یک نمونه $d$، احتمال پسین قرار گرفتن در کلاس $c_j$ با فرمول زیر بیان می‌شود:
+\[
+P(c_j|d) = \frac{p(d|c_j)P(c_j)}{p(d)}
+\]
+که در آن:
+\begin{itemize}
+    \item احتمال پسین ($P(c_j|d)$): احتمال کلاس $c_j$ با فرض مشاهده نمونه $d$.
+    \item درست‌نمایی ($p(d|c_j)$): احتمال مشاهده نمونه $d$ به شرط تعلق به کلاس $c_j$.
+    \item احتمال پیشین ($P(c_j)$): احتمال وقوع کلاس $c_j$ در مجموعه‌داده (نرخ پایه).
+    \item شواهد ($p(d)$): احتمال کل مشاهده نمونه $d$ در تمامی کلاس‌ها که به عنوان فاکتور نرمال‌سازی عمل می‌کند.
+\end{itemize}
+
+فرمول ساده‌شده برای دسته‌بندی (با حذف مخرج مشترک):
+\[
+P(c_j|d) \propto p(d|c_j) P(c_j)
+\]
+ما نمونه $d$ را به کلاسی با بیشترین احتمال پسین اختصاص می‌دهیم.
+
+\section*{۴. نایو بیز با ویژگی‌های متعدد}
+در صورتی که چندین ویژگی داشته باشیم، دسته‌بندی‌کننده‌های نایو بیز با فرض ساده‌لوحانه مستقل بودن توزیع ویژگی‌ها از یکدیگر، درست‌نمایی را به صورت حاصل‌ضرب احتمالات تک‌تک ویژگی‌ها تخمین می‌زنند:
+\[
+p(d|c_j) = p(d_1|c_j) \times p(d_2|c_j) \times \dots \times p(d_n|c_j)
+\]
+
+\subsection*{مثال میوه‌ها}
+در یک مجموعه‌داده شامل ۱۰۰۰ میوه (موز، پرتقال، و سایر میوه‌ها)، می‌خواهیم میوه جدیدی با ویژگی‌های (بلند، شیرین، زرد) را دسته‌بندی کنیم. با محاسبه احتمالات پسین داریم:
+\begin{itemize}
+    \item $P(\text{Banana} | \text{Long, Sweet, Yellow}) = 0.8 \times 0.7 \times 0.9 \times 0.5 = 0.252$
+    \item $P(\text{Orange} | \text{Long, Sweet, Yellow}) = 0 \times 0.5 \times 1 \times 0.3 = 0$
+    \item $P(\text{Other} | \text{Long, Sweet, Yellow}) = 0.5 \times 0.75 \times 0.25 \times 0.2 = 0.01875$
+\end{itemize}
+از آنجا که احتمال پسین موز از همه بیشتر است، میوه جدید به عنوان موز دسته‌بندی می‌شود.
+
+\section*{۵. مدل‌های زایشی}
+مدلی که چگالی درست‌نمایی $P(\text{features}|L)$ را برای هر کلاس تعریف می‌کند، مدل زایشی (\lr{generative model}) نامیده می‌شود، زیرا فرآیند تصادفی فرضی تولید داده‌ها را مشخص می‌کند. در دسته‌بندی بیز، مشخص کردن این مدل زایشی گام اصلی آموزش است.
+
+\section*{۶. نایو بیز گاوسی}
+ساده‌ترین مدل نایو بیز، مدل نایو بیز گاوسی (\lr{Gaussian Naive Bayes}) است. در این مدل فرض می‌شود داده‌های مربوط به هر کلاس از یک توزیع گاوسی ساده بدون کوواریانس بین ابعاد استخراج شده‌اند. این مدل با محاسبه میانگین و انحراف معیار نقاط در هر کلاس برازش می‌شود.
+مرز تصمیم‌گیری حاصل از مدل نایو بیز گاوسی عموماً درجه دوم (منحنی) است. این روش امکان دسته‌بندی احتمالی (\lr{probabilistic classification}) را نیز فراهم می‌کند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_23_1.png}
+  \caption{پیش‌بینی کلاس نقاط جدید بر روی فضای ویژگی}
+\end{figure}
+
+
+
+
+\section{۷. نایو بیز چندجمله‌ای}
+یکی دیگر از مدل‌ها، نایو بیز چندجمله‌ای (\lr{Multinomial Naive Bayes}) است که در آن فرض می‌شود ویژگی‌ها از یک توزیع چندجمله‌ای ساده تولید شده‌اند. این توزیع تعداد رخدادها را در چند طبقه توصیف می‌کند و برای ویژگی‌هایی که نشان‌دهنده فراوانی یا تعداد شمارش هستند مناسب است.
+
+کاربرد اصلی این روش در دسته‌بندی متون (\lr{text classification}) است، که در آن ویژگی‌ها مربوط به تعداد تکرار یا فرکانس کلمات در اسناد هستند.
+
+\section*{۸. چه زمانی از نایو بیز استفاده کنیم؟}
+با وجود فرضیات ساده‌لوحانه، دسته‌بندی‌کننده نایو بیز مزایای زیر را دارد:
+\begin{itemize}
+    \item آموزش و پیش‌بینی بسیار سریع.
+    \item ارائه پیش‌بینی‌های احتمالی صریح.
+    \item تفسیرپذیری بالا و پارامترهای قابل تنظیم بسیار کم.
+\end{itemize}
+این الگوریتم به ویژه برای داده‌های با ابعاد بسیار بالا (مانند متون) و دسته‌بندی‌های به خوبی تفکیک‌شده بسیار کارآمد عمل می‌کند.
+
+\end{document}

@@ -1,0 +1,136 @@
+\section{نتایج محاسباتی و تحلیل}
+
+\subsection{محیط و پروتکل آزمایش}
+پیاده‌سازی با \lr{Python 3} انجام شد. \lr{NetworkX} برای انقباض گراف،
+\lr{PuLP} و \lr{CBC} برای مدل دقیق، و \lr{NumPy} و \lr{Matplotlib} برای تحلیل
+به‌کار رفتند. آزمایش‌ها روی \lr{macOS} با پردازنده \lr{Apple Silicon M4} و
+۱۶ گیگابایت حافظه اجرا شدند. برای بازتولید محیط، وابستگی‌ها در فایل
+\texttt{requirements.txt} ثبت شده‌اند.
+
+۱۷ نمونه متنی در شش گروه بررسی شدند: ۹ نمونه استاندارد با توزیع یکنواخت و ۸
+نمونه مصنوعی دشوار با مخلوطی از اقلام نزدیک نصف ظرفیت، متوسط و کوچک. گروه دوم
+فقط از ایده نمونه‌های دشوار ادبیات الهام گرفته است و benchmark رسمی
+\lr{Falkenauer} محسوب نمی‌شود. تمام فایل‌ها شامل $n$، ظرفیت، وزن‌ها و یال‌های
+چسبندگی‌اند و نام فایل با محتوای آن سازگار است.
+
+برای هر جواب ابتکاری سه شرط به‌صورت برنامه‌ای بررسی شد: هر مؤلفه دقیقاً یک بار
+ظاهر شود، ظرفیت هیچ سطلی نقض نشود و پس از بسط مؤلفه‌ها تمام یال‌های چسبندگی
+رعایت شوند. هر ۱۷ جواب این اعتبارسنجی را گذراندند.
+
+\subsection{مقدار مرجع و تعریف شکاف}
+برای نمونه‌های دارای $n\le30$، مدل دقیق component-level با \lr{CBC} و حد زمان
+۱۲۰ ثانیه اجرا شد و فقط وضعیت \lr{Optimal} پذیرفته شد. برای نمونه‌های بزرگ‌تر
+از کران پایین معتبر
+\begin{equation}
+LB=\max\left\{\left\lceil\frac{\sum_c W_c}{C}\right\rceil,
+\left|\{c:W_c>C/2\}\right|\right\}
+\end{equation}
+استفاده شد. شکاف گزارش‌شده برابر فاصله جواب تا مقدار مرجع است. اگر جواب به
+$LB$ برسد، بهینگی آن ثابت می‌شود؛ ولی شکاف مثبت نسبت به $LB$ لزوماً برابر
+شکاف واقعی تا جواب بهینه نیست. نوع مرجع در همه جدول‌ها صریحاً مشخص شده است.
+
+\subsection{نتایج اصلی}
+\input{../results/results_table.tex}
+\input{../results/hard_results_table.tex}
+
+در هر شش نمونه کوچک استاندارد و دشوار، جواب \lr{FFD+Tabu} با جواب بهینه مدل
+دقیق برابر شد. هر ۹ نمونه استاندارد نیز به کران پایین رسیدند. این نتیجه بیش از
+آنکه نشانه دشواری جستجو باشد، نشان می‌دهد \lr{FFD} برای این مجموعه یکنواخت
+نقطه شروع بسیار قوی‌ای است؛ در نتیجه الگوریتم با تشخیص رسیدن به مرجع معتبر
+بلافاصله متوقف می‌شود.
+
+در نمونه مصنوعی دشوار ۱۵۰ قلمی، جواب ۵۰ سطل و کران پایین ۴۹ است؛ بنابراین
+فاصله نسبت به مرجع ۲٫۰۴ درصد باقی ماند. در مقابل، روی نمونه‌های دشوار ۳۰۰ و
+۵۰۰ قلمی، \lr{FFD} به‌ترتیب ۱۰۰ و ۱۶۷ سطل ساخت و جستجوی تابو هر دو را یک سطل
+بهبود داد و به کران‌های پایین ۹۹ و ۱۶۶ رسید. شکل~\ref{fig:hard-improvement}
+این تفاوت را نشان می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/fig6_pathological.pdf}
+\caption{مقایسه \lr{FFD}، جواب نهایی تابو و کران پایین روی سه نمونه مصنوعی دشوار.}
+\label{fig:hard-improvement}
+\end{figure}
+
+\subsection{تحلیل پایداری با ۳۰ شروع مستقل}
+برای هر نمونه متوسط استاندارد و دشوار، الگوریتم ۳۰ بار با شروع تصادفی و seedهای
+۱ تا ۳۰ اجرا شد. جدول~\ref{tab:robustness} هم میانگین جواب اولیه و هم جواب
+نهایی را گزارش می‌کند؛ بنابراین اثر خود جستجوی تابو از کیفیت \lr{FFD} تفکیک
+می‌شود.
+
+\input{../results/robustness_table.tex}
+
+در نمونه استاندارد ۱۵۰ قلمی، میانگین تعداد سطل از ۲۸٫۲۰ به ۲۷ کاهش یافت. در
+نمونه‌های دشوار ۵۰، ۱۰۰ و ۱۵۰ قلمی، کاهش میانگین به‌ترتیب از ۱۸٫۳۳ به ۱۷، از
+۳۶٫۲۰ به ۳۳٫۴۳ و از ۵۳٫۵۳ به ۵۰ بود. انحراف معیار نهایی نمونه دشوار ۱۰۰ قلمی
+۰٫۵۰ است؛ این مورد نشان می‌دهد نقطه شروع هنوز بر کیفیت نهایی اثر محدود دارد.
+سایر نمونه‌ها در ۳۰ اجرا به یک مقدار نهایی مشترک رسیدند.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig4_boxplot.pdf}
+\caption{توزیع جواب نهایی در ۳۰ شروع تصادفی مستقل.}
+\label{fig:boxplot}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/gap_comparison_random_vs_ffd.png}
+\caption{فاصله میانگین شروع تصادفی و جواب پس از تابو نسبت به کران پایین.}
+\label{fig:random-gap}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/tabu_improvement_on_random.png}
+\caption{میانگین تعداد سطل حذف‌شده توسط جستجوی تابو در ۳۰ اجرا.}
+\label{fig:mean-improvement}
+\end{figure}
+
+\subsection{همگرایی، زمان و ساختار جواب}
+شکل~\ref{fig:convergence} بهترین جواب مشاهده‌شده را در طول جستجو برای سه شروع
+تصادفی نشان می‌دهد. شکل~\ref{fig:time} زمان wall-clock مدل دقیق و روش ابتکاری
+را برای نمونه‌های کوچک روی مقیاس لگاریتمی مقایسه می‌کند. زمان‌های بسیار کوچک
+ابتکاری شامل contraction، ساخت جواب اولیه و اعتبارسنجی‌اند و در صورت رسیدن
+جواب اولیه به مقدار مرجع، حلقه جستجو اجرا نمی‌شود.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_convergence.pdf}
+\caption{روند بهترین جواب در جستجوی تابو از شروع‌های تصادفی واقعی.}
+\label{fig:convergence}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/fig2_time_comparison.pdf}
+\caption{مقایسه زمان مدل دقیق و روش ابتکاری در نمونه‌های کوچک؛ محور عمودی لگاریتمی است.}
+\label{fig:time}
+\end{figure}
+
+شکل~\ref{fig:gap-size} فاصله تا مرجع را بر حسب اندازه و
+شکل~\ref{fig:packing} یک جواب component-level اعتبارسنجی‌شده را نمایش می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/fig3_gap_vs_size.pdf}
+\caption{فاصله جواب تا مرجع اعلام‌شده.}
+\label{fig:gap-size}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/fig5_bin_visualization.pdf}
+\caption{چیدمان مؤلفه‌ها در نمونه ۳۰ قلمی.}
+\label{fig:packing}
+\end{minipage}
+\end{figure}
+
+\subsection{تهدیدهای اعتبار}
+نمونه‌ها مصنوعی و تعداد آن‌ها محدود است؛ بنابراین نتایج قابل تعمیم مستقیم به
+همه benchmarkهای \lr{BPP} نیست. همچنین کران پایین استفاده‌شده برای نمونه‌های
+بزرگ ساده است و در حالت فاصله مثبت، مقدار بهینه ناشناخته می‌ماند. زمان‌های
+اجرا فقط روی یک سامانه اندازه‌گیری شده‌اند. بااین‌حال، ثبت seedها، انتشار تمام
+فایل‌های داده، تولید خودکار جدول‌ها و شکل‌ها و اعتبارسنجی مستقل جواب‌ها امکان
+بازتولید و بررسی نتایج حاضر را فراهم می‌کند.

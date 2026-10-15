@@ -1,0 +1,133 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۸} \\[0.4cm] \footnotesize بررسی نسبت تقریب فرض مارکوف به احتمال واقعی دنباله‌ای از توکن‌ها}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: قاعده زنجیره‌ای و فرض مارکوف}
+بر اساس بخش \en{۳.۱} کتاب، ابتدا احتمال واقعی یک دنباله از کلمات با استفاده از \textbf{قاعده زنجیره‌ای (\en{Chain Rule})} محاسبه می‌شود:
+
+\[
+P(w_1, w_2, ..., w_n) = \prod_{k=1}^{n} P(w_k | w_1, w_2, ..., w_{k-1})
+\]
+
+این فرمول، احتمال دقیق (واقعی) دنباله را بر حسب حاصلضرب احتمالات شرطی هر کلمه با شرط گرفتن روی \textbf{همه} کلمات قبلی بیان می‌کند.
+
+اما محاسبه این احتمال در عمل غیرممکن است، زیرا:
+\begin{itemize}
+\item زبان خلاقانه است و جملات جدید همیشه ساخته می‌شوند
+\item برای تخمین $P(w_k | w_1...w_{k-1})$ به داده‌های بسیار زیادی نیاز داریم
+\item بسیاری از تاریخچه‌های طولانی هرگز در پیکره دیده نشده‌اند
+\end{itemize}
+
+\separator
+\newpage
+\section{فرض مارکوف و تقریب \en{N-gram}}
+برای حل این مشکل، \textbf{فرض مارکوف (\en{Markov Assumption})} را معرفی می‌کنیم: احتمال یک کلمه فقط به $N-1$ کلمه قبلی وابسته است، نه به کل تاریخچه.
+
+برای مدل \en{bigram} (مرتبه ۲):
+\[
+P(w_k | w_1, w_2, ..., w_{k-1}) \approx P(w_k | w_{k-1})
+\]
+
+بنابراین احتمال تقریبی دنباله به صورت زیر محاسبه می‌شود:
+\[
+P_{\text{approx}}(w_1, w_2, ..., w_n) = \prod_{k=1}^{n} P(w_k | w_{k-1})
+\]
+که در آن $w_0 = \text{<s>}$ است.
+
+\separator
+\section{نسبت تقریب فرض مارکوف به احتمال واقعی}
+سوال اصلی این است: تقریب فرض مارکوف نسبت به احتمال واقعی چه نسبتی دارد؟ آیا یک \textbf{کران بالا (\en{upper bound})}، \textbf{کران پایین (\en{lower bound})}، یا صرفاً یک تقریب بدون الگوی مشخص است؟
+
+\subsection*{پاسخ: صرفاً یک تقریب بدون الگوی مشخص}
+این تقریب \textbf{نه یک کران بالا است و نه یک کران پایین}. بلکه صرفاً یک \textbf{تخمین ساده‌شده} است که می‌تواند گاهی بیشتر و گاهی کمتر از مقدار واقعی باشد.
+
+\subsection*{دلایل:}
+
+\begin{enumerate}
+\item \textbf{نادیده گرفتن وابستگی‌های دوربرد}: فرض مارکوف وابستگی بین کلماتی را که فاصله زیادی دارند نادیده می‌گیرد. این می‌تواند هم منجر به overestimation و هم underestimation شود.
+
+\item \textbf{مثال overestimation}: اگر در داده‌های آموزشی الگوی خاصی وجود داشته باشد که فرض مارکوف آن را بیش از حد ساده کند، ممکن است احتمال تقریبی بیشتر از مقدار واقعی شود.
+
+\item \textbf{مثال underestimation}: اگر ساختارهای زبانی با وابستگی طولانی‌مدت وجود داشته باشد (مثلاً توافق فاعل و فعل در جملات شرطی بلند)، فرض مارکوف ممکن است احتمال واقعی را کمتر از حد تخمین بزند.
+
+\item \textbf{ذات تقریب}: تقریب N-gram یک \textbf{تخمین مبتنی بر بسامد} است که وابستگی‌های طولانی را حذف می‌کند. این حذف یک بایاس جهت‌دار ایجاد نمی‌کند؛ بلکه ساده‌سازی مدل است.
+\end{enumerate}
+
+\separator
+\section{مثال عددی برای روشن شدن مطلب}
+فرض کنید جمله واقعی \en{<s> The cat that chased the mouse ran away </s>} را داریم. در مدل بای‌گرام، احتمال کلمه \en{ran} فقط به کلمه قبلی (\en{mouse}) بستگی دارد، در حالی که در واقعیت به فاعل اصلی (\en{cat}) نیز وابسته است.
+
+\begin{itemize}
+\item اگر $P(\text{ran}|\text{mouse})$ در پیکره بزرگ باشد → احتمال تقریبی \textbf{بیشتر از واقعیت} می‌شود (زیرا وابستگی به \en{cat} نادیده گرفته شده)
+\item اگر $P(\text{ran}|\text{mouse})$ در پیکره کوچک باشد → احتمال تقریبی \textbf{کمتر از واقعیت} می‌شود
+\end{itemize}
+
+بنابراین در یک مورد احتمال تقریبی بالاست و در مورد دیگر پایین؛ هیچ رابطهٔ قطعی $\leq$ یا $\geq$ وجود ندارد.
+
+\separator
+\section{جمع‌بندی}
+\begin{center}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{احتمال واقعی} & $P_{\text{real}}(w_1...w_n) = \prod_{k=1}^{n} P(w_k | w_1...w_{k-1})$ \\
+\hline
+\textbf{احتمال تقریبی (فرض مارکوف)} & $P_{\text{approx}}(w_1...w_n) = \prod_{k=1}^{n} P(w_k | w_{k-N+1}...w_{k-1})$ \\
+\hline
+\textbf{نسبت} & هیچ رابطهٔ $\leq$ یا $\geq$ قطعی وجود ندارد \\
+\hline
+\textbf{نوع} & یک تقریب ساده‌شده بدون الگوی مشخص (\en{neither upper nor lower bound}) \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{نتیجه‌گیری نهایی}
+\[
+\boxed{\begin{array}{r}
+\text{تقریب فرض مارکوف برای احتمال یک دنباله از توکن‌ها، \textbf{نه یک کران بالا است و نه یک کران پایین}.} \\
+\text{این تقریب صرفاً یک ساده‌سازی محاسباتی است که به دلیل محدودیت داده‌ها و ماهیت خلاقانه زبان} \\
+\text{اجتناب‌ناپذیر است، اما هیچ رابطهٔ نامساوی قطعی با احتمال واقعی ندارد و در موارد مختلف} \\
+\text{می‌تواند بیشتر یا کمتر از مقدار واقعی باشد.}
+\end{array}}
+\]
+
+\separator
+\section{ارتباط با کتاب}
+در بخش \en{۳.۱} کتاب، نویسندگان اشاره می‌کنند که:
+\begin{quote}
+\en{This method of estimating probabilities directly from counts works fine in many cases, it turns out that even the web isn't big enough to give us good estimates in most cases. This is because language is creative...}
+\end{quote}
+
+این نقل قول نشان می‌دهد که تقریب مارکوف یک \textbf{ضرورت عملی} است، نه یک کران ریاضی. کتاب هیچ‌گاه ادعا نمی‌کند که این تقریب همیشه کمتر یا همیشه بیشتر از مقدار واقعی است، بلکه آن را به عنوان یک \textbf{تخمین} معرفی می‌کند که در عمل استفاده می‌شود.
+
+\thickseparator
+
+\end{document}

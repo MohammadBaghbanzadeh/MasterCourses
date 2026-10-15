@@ -1,0 +1,173 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۶} \\[0.4cm] \small محاسبه شباهت معنایی با استفاده از معیار کسینوس}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: معیار شباهت کسینوس (بخش \en{۵-۴} کتاب)}
+
+در بخش \textbf{\en{۵-۴}} کتاب (\en{Cosine for measuring similarity})، فرمول شباهت کسینوس به عنوان رایج‌ترین معیار برای اندازه‌گیری شباهت معنایی بین دو بردار کلمه معرفی شده است. این معیار بر اساس زاویه بین دو بردار در فضای برداری عمل می‌کند و مقدار آن بین \(0\) (بدون شباهت) تا \(1\) (بیشترین شباهت) قرار دارد.
+
+فرمول شباهت کسینوس برای دو بردار \(v\) و \(w\) به صورت زیر است (معادله \en{۵-۱۰} کتاب):
+
+\[
+\text{\en{cosine}}(v,w) = \frac{v \cdot w}{|v||w|} = \frac{\sum_{i=1}^{N} v_i w_i}{\sqrt{\sum_{i=1}^{N} v_i^2} \cdot \sqrt{\sum_{i=1}^{N} w_i^2}}
+\]
+
+ضرب داخلی (دات پروداکت) دو بردار نیز به صورت زیر محاسبه می‌شود:
+
+\[
+v \cdot w = v_1 w_1 + v_2 w_2 + \dots + v_N w_N
+\]
+
+و اندازه (طول) یک بردار از رابطه زیر به دست می‌آید:
+
+\[
+|v| = \sqrt{v_1^2 + v_2^2 + \dots + v_N^2}
+\]
+
+\thickseparator
+
+\section{داده‌های مسأله}
+
+بردارهای داده شده در صورت سوال:
+
+\begin{align*}
+\vec{v}_{\text{\en{king}}} &= [0.8,\; 0.6] \\
+\vec{v}_{\text{\en{queen}}} &= [0.6,\; 0.8] \\
+\vec{v}_{\text{\en{table}}} &= [0.1,\; 0.05]
+\end{align*}
+
+\thickseparator
+
+\section{محاسبه شباهت کسینوس برای هر جفت واژه}
+
+\subsection{گام ۱: محاسبه اندازه (طول) هر بردار}
+
+\noindent\textbf{طول بردار \en{king}:}
+\[
+|\vec{v}_{\text{\en{king}}}| = \sqrt{(0.8)^2 + (0.6)^2} = \sqrt{0.64 + 0.36} = \sqrt{1.00} = 1.00
+\]
+
+\noindent\textbf{طول بردار \en{queen}:}
+\[
+|\vec{v}_{\text{\en{queen}}}| = \sqrt{(0.6)^2 + (0.8)^2} = \sqrt{0.36 + 0.64} = \sqrt{1.00} = 1.00
+\]
+
+\noindent\textbf{طول بردار \en{table}:}
+\[
+|\vec{v}_{\text{\en{table}}}| = \sqrt{(0.1)^2 + (0.05)^2} = \sqrt{0.01 + 0.0025} = \sqrt{0.0125} \approx 0.1118
+\]
+
+\subsection{گام ۲: محاسبه شباهت (\en{king}, \en{queen})}
+
+\noindent\textbf{ابتدا ضرب داخلی:}
+\[
+\vec{v}_{\text{\en{king}}} \cdot \vec{v}_{\text{\en{queen}}} = (0.8 \times 0.6) + (0.6 \times 0.8) = 0.48 + 0.48 = 0.96
+\]
+
+\noindent\textbf{سپس شباهت کسینوس:}
+\[
+\text{\en{cosine}}(\text{\en{king}}, \text{\en{queen}}) = \frac{0.96}{|\vec{v}_{\text{\en{king}}}| \times |\vec{v}_{\text{\en{queen}}}|} = \frac{0.96}{1.00 \times 1.00} = 0.96
+\]
+
+\subsection{گام ۳: محاسبه شباهت (\en{king}, \en{table})}
+
+\noindent\textbf{ضرب داخلی:}
+\[
+\vec{v}_{\text{\en{king}}} \cdot \vec{v}_{\text{\en{table}}} = (0.8 \times 0.1) + (0.6 \times 0.05) = 0.08 + 0.03 = 0.11
+\]
+
+\noindent\textbf{شباهت کسینوس:}
+\[
+\text{\en{cosine}}(\text{\en{king}}, \text{\en{table}}) = \frac{0.11}{1.00 \times 0.1118} = \frac{0.11}{0.1118} \approx 0.9839
+\]
+
+\subsection{گام ۴: محاسبه شباهت (\en{queen}, \en{table})}
+
+\noindent\textbf{ضرب داخلی:}
+\[
+\vec{v}_{\text{\en{queen}}} \cdot \vec{v}_{\text{\en{table}}} = (0.6 \times 0.1) + (0.8 \times 0.05) = 0.06 + 0.04 = 0.10
+\]
+
+\noindent\textbf{شباهت کسینوس:}
+\[
+\text{\en{cosine}}(\text{\en{queen}}, \text{\en{table}}) = \frac{0.10}{1.00 \times 0.1118} = \frac{0.10}{0.1118} \approx 0.8945
+\]
+
+\separator
+\section{مقایسه نتایج}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{جفت واژه} & \textbf{شباهت کسینوس} \\
+\hline
+(\en{king}, \en{queen}) & \(0.96\) \\
+\hline
+(\en{king}, \en{table}) & \(0.9839\) \\
+\hline
+(\en{queen}, \en{table}) & \(0.8945\) \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{پاسخ نهایی}
+
+با توجه به محاسبات انجام شده:
+
+\begin{itemize}
+    \item شباهت (\en{king}, \en{queen}) برابر با \(0.96\)
+    \item شباهت (\en{king}, \en{table}) برابر با \(0.9839\)
+    \item شباهت (\en{queen}, \en{table}) برابر با \(0.8945\)
+\end{itemize}
+
+بنابراین \textbf{جفت (\en{king}, \en{table}) با مقدار تقریبی \(0.9839\) بیشترین شباهت کسینوس} را در بین سه جفت دارد.
+
+\thickseparator
+\section{نکته}
+
+در این مثال خاص، اعداد به گونه‌ای انتخاب شده‌اند که بردار \en{table} در امتداد نزدیکی به \en{king} قرار گرفته است. در عمل و در مدل‌های \en{embedding} واقعی (مانند \en{Word2Vec} یا \en{GloVe})، کلمات \en{king} و \en{queen} که از نظر معنایی مرتبط‌تر هستند، شباهت بسیار بیشتری نسبت به (\en{king}, \en{table}) خواهند داشت. اما پاسخ سوال بر اساس داده‌های عددی مسأله، (\en{king}, \en{table}) است.
+
+\thickseparator
+\begin{center}
+\fbox{\parbox{0.9\linewidth}{\centering
+\textbf{پاسخ نهایی:} \\
+بر اساس محاسبات معیار کسینوس:
+\begin{itemize}
+    \item شباهت (\en{king}, \en{queen}) = \(0.96\)
+    \item شباهت (\en{king}, \en{table}) \(\approx 0.9839\)
+    \item شباهت (\en{queen}, \en{table}) \(\approx 0.8945\)
+\end{itemize}
+\textbf{\en{king} و \en{table} بیشترین شباهت را دارند.}
+}}
+\end{center}
+
+\thickseparator
+
+\end{document}

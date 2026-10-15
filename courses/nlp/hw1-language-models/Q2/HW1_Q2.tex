@@ -1,0 +1,167 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۲} \\[0.4cm] \footnotesize دسته‌بندی احساسات جمله با استفاده از مدل \en{Naive Bayes}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: دسته‌بند \en{Naive Bayes} برای تحلیل احساسات}
+دسته‌بند \textbf{بیز ساده (\en{Naive Bayes})} یک دسته‌بند احتمالاتی است که از قانون بیز و فرض استقلال شرطی میان ویژگی‌ها (در اینجا کلمات) استفاده می‌کند. در مسائل \textbf{تحلیل احساسات (\en{Sentiment Analysis})}، هدف ما تخصیص یک متن به یکی از کلاس‌های \textbf{مثبت (\en{pos})} یا \textbf{منفی (\en{neg})} است.
+
+فرمول اصلی دسته‌بند بیز ساده به صورت زیر است:
+\[
+\hat{c} = \arg\max_{c \in \{\text{pos},\text{neg}\}} P(c) \prod_{i \in \text{positions}} P(w_i | c)
+\]
+
+برای جلوگیری از زیرریز محاسباتی (\en{underflow})، معمولاً از لگاریتم استفاده می‌شود:
+\[
+\hat{c} = \arg\max_{c} \left[ \log P(c) + \sum_{i} \log P(w_i | c) \right]
+\]
+
+\separator
+\section{محاسبه احتمال پیشین (\en{Prior Probability})}
+صورت سوال تصریح کرده است که \textbf{احتمال پیشین (\en{prior probability}) برای هر کلاس برابر} است. بنابراین:
+\[
+P(\text{pos}) = P(\text{neg}) = 0.5
+\]
+در نتیجه در فضای لگاریتم:
+\[
+\log P(\text{pos}) = \log(0.5) \approx -0.6931 \quad , \quad \log P(\text{neg}) = \log(0.5) \approx -0.6931
+\]
+
+\separator
+\section{احتمال شرطی کلمات (\en{Likelihood}) و دایره واژگان}
+جدول داده شده احتمالات شرطی هر کلمه را به ازای هر کلاس نشان می‌دهد:
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{\en{word}} & \textbf{\en{pos}} & \textbf{\en{neg}} \\
+\hline
+\en{This} & 0.1 & 0.15 \\
+\hline
+\en{Was} & 0.12 & 0.14 \\
+\hline
+\en{a} & 0.2 & 0.18 \\
+\hline
+\en{Predictable} & 0.01 & 0.29 \\
+\hline
+\en{mess} & 0.02 & 0.16 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{نکته مهم}: بر اساس بخش ۴.۲ کتاب، در مدل \en{Naive Bayes} کلماتی که در دایره واژگان \textbf{آموزشی} نبوده‌اند (یعنی در هیچ کلاسی دیده نشده‌اند) از محاسبات حذف می‌شوند. در این سوال تمام کلمات جمله در جدول وجود دارند و دایره واژگان $V$ شامل همین ۵ کلمه است.
+
+جمله مورد نظر:
+\begin{center}
+\textbf{\en{``this was a predictable mess''}}
+\end{center}
+
+توجه: حروف بزرگ و کوچک در محاسبات دسته‌بند تأثیری ندارند (معمولاً همه کلمات به حروف کوچک تبدیل می‌شوند).
+
+\separator
+\section{محاسبه احتمال هر کلاس برای جمله داده شده}
+برای هر کلاس، احتمال را به صورت حاصلضرب احتمال پیشین در احتمال تک تک کلمات (با فرض استقلال شرطی) محاسبه می‌کنیم:
+
+\subsection*{کلاس مثبت (\en{pos})}
+\[
+P(\text{pos}) \times P(\text{this}|\text{pos}) \times P(\text{was}|\text{pos}) \times P(\text{a}|\text{pos}) \times P(\text{predictable}|\text{pos}) \times P(\text{mess}|\text{pos})
+\]
+\[
+= 0.5 \times 0.1 \times 0.12 \times 0.2 \times 0.01 \times 0.02
+\]
+\[
+= 0.5 \times (0.1 \times 0.12 = 0.012) \times (0.2 \times 0.01 = 0.002) \times 0.02
+\]
+\[
+= 0.5 \times 0.012 \times 0.002 \times 0.02
+\]
+\[
+= 0.5 \times (0.012 \times 0.002 = 0.000024) \times 0.02
+\]
+\[
+= 0.5 \times 0.00000048
+\]
+\[
+= 2.4 \times 10^{-7}
+\]
+
+\subsection*{کلاس منفی (\en{neg})}
+\[
+P(\text{neg}) \times P(\text{this}|\text{neg}) \times P(\text{was}|\text{neg}) \times P(\text{a}|\text{neg}) \times P(\text{predictable}|\text{neg}) \times P(\text{mess}|\text{neg})
+\]
+\[
+= 0.5 \times 0.15 \times 0.14 \times 0.18 \times 0.29 \times 0.16
+\]
+ابتدا ضرب دو به دو را انجام می‌دهیم:
+\[
+0.15 \times 0.14 = 0.021
+\]
+\[
+0.18 \times 0.29 = 0.0522
+\]
+\[
+0.021 \times 0.0522 = 0.0010962
+\]
+حال ضرب در \en{۰.۱۶}:
+\[
+0.0010962 \times 0.16 = 0.000175392
+\]
+در نهایت ضرب در احتمال پیشین \en{۰.۵}:
+\[
+P(\text{neg}) \times \text{حاصلضرب} = 0.5 \times 0.000175392 = 8.7696 \times 10^{-5}
+\]
+
+\separator
+\section{مقایسه و نتیجه‌گیری نهایی}
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{کلاس} & \textbf{احتمال نهایی} \\
+\hline
+مثبت (\en{pos}) & \(2.4 \times 10^{-7}\) \\
+\hline
+منفی (\en{neg}) & \(8.77 \times 10^{-5}\) \\
+\hline
+\end{tabular}
+\end{center}
+
+از آنجا که:
+\[
+8.77 \times 10^{-5} > 2.4 \times 10^{-7}
+\]
+احتمال تعلق جمله به کلاس منفی بسیار بیشتر از کلاس مثبت است.
+
+بنابراین:
+\[
+\boxed{\text{جمله \en{«this was a predictable mess»} به کلاس \textbf{منفی (\en{neg})} تعلق می‌گیرد.}}
+\]
+
+\thickseparator
+
+\end{document}

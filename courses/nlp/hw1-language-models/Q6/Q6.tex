@@ -1,0 +1,138 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۶} \\[0.4cm] \footnotesize مقایسه روش‌های \en{Interpolation} و \en{Backoff} در مدل‌های \en{Trigram}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: \en{Backoff} و \en{Interpolation}}
+بر اساس بخش ۳.۶.۳ کتاب، زمانی که با \en{n-gram}های صفر مواجه می‌شویم، می‌توانیم از دو روش استفاده کنیم:
+
+\begin{itemize}
+\item \textbf{\en{Backoff} (عقب‌نشینی)}: اگر شواهد کافی برای \en{n-gram} با مرتبه بالا نداریم (یعنی شمارش آن صفر است)، به \en{n-gram} با مرتبه پایین‌تر عقب‌نشینی می‌کنیم. یعنی فقط در صورت صفر بودن از مرتبه پایین‌تر استفاده می‌شود.
+
+\item \textbf{\en{Interpolation} (درون‌یابی)}: همیشه تخمین‌های همه مرتبه‌ها (ترای‌گرم، بای‌گرام و یونی‌گرم) را با وزن‌های $\lambda$ ترکیب می‌کنیم، حتی اگر ترای‌گرم شمارش غیرصفر داشته باشد.
+\end{itemize}
+
+\separator
+\section{داده‌های مسأله}
+\begin{itemize}
+\item می‌خواهیم $P(\text{City} | \text{New York})$ را محاسبه کنیم.
+\item $C(\text{New York}) = 100$ (تعداد رخدادهای بای‌گرام \en{New York})
+\item $C(\text{York City})$ دفعات زیادی دیده شده است (فرض می‌کنیم مثلاً $C(\text{York City}) = 50$)
+\item $C(\text{New York City}) = 0$ (ترای‌گرم مورد نظر هرگز دیده نشده است)
+\end{itemize}
+
+\textbf{توجه}: $P(\text{City}|\text{York})$ را می‌توان از روی بای‌گرام \en{York City} محاسبه کرد:
+\[
+P(\text{City}|\text{York}) = \frac{C(\text{York City})}{C(\text{York})}
+\]
+
+\separator
+\section{روش اول: \en{Interpolation} (درون‌یابی)}
+در روش درون‌یابی خطی ساده (معادله ۳.۲۷ کتاب)، همیشه از ترکیب سه سطح استفاده می‌کنیم:
+\[
+\hat{P}(\text{City}|\text{New York}) = \lambda_1 P(\text{City}) + \lambda_2 P(\text{City}|\text{York}) + \lambda_3 P(\text{City}|\text{New York})
+\]
+که در آن $\lambda_1 + \lambda_2 + \lambda_3 = 1$.
+
+\begin{itemize}
+\item $P(\text{City})$: احتمال یونی‌گرم کلمه \en{City} (مقدار خاصی دارد)
+\item $P(\text{City}|\text{York})$: احتمال بای‌گرام \en{York City} (عدد بزرگی است چون دفعات زیادی دیده شده)
+\item $P(\text{City}|\text{New York})$: احتمال ترای‌گرم مورد نظر. با توجه به اینکه $C(\text{New York City}) = 0$، تخمین MLE آن صفر است:
+\[
+P_{\text{MLE}}(\text{City}|\text{New York}) = \frac{C(\text{New York City})}{C(\text{New York})} = \frac{0}{100} = 0
+\]
+\end{itemize}
+
+بنابراین در روش درون‌یابی:
+\[
+\hat{P}_{\text{Interp}}(\text{City}|\text{New York}) = \lambda_1 P(\text{City}) + \lambda_2 P(\text{City}|\text{York}) + \lambda_3 \times 0
+\]
+\[
+= \lambda_1 P(\text{City}) + \lambda_2 P(\text{City}|\text{York})
+\]
+
+مقدار نهایی یک عدد مثبت خواهد بود (چون $P(\text{City})$ و $P(\text{City}|\text{York})$ هر دو مثبت هستند). وزن‌های $\lambda$ معمولاً با استفاده از یک مجموعه \en{held-out} بهینه می‌شوند.
+
+\separator
+\section{روش دوم: \en{Backoff} (عقب‌نشینی)}
+در روش عقب‌نشینی (معادله ۳.۲۹ کتاب)، تنها در صورتی که ترای‌گرم صفر باشد، به بای‌گرام عقب‌نشینی می‌کنیم. از آنجا که $C(\text{New York City}) = 0 > 0$؟ خیر، شرط اول برقرار نیست چون شمارش صفر است. بنابراین از حالت دوم استفاده می‌شود:
+
+\[
+P_{\text{BO}}(\text{City}|\text{New York}) = \alpha(\text{New York}) \times P_{\text{BO}}(\text{City}|\text{York})
+\]
+
+\begin{itemize}
+\item $P_{\text{BO}}(\text{City}|\text{York})$: احتمال عقب‌نشینی برای بای‌گرام. اگر $C(\text{York City}) > 0$ باشد، از روی شمارش آن محاسبه می‌شود (احتملاً با تخفیف).
+\item $\alpha(\text{New York})$: ضریب نرمال‌سازی که جرم احتمال تخفیف‌داده‌شده از ترای‌گرم‌های دیده شده را بین بای‌گرام‌های دیده‌نشده توزیع می‌کند.
+\end{itemize}
+
+از آنجا که $C(\text{York City})$ مقدار زیادی است، $P_{\text{BO}}(\text{City}|\text{York})$ یک عدد مثبت و قابل توجه خواهد بود.
+
+\separator
+\section{جدول مقایسه دو روش}
+\begin{center}
+\begin{tabular}{|p{4cm}|p{5cm}|p{4cm}|}
+\hline
+\textbf{ویژگی} & \textbf{\en{Interpolation}} & \textbf{\en{Backoff}} \\
+\hline
+استفاده از ترای‌گرم & همیشه (حتی با ضریب $\lambda_3$) & فقط اگر شمارش > ۰ باشد \\
+\hline
+وضعیت $C(\text{New York City}) = 0$ & $P(\text{City}|\text{New York}) = 0$ در محاسبه & اصلاً استفاده نمی‌شود \\
+\hline
+نحوه محاسبه & $\lambda_1 P(\text{City}) + \lambda_2 P(\text{City}|\text{York})$ & $\alpha(\text{New York}) \times P_{\text{BO}}(\text{City}|\text{York})$ \\
+\hline
+تأثیر $P(\text{City}|\text{York})$ & با وزن $\lambda_2$ وارد می‌شود & مستقیماً (با ضریب $\alpha$) تأثیر می‌گذارد \\
+\hline
+تأثیر $P(\text{City})$ & با وزن $\lambda_1$ وارد می‌شود & فقط اگر بای‌گرام هم صفر باشد \\
+\hline
+پارامترها & $\lambda$های ثابت یا وابسته به متن & ضریب تخفیف و $\alpha$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{نتیجه‌گیری نهایی}
+\begin{itemize}
+\item \textbf{در روش \en{Interpolation}}: احتمال نهایی ترکیب وزنی از یونی‌گرم $P(\text{City})$ و بای‌گرام $P(\text{City}|\text{York})$ است. مقدار $\lambda_2$ معمولاً بزرگتر از $\lambda_1$ است چون بای‌گرام اطلاعات بیشتری دارد. این روش همواره از تمام سطوح استفاده می‌کند.
+
+\item \textbf{در روش \en{Backoff}}: چون ترای‌گرم \en{New York City} دیده نشده، مستقیماً به بای‌گرام \en{York City} عقب‌نشینی می‌کند. ضریب $\alpha(\text{New York})$ تضمین می‌کند که مجموع احتمالات برای همه کلماتی که بعد از \en{New York} می‌آیند، برابر ۱ بماند.
+\end{itemize}
+
+\[
+\boxed{\begin{array}{r}
+\text{در روش \en{Interpolation}، احتمال نهایی ترکیبی از یونی‌گرم \en{City} و بای‌گرام \en{York City} است} \\
+\text{در حالی که در روش \en{Backoff}، مستقیماً از بای‌گرام \en{York City} (با اعمال ضریب $\alpha$) استفاده می‌شود.} \\
+\text{هر دو روش احتمال غیرصفر تولید می‌کنند، اما \en{Backoff} به بای‌گرام وزن بیشتری می‌دهد.}
+\end{array}}
+\]
+
+\thickseparator
+
+\end{document}

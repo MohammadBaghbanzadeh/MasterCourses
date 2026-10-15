@@ -1,0 +1,342 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{Vazir}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۴} \\[0.4cm] \footnotesize مقایسه دو مدل \en{Multinomial Naive Bayes} و \en{Binary Naive Bayes} در تحلیل احساسات}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: دو نسخه از \en{Naive Bayes} برای تحلیل احساسات}
+بر اساس بخش‌های ۴.۱ تا ۴.۴ کتاب، دو نسخه متفاوت از دسته‌بند \en{Naive Bayes} برای تحلیل احساسات وجود دارد:
+
+\subsection*{۱. \en{Multinomial Naive Bayes}}
+این نسخه از \textbf{شمارش واقعی کلمات} (\en{word counts}) استفاده می‌کند. هر چند بار که یک کلمه در یک سند تکرار شود، در محاسبات لحاظ می‌گردد.
+
+\subsection*{۲. \en{Binary Naive Bayes} (یا \en{Binarized Naive Bayes})}
+همان‌طور که در بخش ۴.۴ توضیح داده شده، در این نسخه \textbf{حضور یا عدم حضور} کلمه اهمیت دارد، نه تعداد تکرار آن. به عبارت دیگر، شمارش هر کلمه در هر سند حداکثر به ۱ محدود می‌شود (یعنی کلمات تکراری در یک سند حذف می‌شوند). این روش معمولاً برای تحلیل احساسات عملکرد بهتری دارد.
+
+\separator
+\section{داده‌های آموزشی (\en{Training Data})}
+پنج سند با شمارش کلمات کلیدی \en{good}، \en{poor} و \en{great} و برچسب مثبت (\en{pos}) یا منفی (\en{neg}):
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{\en{doc}} & \textbf{\en{good}} & \textbf{\en{poor}} & \textbf{\en{great}} & \textbf{\en{class}} \\
+\hline
+\en{d1} & 3 & 0 & 3 & \en{pos} \\
+\hline
+\en{d2} & 0 & 1 & 2 & \en{pos} \\
+\hline
+\en{d3} & 1 & 3 & 0 & \en{neg} \\
+\hline
+\en{d4} & 1 & 5 & 2 & \en{neg} \\
+\hline
+\en{d5} & 0 & 2 & 0 & \en{neg} \\
+\hline
+\end{tabular}
+\end{center}
+
+\separator
+\section{محاسبه احتمال پیشین (\en{Prior Probability})}
+تعداد اسناد در هر کلاس:
+\[
+N_{\text{pos}} = 2, \quad N_{\text{neg}} = 3, \quad N_{\text{doc}} = 5
+\]
+\[
+P(\text{pos}) = \frac{2}{5} = 0.4, \qquad P(\text{neg}) = \frac{3}{5} = 0.6
+\]
+
+\separator
+\section{بخش اول: مدل \en{Multinomial Naive Bayes}}
+
+\subsection*{محاسبه دایره واژگان $V$}
+کلمات موجود در داده‌های آموزشی: \en{good, poor, great}
+\[
+|V| = 3
+\]
+
+\subsection*{محاسبه مجموع شمارش کلمات در هر کلاس}
+\begin{itemize}
+\item کلاس \en{pos}: اسناد \en{d1} و \en{d2}
+\[
+\text{sum}_{\text{pos}} = (3+0+3) + (0+1+2) = 6 + 3 = 9
+\]
+\item کلاس \en{neg}: اسناد \en{d3}، \en{d4} و \en{d5}
+\[
+\text{sum}_{\text{neg}} = (1+3+0) + (1+5+2) + (0+2+0) = 4 + 8 + 2 = 14
+\]
+\end{itemize}
+
+\subsection*{محاسبه احتمالات شرطی با \en{Add-1 Smoothing}}
+فرمول:
+\[
+\hat{P}(w_i|c) = \frac{\text{count}(w_i,c) + 1}{\text{sum}_c + |V|}
+\]
+
+\subsubsection*{کلاس \en{pos} (مخرج = $9 + 3 = 12$)}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{pos})$ \\
+\hline
+\en{good} & $3 + 0 = 3$ & 4 & $4/12 = 0.3333$ \\
+\hline
+\en{poor} & $0 + 1 = 1$ & 2 & $2/12 = 0.1667$ \\
+\hline
+\en{great} & $3 + 2 = 5$ & 6 & $6/12 = 0.5000$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{کلاس \en{neg} (مخرج = $14 + 3 = 17$)}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{شمارش} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{neg})$ \\
+\hline
+\en{good} & $1 + 1 + 0 = 2$ & 3 & $3/17 = 0.1765$ \\
+\hline
+\en{poor} & $3 + 5 + 2 = 10$ & 11 & $11/17 = 0.6471$ \\
+\hline
+\en{great} & $0 + 2 + 0 = 2$ & 3 & $3/17 = 0.1765$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{جمله تست برای مدل \en{Multinomial}}
+جمله: \textbf{\en{``A good, good plot and great characters, but poor acting.''}}
+
+کلمات موجود در دایره واژگان: \en{good} (۲ بار)، \en{great} (۱ بار)، \en{poor} (۱ بار)
+
+\subsubsection*{محاسبه برای کلاس \en{pos}}
+\[
+\begin{aligned}
+P(\text{pos}) \times \prod P(w|\text{pos}) = 0.4 \times & P(\text{good}|\text{pos})^2 \times P(\text{great}|\text{pos}) \times P(\text{poor}|\text{pos})
+\end{aligned}
+\]
+\[
+= 0.4 \times (0.3333)^2 \times 0.5 \times 0.1667
+\]
+\[
+= 0.4 \times 0.1111 \times 0.5 \times 0.1667
+\]
+\[
+= 0.4 \times 0.1111 \times 0.08335
+\]
+\[
+= 0.4 \times 0.009259
+\]
+\[
+= 3.7036 \times 10^{-3}
+\]
+
+\subsubsection*{محاسبه برای کلاس \en{neg}}
+\[
+\begin{aligned}
+P(\text{neg}) \times \prod P(w|\text{neg}) = 0.6 \times & P(\text{good}|\text{neg})^2 \times P(\text{great}|\text{neg}) \times P(\text{poor}|\text{neg})
+\end{aligned}
+\]
+\[
+= 0.6 \times (0.1765)^2 \times 0.1765 \times 0.6471
+\]
+\[
+= 0.6 \times 0.03115 \times 0.1765 \times 0.6471
+\]
+\[
+= 0.6 \times 0.03115 \times 0.1142
+\]
+\[
+= 0.6 \times 0.003557
+\]
+\[
+= 2.1342 \times 10^{-3}
+\]
+
+\subsection*{نتیجه مدل \en{Multinomial}}
+\[
+3.7036 \times 10^{-3} > 2.1342 \times 10^{-3} \quad \Rightarrow \quad \text{\en{pos}}
+\]
+
+\separator
+\section{بخش دوم: مدل \en{Binary Naive Bayes}}
+
+بر اساس بخش ۴.۴، در این مدل شمارش هر کلمه در هر سند حداکثر به ۱ محدود می‌شود (حضور یا عدم حضور).
+
+\subsection*{تبدیل داده‌های آموزشی به حالت دودویی (\en{Binary})}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{\en{doc}} & \textbf{\en{good}} & \textbf{\en{poor}} & \textbf{\en{great}} & \textbf{\en{class}} \\
+\hline
+\en{d1} & 1 & 0 & 1 & \en{pos} \\
+\hline
+\en{d2} & 0 & 1 & 1 & \en{pos} \\
+\hline
+\en{d3} & 1 & 1 & 0 & \en{neg} \\
+\hline
+\en{d4} & 1 & 1 & 1 & \en{neg} \\
+\hline
+\en{d5} & 0 & 1 & 0 & \en{neg} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{محاسبه تعداد اسناد در هر کلاس}
+\[
+N_{\text{pos}} = 2, \quad N_{\text{neg}} = 3
+\]
+
+\subsection*{محاسبه مجموع حضورها در هر کلاس (برای \en{smoothing})}
+\begin{itemize}
+\item کلاس \en{pos}: $N_{\text{pos}} \times |V| = 2 \times 3 = 6$ (چون هر سند حداکثر یک بار برای هر کلمه)
+\item کلاس \en{neg}: $N_{\text{neg}} \times |V| = 3 \times 3 = 9$
+\end{itemize}
+
+\subsection*{محاسبه احتمالات شرطی با \en{Add-1 Smoothing} برای مدل دودویی}
+
+\subsubsection*{کلاس \en{pos} (مخرج = $6 + 3 = 9$)}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{تعداد اسناد حاوی کلمه} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{pos})$ \\
+\hline
+\en{good} & $1 + 0 = 1$ & 2 & $2/9 = 0.2222$ \\
+\hline
+\en{poor} & $0 + 1 = 1$ & 2 & $2/9 = 0.2222$ \\
+\hline
+\en{great} & $1 + 1 = 2$ & 3 & $3/9 = 0.3333$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{کلاس \en{neg} (مخرج = $9 + 3 = 12$)}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{کلمه} & \textbf{تعداد اسناد حاوی کلمه} & $\text{شمارش} + 1$ & $\hat{P}(w|\text{neg})$ \\
+\hline
+\en{good} & $1 + 1 + 0 = 2$ & 3 & $3/12 = 0.2500$ \\
+\hline
+\en{poor} & $1 + 1 + 1 = 3$ & 4 & $4/12 = 0.3333$ \\
+\hline
+\en{great} & $0 + 1 + 0 = 1$ & 2 & $2/12 = 0.1667$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{جمله تست برای مدل \en{Binary}}
+جمله: \textbf{\en{``A good, good plot and great characters, but poor acting.''}}
+
+در مدل دودویی، کلمات تکراری در یک سند حذف می‌شوند. بنابراین کلمه \en{good} فقط \textbf{یک بار} محاسبه می‌شود. کلمات موجود: \en{good}، \en{great}، \en{poor}
+
+\subsubsection*{محاسبه برای کلاس \en{pos}}
+\[
+\begin{aligned}
+P(\text{pos}) \times \prod P(w|\text{pos}) = 0.4 \times & P(\text{good}|\text{pos}) \times P(\text{great}|\text{pos}) \times P(\text{poor}|\text{pos})
+\end{aligned}
+\]
+\[
+= 0.4 \times 0.2222 \times 0.3333 \times 0.2222
+\]
+\[
+= 0.4 \times (0.2222 \times 0.3333 = 0.07407) \times 0.2222
+\]
+\[
+= 0.4 \times 0.07407 \times 0.2222
+\]
+\[
+= 0.4 \times 0.01646
+\]
+\[
+= 6.584 \times 10^{-3}
+\]
+
+\subsubsection*{محاسبه برای کلاس \en{neg}}
+\[
+\begin{aligned}
+P(\text{neg}) \times \prod P(w|\text{neg}) = 0.6 \times & P(\text{good}|\text{neg}) \times P(\text{great}|\text{neg}) \times P(\text{poor}|\text{neg})
+\end{aligned}
+\]
+\[
+= 0.6 \times 0.25 \times 0.1667 \times 0.3333
+\]
+\[
+= 0.6 \times (0.25 \times 0.1667 = 0.041675) \times 0.3333
+\]
+\[
+= 0.6 \times 0.041675 \times 0.3333
+\]
+\[
+= 0.6 \times 0.01389
+\]
+\[
+= 8.334 \times 10^{-3}
+\]
+
+\subsection*{نتیجه مدل \en{Binary}}
+\[
+8.334 \times 10^{-3} > 6.584 \times 10^{-3} \quad \Rightarrow \quad \text{\en{neg}}
+\]
+
+\separator
+\section{مقایسه و نتیجه‌گیری نهایی}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{مدل} & \textbf{احتمال \en{pos}} & \textbf{احتمال \en{neg}} & \textbf{نتیجه} \\
+\hline
+\en{Multinomial Naive Bayes} & $3.70 \times 10^{-3}$ & $2.13 \times 10^{-3}$ & \textbf{\en{pos}} \\
+\hline
+\en{Binary Naive Bayes} & $6.58 \times 10^{-3}$ & $8.33 \times 10^{-3}$ & \textbf{\en{neg}} \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+\boxed{\text{دو مدل با یکدیگر \textbf{موافق نیستند} (\en{disagree}). مدل \en{Multinomial} جمله را \en{pos} و مدل \en{Binary} جمله را \en{neg} دسته‌بندی می‌کند.}}
+\]
+
+\separator
+\section{تحلیل علت اختلاف نظر دو مدل}
+دلیل اصلی اختلاف بین دو مدل:
+
+\begin{enumerate}
+\item \textbf{تکرار کلمه \en{good}}: در مدل \en{multinomial}، کلمه \en{good} دو بار در جمله آمده و توان دوم آن محاسبه می‌شود. از آنجا که $P(\text{good}|\text{pos}) > P(\text{good}|\text{neg})$، این تکرار به نفع کلاس مثبت تمام می‌شود.
+
+\item \textbf{مدل \en{binary}}: در این مدل، تکرار کلمه \en{good} تأثیری ندارد و فقط یک بار محاسبه می‌شود. بنابراین وزن این کلمه در مدل دودویی کمتر از مدل چندجمله‌ای است.
+
+\item \textbf{کلمه \en{poor}}: این کلمه در کلاس منفی احتمال بسیار بالایی دارد (\en{۰.۶۴۷۱} در مدل \en{multinomial} و \en{۰.۳۳۳۳} در مدل \en{binary}). در مدل \en{binary}، به دلیل حذف تأثیر تکرار \en{good}، تأثیر کلمه \en{poor} پررنگ‌تر می‌شود.
+
+\item \textbf{نتیجه}: در مدل \en{multinomial}، تکرار \en{good} برتری جزئی به کلاس مثبت می‌دهد، اما در مدل \en{binary}، حضور کلمه \en{poor} غالب شده و کلاس منفی را برنده می‌کند.
+\end{enumerate}
+
+همان‌طور که در بخش ۴.۴ کتاب اشاره شد، برای تحلیل احساسات معمولاً مدل \en{binary naive Bayes} عملکرد بهتری دارد، زیرا وجود یا عدم وجود یک کلمه احساسی معمولاً مهم‌تر از تعداد تکرار آن است.
+
+\thickseparator
+
+\end{document}

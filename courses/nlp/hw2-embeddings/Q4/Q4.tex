@@ -1,0 +1,153 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\setdefaultlanguage{persian}
+\setotherlanguage{english}
+\setmainfont{XB Niloofar}
+
+\newcommand{\en}[1]{\textenglish{#1}}
+\newcommand{\separator}{\vspace{1em}\noindent\rule{\linewidth}{0.4pt}\vspace{1em}}
+\newcommand{\thickseparator}{\vspace{1em}\noindent\rule{\linewidth}{1pt}\vspace{1em}}
+
+\title{\textbf{پاسخ سوال ۴} \\[0.4cm] \small چالش چندمعنایی (\en{Polysemy}) در مدل‌های \en{Static Embedding}}
+\author{محمد باغبان زاده \\ شماره دانشجویی: شناسهٔ دانشجو}
+\date{}
+\linespread{1.35}
+
+\begin{document}
+
+\maketitle
+\thickseparator
+
+\section{مفاهیم پایه: چندمعنایی و نقش آن در مدل‌های معنایی برداری}
+
+\subsection{چندمعنایی (\en{Polysemy}) در معناشناسی واژگانی}
+در بخش \textbf{\en{۵-۱} کتاب} (\en{Lexical Semantics})، مفهوم \textbf{چندمعنایی} به عنوان یکی از ویژگی‌های اساسی زبان معرفی شده است. یک \textbf{\en{lemma}} (مانند \en{mouse} در مثال کتاب یا \en{bank} در سوال ما) می‌تواند دارای \textbf{معانی متعدد (\en{word senses})} باشد. کتاب به صراحت اشاره می‌کند:
+
+\begin{quote}
+\en{``Each lemma can have multiple meanings; the lemma mouse can refer to the rodent or the cursor control device. We call each of these aspects of the meaning of mouse a word sense. The fact that lemmas can be polysemous can make interpretation difficult.''}
+\end{quote}
+
+کلمه \textbf{\en{bank}} دقیقاً چنین وضعیتی دارد:
+\begin{itemize}
+    \item \textbf{معنی ۱ (موسسه مالی):} \en{``I need to go to the bank to deposit a check''}
+    \item \textbf{معنی ۲ (کنار رودخانه):} \en{``children played on the bank of the river''}
+    \item \textbf{معنی ۳ (ذخیره‌سازی/انتقال داده):} \en{``we need to bank the data securely''}
+\end{itemize}
+
+\subsection{مدل‌های \en{Static Embedding} (مانند \en{Word2Vec} و \en{GloVe})}
+در بخش \textbf{\en{۵-۵} کتاب} (\en{Word2vec})، مدل‌های \textbf{استاتیک امبدینگ} معرفی شده‌اند. کتاب با صراحت بیان می‌کند:
+
+\begin{quote}
+\en{``Word2vec embeddings are \textbf{static embeddings}, meaning that the method learns \textbf{one fixed embedding for each word} in the vocabulary.''}
+\end{quote}
+
+این بدان معناست که صرف‌نظر از اینکه کلمه \en{bank} در چه \en{context}ای ظاهر شود (موسسه مالی، کنار رودخانه، یا ذخیره‌سازی داده)، مدل \textbf{فقط یک بردار} به آن نسبت می‌دهد. این بردار حاصل \textbf{ترکیب (میانگین یا جمع)} تمام \en{context}‌های متفاوتی است که کلمه در پیکره آموزشی با آنها دیده شده است.
+
+\thickseparator
+
+\section{تحلیل رفتار مدل \en{Static Embedding} برای کلمه \en{bank}}
+
+\subsection{تعداد بردارهای ساخته‌شده برای کلمه \en{bank}}
+\textbf{پاسخ مستقیم:} در یک مدل \en{Static Embedding} (چه \en{Word2Vec} و چه \en{GloVe})، برای کلمه \en{bank} \textbf{فقط یک بردار} ساخته می‌شود.
+
+این بردار منفرد، نمایشی از \textbf{همه معانی} کلمه به صورت توأمان است. به عبارت دیگر، مدل قادر به تفکیک معانی مختلف نیست و مجبور است تمام \en{context}‌های متفاوت را در یک نقطه از فضای برداری جمع کند.
+
+\subsection{تعامل بردار با معانی متفاوت (چگونه یک بردار حاصل می‌شود؟)}
+فرآیند یادگیری در الگوریتم‌هایی مانند \en{Skip-Gram with Negative Sampling (SGNS)} که در بخش \textbf{\en{۵-۵-۲} کتاب} توضیح داده شده، به این صورت است:
+
+\begin{enumerate}
+    \item مدل با بردارهای تصادفی برای هر کلمه آغاز می‌شود.
+    \item در حین پردازش پیکره، هر بار که کلمه \en{bank} ظاهر می‌شود:
+    \begin{itemize}
+        \item اگر در \en{context} \textbf{موسسه مالی} باشد (با کلماتی مانند \en{money, deposit, check, account})، مدل سعی می‌کند بردار \en{bank} را به بردار این کلمات نزدیک کند.
+        \item اگر در \en{context} \textbf{کنار رودخانه} باشد (با کلماتی مانند \en{river, water, flow, shore})، مدل سعی می‌کند بردار \en{bank} را به بردار این کلمات نزدیک کند.
+        \item اگر در \en{context} \textbf{ذخیره‌سازی داده} باشد (با کلماتی مانند \en{data, storage, secure, backup})، مدل سعی می‌کند بردار \en{bank} را به بردار این کلمات نزدیک کند.
+    \end{itemize}
+    \item در نهایت، بردار نهایی \en{bank} در نقطه‌ای از فضای برداری قرار می‌گیرد که \textbf{نزدیک به همه} این گروه‌های کلمات است، اما \textbf{دقیقاً به هیچ‌کدام نزدیک نیست}.
+\end{enumerate}
+
+این وضعیت مشابه مفهوم \textbf{\en{first-order co-occurrence} در مقابل \en{second-order co-occurrence}} است که در بخش \textbf{\en{۵-۷} کتاب} (\en{Semantic properties of embeddings}) توضیح داده شده: \en{context}‌های متفاوت، بردار نهایی را به جهات مختلف می‌کشند.
+
+\separator
+\newpage
+\section{چالش‌های مدل \en{Static Embedding} برای تحلیل‌های بعدی}
+
+\subsection{چالش در \en{Sentiment Analysis} (تحلیل احساسات)}
+فرض کنید یک سیستم \en{Sentiment Analysis} داریم که از امبدینگ کلمه \en{bank} استفاده می‌کند. جمله زیر را در نظر بگیرید:
+
+\begin{quote}
+\en{``The bank was ruined after the flood destroyed its records and the river overflowed.''}
+\end{quote}
+
+در این جمله، کلمه \en{bank} به هر دو معنی اشاره دارد. اما مدل \en{Static Embedding} \textbf{نمی‌تواند تشخیص دهد کدام معنی منظور است}. چالش‌ها به شرح زیر است:
+
+\begin{enumerate}
+    \item \textbf{ابهام در قطبیت احساسات (\en{Sentiment Polarity Ambiguity}):}
+    \begin{itemize}
+        \item معنی \textbf{موسسه مالی} در جملات مثبت (مانند \en{``The bank gave me a loan with low interest''}) و منفی (مانند \en{``The bank went bankrupt''}) ظاهر می‌شود.
+        \item معنی \textbf{کنار رودخانه} اغلب در جملات خنثی یا توصیفی ظاهر می‌شود.
+        \item مدل \en{Static} نمی‌تواند بداند در جمله مورد نظر، کدام معنی مدنظر است، بنابراین برآورد احساسات آن نادرست خواهد بود.
+    \end{itemize}
+    
+    \item \textbf{افزایش خطا در طبقه‌بندی (\en{Classification Error}):}
+    \begin{itemize}
+        \item از آنجا که بردار \en{bank} به همه معانی نزدیک است، ممکن است به اشتباه در \en{context}‌هایی که به معنی دیگر اشاره دارد، فعال شود.
+        \item این موضوع می‌تواند منجر به \textbf{نویز (\en{noise})} در ویژگی‌های ورودی مدل \en{Sentiment Analysis} شود.
+    \end{itemize}
+    
+    \item \textbf{از دست دادن اطلاعات \en{context}ای (\en{Loss of Contextual Information}):}
+    \begin{itemize}
+        \item در بخش \textbf{\en{۵-۷} کتاب} اشاره شده که پنجره‌های \en{context}ای کوتاه، اطلاعات نحوی و پنجره‌های بلند، اطلاعات موضوعی را \textbf{جذب} می‌کنند. اما در هر دو حالت، مدل \en{Static} قادر به تفکیک معانی نیست.
+        \item برای تحلیل احساسات، نیاز به درک دقیق معنی کلمه در \en{context} خاص داریم؛ چیزی که امبدینگ‌های استاتیک ارائه نمی‌کنند.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{چالش‌های دیگر در آنالیزهای پایین‌دستی}
+\begin{itemize}
+    \item \textbf{پرسش و پاسخ (\en{Question Answering}):} اگر کاربر بپرسد \en{``Where can I deposit money?''} و مدل به دلیل نزدیکی بردار \en{bank} به \en{river}، پاسخ اشتباه \en{``On the river bank''} را بدهد.
+    \item \textbf{خلاصه‌سازی متن (\en{Text Summarization}):} ممکن است سیستم به اشتباه معنای نادرستی را در خلاصه لحاظ کند.
+    \item \textbf{ترجمه ماشینی (\en{Machine Translation}):} ترجمه کلمه \en{bank} به فارسی بسته به معنی می‌تواند \textbf{بانک}، \textbf{کنار رودخانه} یا \textbf{ذخیره کردن} باشد. مدل \en{Static} نمی‌تواند انتخاب درستی داشته باشد.
+\end{itemize}
+
+\separator
+\section{راهکارهای پیشنهادی در ادبیات (ارتباط با فصل ۹ کتاب)}
+کتاب در انتهای بخش \textbf{\en{۵-۵}} اشاره می‌کند که مدل‌های \textbf{\en{Static Embeddings}} در مقابل \textbf{\en{Dynamic Contextual Embeddings}} (مانند \en{BERT} که در فصل ۹ معرفی می‌شود) قرار می‌گیرند:
+
+\begin{quote}
+\en{``In Chapter 9 we'll introduce methods for learning dynamic contextual embeddings like the popular family of BERT representations, in which the vector for each word is \textbf{different in different contexts}.''}
+\end{quote}
+
+راهکار اصلی برای حل مشکل چندمعنایی، استفاده از \textbf{امبدینگ‌های متنی (\en{Contextual Embeddings})} است که به ازای هر بار ظهور کلمه، بردار متفاوتی بر اساس \en{context} اطراف تولید می‌کنند.
+
+\thickseparator
+\section{جمع‌بندی و پاسخ نهایی}
+
+\begin{center}
+\fbox{\parbox{0.95\linewidth}{\centering
+\textbf{پاسخ خلاصه‌شده به سه پرسش سوال:}
+\begin{itemize}
+    \item \textbf{تعداد بردارها:} در مدل \en{Static Embedding}، برای کلمه \en{bank} \textbf{فقط یک بردار} ساخته می‌شود.
+    \item \textbf{نحوه تعامل با معانی متفاوت:} مدل بردار نهایی را از \textbf{ترکیب (میانگین)} تمام \en{context}‌های مختلف یاد می‌گیرد. این بردار در فضای برداری در نقطه‌ای قرار می‌گیرد که به همه معانی نزدیک است اما به هیچ معنی خاصی نزدیک نیست.
+    \item \textbf{چالش‌ها برای \en{Sentiment Analysis}:} 
+    \begin{itemize}
+        \item ابهام در تشخیص قطبیت احساسات (چون معانی مختلف می‌توانند احساسات متفاوتی داشته باشند)
+        \item افزایش خطای طبقه‌بندی به دلیل نویز در ویژگی‌ها
+        \item از دست دادن اطلاعات \en{context}ای که برای تعیین معنی دقیق ضروری است
+    \end{itemize}
+\end{itemize}
+}}
+\end{center}
+
+\thickseparator
+
+\end{document}

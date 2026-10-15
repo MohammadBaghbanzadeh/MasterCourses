@@ -1,0 +1,544 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\geometry{a4paper, margin=1in}
+
+\title{\lr{Linear models} \\ (مدل‌های خطی)}
+\author{محمود امین‌طوسی \\ دانشگاه فردوسی مشهد}
+\date{بهار ۲۰۲۶}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_13_1.png}
+  \caption{تأثیر نرخ یادگیری (Learning Rate) بر همگرایی یا واگرایی کاهش گرادیان}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_14_1.png}
+  \caption{تأثیر کاهش تدریجی نرخ یادگیری بر فرآیند آموزش}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_14_2.png}
+  \caption{خطوط تراز تابع زیان و بهینه‌سازی به روش کاهش گرادیان در فضای دوبعدی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_15_1.png}
+  \caption{نمودار بیضی خطوط تراز خطای مربعات نمونه}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_15_2.png}
+  \caption{مسیر حرکت در امتداد جهت گرادیان روی منحنی‌ها}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_44_1.png}
+  \caption{موازنه میان وفاداری به داده اولیه و تنک‌سازی پاسخ در لاسو}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_53_1.png}
+  \caption{تاثیر مقیاس‌گذاری متغیرها بر نرخ هم‌گرایی الگوریتم‌های بهینه‌سازی}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_53_2.png}
+  \caption{مقایسه توابع زیان مختلف طبقه‌بندی (لجستیک، هینج، مربعات و غیره)}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_53_3.png}
+  \caption{نحوه کارکرد طبقه‌بندی چندکلاسه به روش یک در مقابل همه (One-vs-Rest)}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_56_1.png}
+  \caption{مرزهای تصمیم طبقه‌بند چندکلاسه در یک فضای دوبعدی نمونه}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_58_1.png}
+  \caption{نمودار خطای آموزش با افزایش تعداد نمونه‌ها}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\section*{فهرست مطالب}
+\begin{itemize}
+    \item نمادگذاری و تعاریف
+    \item مبانی مدل‌سازی، بهینه‌سازی و منظم‌سازی
+    \item رگرسیون خطی و حل آن
+    \item کاهش گرادیان (\lr{Gradient Descent})
+    \item رگرسیون ستیغی (\lr{Ridge Regression})
+    \item لاسو (\lr{Lasso}) و فرود مختصاتی (\lr{Coordinate Descent})
+    \item الاستیک‌نت (\lr{Elastic-Net})
+    \item بهینه‌سازی تنک و الگوریتم \lr{Orthogonal Matching Pursuit (OMP)}
+    \item ارتباط با آنالیز تابعی (\lr{Functional Analysis})
+    \item بازسازی تصاویر \lr{MRI}
+    \item مدل‌های خطی برای دسته‌بندی (\lr{Classification})
+    \item رگرسیون لجستیک (\lr{Logistic regression}) و توابع زیان
+    \item دسته‌بندی چندکلاسه (\lr{Multiclass classification})
+    \item جدول خلاصه مدل‌های خطی
+\end{itemize}
+
+\newpage
+
+\section*{نمادگذاری و تعاریف}
+\begin{itemize}
+    \item \textbf{اسکالر (\lr{Scalar}):} یک مقدار عددی ساده که با حروف کج نشان داده می‌شود (مانند $x = 3.24$).
+    \item \textbf{بردار (\lr{Vector}):} یک آرایه مرتب یک‌بعدی از $n$ اسکالر که با حروف کوچک پررنگ نشان داده می‌شود: $x = [3.24, 1.2]^T$. $x_i$ نشان‌دهنده عنصر $i$-ام بردار است.
+    \item \textbf{مجموعه (\lr{Set}):} یک گروه نامرتب از عناصر منحصربه‌فرد که با حروف بزرگ کالیگرافیک مانند $\mathcal{S}$ نشان داده می‌شود.
+    \item \textbf{ماتریس (\lr{Matrix}):} یک آرایه دوبعدی از اسکالرها که با حروف بزرگ پررنگ نشان داده می‌شود:
+    \[
+    \mathbf{X} = \begin{bmatrix} 3.24 & 1.2 \\ 2.24 & 0.2 \\ 3.0 & 0.6 \end{bmatrix}
+    \]
+    $\mathbf{X}_{i,:}$ نشان‌دهنده سطر $i$-ام، $\mathbf{X}_{:,j}$ نشان‌دهنده ستون $j$-ام و $\mathbf{X}_{i,j}$ عنصر واقع در سطر $i$ و ستون $j$ است. یک ماتریس با ابعاد $n \times p$ نشان‌دهنده $n$ نقطه داده در فضای $p$-بعدی است.
+    \item \textbf{تنسور (\lr{Tensor}):} یک آرایه $k$-بعدی از داده‌ها که با حروف بزرگ کج مانند $T$ نشان داده می‌شود. $k$ مرتبه، درجه یا رتبه تنسور نامیده می‌شود. $T_{i,j,k,\dots}$ عنصر یا زیرتنسور را در موقعیت مربوطه نشان می‌دهد. برای مثال، مجموعه‌ای از تصاویر رنگی را می‌توان با یک تنسور ۴بعدی (نمونه × ارتفاع × عرض × کانال رنگ) نشان داد.
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_2_1.png}
+  \caption{تعریف هندسی بردارها و عملیات برداری}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_3_1.png}
+  \caption{نمایش داده‌ها به صورت تنسور با ابعاد بالا}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_33_1.png}
+  \caption{تخمین سیگنال اصلی تنک با استفاده از لاسو}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_33_2.png}
+  \caption{نتایج بازسازی تصویر با استفاده از مدل خطی تنک بر مبنای OMP}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\subsection*{عملیات پایه}
+\begin{itemize}
+    \item مجموع‌ها و حاصل‌ضرب‌ها با سیگمای بزرگ ($\sum$) و پی بزرگ ($\prod$) نشان داده می‌شوند.
+    \item عملیات روی بردارها به صورت مولفه‌به‌مولفه است: $x + z = [x_0 + z_0, \dots, x_p + z_p]^T$.
+    \item ضرب داخلی (\lr{Dot product}):
+    \[
+    w \cdot x = w^T x = \sum_{i=0}^{p} w_i x_i = w_0 x_0 + \dots + w_p x_p
+    \]
+    \item ضرب ماتریسی (\lr{Matrix product}) به صورت $\mathbf{W}x$ تعریف می‌شود.
+    \item تابع $f(x)=y$ یک عنصر ورودی $x$ را به خروجی $y$ مرتبط می‌کند. دارای مینیمم محلی در $x=c$ است اگر $f(x) \ge f(c)$ در یک بازه اطراف $c$ برقرار باشد. دارای مینیمم سراسری در $x=c$ است اگر $f(x) \ge f(c)$ برای هر $x$ برقرار باشد.
+    \item $\max f(x)$ بزرگترین مقدار تابع و $\arg\max f(x)$ نقطه‌ای را که تابع در آن بیشینه می‌شود، بازمی‌گردانند.
+\end{itemize}
+
+\subsection*{گرادیان‌ها (\lr{Gradients})}
+مشتق تابع $f$ سرعت رشد یا کاهش آن را توصیف می‌کند. فرآیند یافتن مشتق را مشتق‌گیری می‌نامند. برای توابع چندمتغیره، گرادیان ($\nabla f$) برداری از مشتقات جزئی است:
+\[
+\nabla f = \left[ \frac{\partial f}{\partial x_0}, \frac{\partial f}{\partial x_1}, \dots \right]
+\]
+
+\subsection*{توزیع‌ها و احتمالات}
+توزیع نرمال (گاوسی) با میانگین $\mu$ و انحراف معیار $\sigma$ به صورت $N(\mu, \sigma)$ نشان داده می‌شود.
+برای متغیر تصادفی پیوسته $X$، توزیع احتمال با تابع چگالی احتمال (\lr{pdf}) و امید ریاضی با $E[X] = \int x f_X(x) dx$ مشخص می‌شود. برای متغیر گسسته از تابع جرم احتمال (\lr{pmf}) استفاده می‌شود.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_5_1.png}
+  \caption{توزیع نرمال گوسی برای خطاها در فرضیات رگرسیون خطی}
+\end{figure}
+
+
+
+
+\section*{مدل‌های خطی برای رگرسیون}
+مدل‌های خطی با استفاده از یک تابع خطی از ویژگی‌های ورودی پیش‌بینی می‌کنند:
+\[
+f_w(x) = \sum_{i=1}^{p} w_i x_i + w_0
+\]
+که در آن $w_1, \dots, w_p$ وزن‌ها یا ضرایب (\lr{weights/coefficients}) و $w_0$ بایاس یا عرض از مبدأ (\lr{bias/intercept}) است. هدف یادگیری پارامترهای $w$ است که تابع زیان (\lr{loss function}) را کمینه کنند:
+\[
+\arg\min_{w} L(f_w(X))
+\]
+
+الگوریتم‌های متعددی مانند کمترین مربعات معمولی (\lr{Ordinary Least Squares})، ستیغی (\lr{Ridge})، لاسو (\lr{Lasso}) و غیره با توابع زیان مختلف وجود دارند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_8_1.png}
+  \caption{بهینه‌سازی تابع خطای حداقل مربعات}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_22_1.png}
+  \caption{مقایسه خطوط تراز جریمه منظم‌سازی‌های L1 و L2 در فضای پارامتر}
+\end{figure}
+
+
+
+
+
+
+\subsection*{رگرسیون خطی (کمترین مربعات معمولی - \lr{OLS})}
+تابع زیان مجموع خطاهای مربعات (\lr{SSE}) بین پیش‌بینی‌ها ($\hat{y}_n$) و اهداف واقعی ($y_n$) است:
+\[
+L_{\text{SSE}} = \sum_{n=1}^{N} (y_n - \hat{y}_n)^2 = \sum_{n=1}^{N} (y_n - (w^T x_n + w_0))^2
+\]
+
+\subsection*{راه حل فرم بسته (\lr{Closed-Form Solution})}
+این مسئله بهینه‌سازی محدب دارای یک راه حل یکتای فرم بسته به صورت زیر است:
+\[
+w^* = (X^T X)^{-1} X^T y
+\]
+
+\textbf{اثبات:} تابع زیان را به صورت ماتریسی می‌نویسیم:
+\[
+L_{\text{SSE}} = \|Xw - y\|_2^2 = w^T X^T X w - 2 y^T X w + y^T y
+\]
+با گرفتن مشتق نسبت به $w$ و قرار دادن آن برابر صفر داریم:
+\[
+\frac{\partial L_{\text{SSE}}}{\partial w} = 2 X^T X w - 2 X^T y = 0 \implies X^T X w = X^T y \implies w = (X^T X)^{-1} X^T y
+\]
+
+\textbf{نکات:}
+\begin{itemize}
+    \item پیچیدگی محاسباتی با تعداد ویژگی‌ها به صورت درجه دو $O(p^2 n)$ رشد می‌کند و کند است.
+    \item فقط زمانی کار می‌کند که تعداد نمونه‌ها بیشتر از ویژگی‌ها باشد ($n > p$). در غیر این صورت ماتریس $X^T X$ منفرد (\lr{singular}) است و معکوس آن تعریف نشده است.
+    \item راه حل فرم بسته بسیار مستعد بیش‌برازش (\lr{overfitting}) است.
+\end{itemize}
+
+\section*{کاهش گرادیان (\lr{Gradient Descent})}
+زمانی که محاسبه $(X^T X)^{-1}$ به دلیل بزرگ بودن ابعاد داده‌ها غیرممکن است، از کاهش گرادیان استفاده می‌شود. با وزن‌های اولیه تصادفی $w_0$ شروع کرده و وزن‌ها را در جهت مخالف گرادیان با نرخ یادگیری $\eta$ به‌روزرسانی می‌کنیم:
+\[
+w_{s+1} = w_s - \eta \nabla L(w_s)
+\]
+گرادیان برای کمترین مربعات برابر است با:
+\[
+\frac{\partial L_{\text{SSE}}}{\partial w_i} = -2 \sum_{n=1}^{N} (y_n - \hat{y}_n) x_{n,i}
+\]
+
+\subsection*{کاهش گرادیان تصادفی (\lr{Stochastic Gradient Descent - SGD})}
+به جای محاسبه گرادیان روی کل مجموعه داده، گرادیان در هر زمان روی یک نقطه داده محاسب می‌شود:
+\[
+w_{s+1} = w_s - \eta \nabla L_i(w_s)
+\]
+روش‌های دیگری مانند \lr{Minibatch SGD} (محاسبه گرادیان روی دسته‌های کوچک داده) و \lr{Stochastic Average Gradient} (SAG) نیز وجود دارند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_17_1.png}
+  \caption{جهت و سرعت تغییرات گرادیان در جهات مختلف تابع}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_55_1.png}
+  \caption{برازش منحنی لجستیک به نقاط داده نمونه}
+\end{figure}
+
+
+
+
+
+
+\section*{منظم‌سازی و رگرسیون ستیغی (\lr{Ridge Regression})}
+منظم‌سازی (\lr{Regularization}) به معنای محدود کردن مدل برای جلوگیری از بیش‌برازش است. رگرسیون ستیغی جریمه مرتبه دوم یا جریمه \lr{L2} را به تابع زیان اضافه می‌کند:
+\[
+L_{\text{Ridge}} = \sum_{n=1}^{N} (y_n - (w^T x_n + w_0))^2 + \alpha \sum_{i=1}^{p} w_i^2
+\]
+پارامتر $\alpha$ قدرت منظم‌سازی را کنترل می‌کند. راه حل فرم بسته رگرسیون ستیغی به صورت زیر است:
+\[
+w^* = (X^T X + \alpha I)^{-1} X^T y
+\]
+افزودن $\alpha I$ پایداری عددی را بهبود داده و وارون‌پذیری را تضمین می‌کند.
+\begin{itemize}
+    \item مقادیر کوچک $\alpha$: خطر بیش‌برازش (\lr{overfitting})
+    \item مقادیر بزرگ $\alpha$: خطر کم‌برازش (\lr{underfitting})
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_21_1.png}
+  \caption{نمودار خطای آموزش و آزمون به عنوان تابعی از شدت پارامتر منظم‌سازی}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_21_2.png}
+  \caption{پیدا کردن مقدار منظم‌سازی بهینه (Sweet Spot) برای پیشگیری از بیش‌برازش}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_46_1.jpeg}
+  \caption{بازسازی تصویر پزشکی ام‌آرآی (MRI) با فشرده‌سازی تنک}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_51_1.png}
+  \caption{مرز تصمیم رگرسیون لجستیک روی مجموعه داده‌های سرطان پستان}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_51_2.png}
+  \caption{بررسی ضرایب ویژگی‌ها با تغییر پارامتر منظم‌سازی C در رگرسیون لجستیک}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\section*{لاسو (\lr{Lasso})}
+لاسو جریمه مرتبه اول یا جریمه \lr{L1} را به مجموع خطاهای مربعات اضافه می‌کند:
+\[
+L_{\text{Lasso}} = \sum_{n=1}^{N} (y_n - (w^T x_n + w_0))^2 + \alpha \sum_{i=1}^{p} |w_i|
+\]
+منظم‌سازی L1 باعث می‌شود بسیاری از وزن‌ها دقیقاً صفر شوند که منجر به مدل‌های تنک (\lr{sparse models}) می‌گردد. این ویژگی به عنوان انتخاب خودکار ویژگی (\lr{automatic feature selection}) عمل می‌کند. لاسو راه حل فرم بسته ندارد.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_23_1.png}
+  \caption{مجموعه مجاز جریمه لاسو در مقایسه با حداقل مربعات معمولی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_31_1.png}
+  \caption{کاربرد لاسو در بازسازی و حذف نویز از یک سیگنال یک‌بعدی}
+\end{figure}
+
+
+
+
+
+
+
+
+\subsection*{فرود مختصاتی (\lr{Coordinate Descent})}
+برای بهینه‌سازی لاسو از فرود مختصاتی استفاده می‌شود که در آن در هر تکرار، تنها یک مختصات $w_i$ بهینه‌سازی می‌شود. با محاسبه زیرگرادیان (\lr{subgradient})، راه حل لاسو فرم یک تابع آستانه‌گذاری نرم (\lr{soft thresholding}) را به خود می‌گیرد:
+\[
+w_i^* = S(\rho_i, \alpha) = \begin{cases} \rho_i + \alpha & \rho_i < -\alpha \\ 0 & -\alpha < \rho_i < \alpha \\ \rho_i - \alpha & \rho_i > \alpha \end{cases}
+\]
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_24_1.png}
+  \caption{مراحل الگوریتم فرود مختصاتی برای مدل لاسو}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_24_2.png}
+  \caption{فرآیند بهینه‌سازی مرحله به مرحله فرود مختصاتی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_25_1.png}
+  \caption{تاثیر جریمه لاسو بر روی صفر شدن وزن‌ها و تنک‌سازی مدل}
+\end{figure}
+
+
+
+
+
+
+
+\section*{الاستیک‌نت (\lr{Elastic-Net})}
+الاستیک‌نت هر دو منظم‌سازی L1 و L2 را ترکیب می‌کند:
+\[
+L_{\text{Elastic}} = \sum_{n=1}^{N} (y_n - (w^T x_n + w_0))^2 + \alpha \rho \sum_{i=1}^{p} |w_i| + \alpha (1 - \rho) \sum_{i=1}^{p} w_i^2
+\]
+که در آن $\rho$ نسبت L1 را تعیین می‌کند. الاستیک‌نت به مدل اجازه می‌دهد ویژگی‌های همبسته را حفظ کند (بر خلاف لاسو که یکی را تصادفی انتخاب می‌کند).
+
+\section*{بهینه‌سازی تنک و الگوریتم \lr{OMP}}
+بهینه‌سازی تنک به دنبال یافتن راه‌حل‌هایی با تعداد عناصر غیرصفر کم است. این موضوع ریشه در تئوری حسگری فشرده (\lr{Compressed Sensing}) دارد.
+
+الگوریتم تعقیب تطبیقی متعامد (\lr{Orthogonal Matching Pursuit} یا \lr{OMP}) یک روش حریصانه برای حل مسئله تقریب تنک زیر است:
+\[
+\min_{w} \|w\|_0 \quad \text{subject to} \quad \|y - X w\|_2 \le \epsilon
+\]
+الگوریتم OMP به صورت تکراری در هر مرحله ستونی از ماتریس را که بیشترین همبستگی را با باقیمانده (\lr{residual}) فعلی دارد انتخاب می‌کند، سپس مسئله کمترین مربعات را روی مجموعه فعال حل می‌کند.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_1_1.png}
+  \caption{مدل رگرسیون خطی و نحوه برازش آن بر روی داده‌ها}
+\end{figure}
+
+
+
+
+\subsection*{ارتباط با آنالیز تابعی (\lr{Functional Analysis})}
+روش‌های بازیابی تنک مانند OMP و LASSO در آنالیز تابعی ریشه دارند. فضاهای هیلبرت (\lr{Hilbert spaces}) برای تحلیل پروجکشن‌های متعامد و ضرب‌های داخلی، و فضاهای باناخ (\lr{Banach spaces}) برای بررسی غیرهمواری جریمه‌های $\ell_1$ استفاده می‌شوند.
+
+\subsection*{بازسازی تصاویر \lr{MRI}}
+بازسازی تصاویر \lr{MRI} از داده‌های نمونه‌برداری نشده در حوزه فرکانس به کمک بهینه‌سازی تنک فرموله می‌شود:
+\[
+\min_{m} \|F_u m - y\|_2^2 + \lambda \|\Psi m\|_p
+\]
+که در آن $m$ تصویر بازسازی شده، $F_u$ اپراتور فوریه نمونه‌برداری نشده، $y$ داده‌های ثبت شده و $\Psi$ تبدیل تنک‌کننده (مانند موجک) است.
+
+\section*{مدل‌های خطی برای دسته‌بندی (\lr{Classification})}
+در دسته‌بندی باینری، هدف یافتن ابرصفحه‌ای است که نمونه‌ها را جدا کند:
+\[
+\hat{y} = w_1 x_1 + \dots + w_p x_p + w_0 > 0
+\]
+اگر این مقدار بزرگتر از صفر باشد، کلاس $+1$ و در غیر این صورت کلاس $-1$ پیش‌بینی می‌شود.
+
+\subsection*{رگرسیون لجستیک (\lr{Logistic regression})}
+احتمال تعلق یک نمونه به کلاس مثبت را با استفاده از تابع سیگموئید (\lr{sigmoid}) مدل‌سازی می‌کند:
+\[
+\hat{y} = \frac{1}{1 + e^{-w^T x}}
+\]
+تابع زیان آن کراس آنتروپی (\lr{Cross-entropy} یا \lr{log loss}) است:
+\[
+L_{\text{log}}(w) = -\sum_{n=1}^{N} [y_n \log(\hat{y}_n) + (1 - y_n) \log(1 - \hat{y}_n)]
+\]
+برای حل این زیان از روش‌های بهینه‌سازی مانند کاهش گرادیان، نیوتن و شبه‌نیوتن (\lr{lbfgs}) استفاده می‌شود. پارامتر $C$ در کتابخانه \lr{scikit-learn} عکس قدرت منظم‌سازی است ($C = 1/\alpha$).
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_48_1.png}
+  \caption{تابع لجستیک سیگموئید و نگاشت مقادیر خروجی به احتمالات بین ۰ و ۱}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_49_1.png}
+  \caption{تابع زیان انتروپی متقاطع (Cross-Entropy Loss) در رگرسیون لجستیک}
+\end{figure}
+
+
+
+
+
+
+\subsection*{دسته‌بندی چندکلاسه (\lr{Multiclass classification})}
+\begin{itemize}
+    \item \textbf{یک در مقابل همه (\lr{one-vs-rest}):} برای هر کلاس یک مدل دسته‌بندی باینری در مقابل سایر کلاس‌ها آموزش داده می‌شود.
+    \item \textbf{یک در مقابل یک (\lr{one-vs-one}):} برای هر جفت از کلاس‌ها یک مدل آموزش داده می‌شود. برای $C$ کلاس، تعداد $\frac{C(C-1)}{2}$ مدل ساخته شده و با رای‌گیری اکثریت کلاس نهایی تعیین می‌شود.
+\end{itemize}
+
+\newpage
+
+\section*{جدول خلاصه مدل‌های خطی}
+\begin{table}[h]
+\centering
+\caption{خلاصه مدل‌های خطی برای رگرسیون (R) و دسته‌بندی (C)}
+\vspace{1mm}
+\begin{tabular}{lllll}
+\toprule
+\textbf{نام مدل} & \textbf{نوع} & \textbf{تابع زیان} & \textbf{بهینه‌ساز} & \textbf{منظم‌سازی} \\
+\midrule
+\lr{Least squares} & R & \lr{SSE} & فرم بسته / \lr{SGD} & ندارد \\
+\lr{Ridge} & R & \lr{SSE} + L2 & فرم بسته / \lr{SGD} & L2 \\
+\lr{Lasso} & R & \lr{SSE} + L1 & فرود مختصاتی & L1 \\
+\lr{Elastic-Net} & R & \lr{SSE} + L1 + L2 & فرود مختصاتی & L1 + L2 \\
+\lr{Logistic regression} & C & \lr{Log} + L1/L2 & \lr{lbfgs} / \lr{SGD} / \lr{liblinear} & L1 / L2 \\
+\lr{Ridge classification} & C & \lr{SSE} + L2 & فرم بسته / \lr{SGD} & L2 \\
+\lr{Linear SVM} & C & \lr{Hinge} & برنامه‌نویسی مرتبه دوم / \lr{SGD} & L2 \\
+\lr{Perceptron} & C & \lr{Perceptron loss} & \lr{SGD} & ندارد \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_6_1.png}
+  \caption{نمایش برازش خط به داده‌های پراکنده تک‌متغیره}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_7_1.png}
+  \caption{تفسیر هندسی حل حداقل مربعات خطا}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_12_1.jpeg}
+  \caption{مفهوم الگوریتم کاهش گرادیان در بهینه‌سازی توابع هدف}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_16_1.png}
+  \caption{چالش نقاط کمینه محلی در مقایسه با بهینه سراسری در توابع غیرکوژ}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_16_2.png}
+  \caption{فرآیند بهینه‌سازی روی یک سطح پیچیده غیرمحدب}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_27_1.png}
+  \caption{نقاط برخورد خطوط تراز خطا با مرزهای جریمه L1 برای انتخاب ویژگی تنک}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_47_1.png}
+  \caption{کیفیت تصویر بازسازی‌شده ام‌آرآی به عنوان تابعی از وزن منظم‌سازی}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img_page_52_1.png}
+  \caption{بررسی ضرایب حاصل از منظم‌سازی‌های L1 و L2 در رگرسیون لجستیک}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

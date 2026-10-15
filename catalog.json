@@ -1,0 +1,1474 @@
+{
+  "version": 1,
+  "courses": [
+    {
+      "id": "sml",
+      "title": "یادگیری ماشین آماری",
+      "english": "Statistical Machine Learning",
+      "description": "مدل‌های احتمالاتی، روش‌های Kernel، خوشه‌بندی و کاربردهای یادگیری ماشین."
+    },
+    {
+      "id": "nlp",
+      "title": "پردازش زبان طبیعی",
+      "english": "Natural Language Processing",
+      "description": "از مدل‌های زبانی کلاسیک تا Transformer، Fine-Tuning و RAG."
+    },
+    {
+      "id": "optimization",
+      "title": "بهینه‌سازی ترکیبی",
+      "english": "Combinatorial Optimization",
+      "description": "مدل‌سازی مسائل گسسته، Local Search، الگوریتم‌های تقریبی و آزمایش‌های محاسباتی."
+    },
+    {
+      "id": "database",
+      "title": "پایگاه داده",
+      "english": "Database Systems",
+      "description": "تمرین‌ها و مواد آموزشی طراحی پایگاه داده و مدل‌سازی سامانه‌ها."
+    },
+    {
+      "id": "data-mining",
+      "title": "داده‌کاوی",
+      "english": "Data Mining",
+      "description": "مواد آموزشی و قالب پروژه برای Recommender Systems."
+    },
+    {
+      "id": "graph-mining",
+      "title": "گراف‌کاوی",
+      "english": "Graph Mining",
+      "description": "ارائهٔ پیش‌پردازش گراف و آماده‌سازی داده‌های گرافی."
+    },
+    {
+      "id": "algorithms",
+      "title": "الگوریتم‌های پیشرفته",
+      "english": "Advanced Algorithms",
+      "description": "یادداشت آموزشی تحلیل سرشکن و روش پتانسیل."
+    }
+  ],
+  "works": [
+    {
+      "course": "sml",
+      "slug": "hw1-naive-bayes",
+      "title": "تمرین ۱: Gaussian Naive Bayes",
+      "description": "بررسی مرز تصمیم بیز روی دادهٔ مصنوعی و مقایسهٔ پیاده‌سازی بیز ساده روی Iris.",
+      "kind": "نوت‌بوک و کد",
+      "topics": [
+        "GaussianNB",
+        "Iris",
+        "Decision Boundary"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "gaussian_naive_bayes.ipynb",
+          "path": "courses/sml/hw1-naive-bayes/gaussian_naive_bayes.ipynb",
+          "bytes": 4263,
+          "sha256": "a2d0ac382ff813d1b11aea535f7470a45580b53eac39c89b99c6e220772e657b"
+        },
+        {
+          "name": "gaussian_naive_bayes_notebook.py",
+          "path": "courses/sml/hw1-naive-bayes/gaussian_naive_bayes_notebook.py",
+          "bytes": 2166,
+          "sha256": "93d7333d7a2d0d519aacd36caf62f65a0c99d31d09f1ebe0a4cf648db5e6b0f5"
+        },
+        {
+          "name": "iris_gnb.ipynb",
+          "path": "courses/sml/hw1-naive-bayes/iris_gnb.ipynb",
+          "bytes": 7086,
+          "sha256": "6a9c7029e5630ebcb02d4f567bf3c8fd355737ee5fd691cc231368e6b4ba317c"
+        },
+        {
+          "name": "iris_gnb_notebook.py",
+          "path": "courses/sml/hw1-naive-bayes/iris_gnb_notebook.py",
+          "bytes": 3562,
+          "sha256": "fc53ff32f4b8c50cac55632df6baebaab8d177fea2c8ac149826123da2b147cb"
+        }
+      ]
+    },
+    {
+      "course": "sml",
+      "slug": "hw3-image-denoising",
+      "title": "تمرین ۳: کاهش نویز تصویر با Sparse Coding",
+      "description": "نوت‌بوک آزمایش کاهش نویز با SPORCO، همراه با متن صورت تمرین.",
+      "kind": "نوت‌بوک و صورت تمرین",
+      "topics": [
+        "Sparse Coding",
+        "Image Denoising",
+        "SPORCO"
+      ],
+      "note": "این کار از مثال‌های SPORCO اقتباس شده است؛ ارجاع و مجوز کتابخانه در مخزن آمده است. تصاویر اشخاص و خروجی‌های حاوی آن‌ها منتشر نشده‌اند.",
+      "files": [
+        {
+          "name": "gwnden_clr.ipynb",
+          "path": "courses/sml/hw3-image-denoising/gwnden_clr.ipynb",
+          "bytes": 8441,
+          "sha256": "e4406417c187a00ef237471acb6d95199993be7f5aca3a2ee80cf535c28cd72a"
+        },
+        {
+          "name": "gwnden_clr_notebook.py",
+          "path": "courses/sml/hw3-image-denoising/gwnden_clr_notebook.py",
+          "bytes": 4958,
+          "sha256": "e52e7092f45b2c450e0c33f8cbda6b99de6d5bf6cfe2c3c4cea1cd28c0ff4f87"
+        },
+        {
+          "name": "report.md",
+          "path": "courses/sml/hw3-image-denoising/report.md",
+          "bytes": 12333,
+          "sha256": "cc7015b7c109d12c3de80eea2016e15a3e64d2841d4c722920a0d075123cf5e4"
+        }
+      ]
+    },
+    {
+      "course": "sml",
+      "slug": "hw4-kernel-kmeans",
+      "title": "تمرین ۴: Kernel K-Means",
+      "description": "پیاده‌سازی خوشه‌بندی در فضای Kernel و بررسی آن روی داده‌های غیرخطی.",
+      "kind": "نوت‌بوک و کد",
+      "topics": [
+        "Kernel K-Means",
+        "Clustering",
+        "RBF"
+      ],
+      "note": "فایل KernelKMeans.py کد مرجع Mathieu Blondel با برچسب BSD 3-Clause است؛ نوت‌بوک تمرین و بررسی‌ها در کنار آن آمده‌اند. این فایل مرجع به‌عنوان کد تألیفی معرفی نمی‌شود.",
+      "files": [
+        {
+          "name": "KernelKMeans.py",
+          "path": "courses/sml/hw4-kernel-kmeans/KernelKMeans.py",
+          "bytes": 4113,
+          "sha256": "ebf7c93a96aa0742474ccf8cf014e9655ef7824d1fa3d19f9a502e446c67f1e4"
+        },
+        {
+          "name": "KernelKMeans_Assignment.ipynb",
+          "path": "courses/sml/hw4-kernel-kmeans/KernelKMeans_Assignment.ipynb",
+          "bytes": 50481,
+          "sha256": "504a4ea2426f85634d8dcb44f4ae866d22404d2e151b3b6c61e23d55589a6ef1"
+        },
+        {
+          "name": "KernelKMeans_Assignment_notebook.py",
+          "path": "courses/sml/hw4-kernel-kmeans/KernelKMeans_Assignment_notebook.py",
+          "bytes": 21153,
+          "sha256": "9b11f58dfe8aab44808b6d9bd4ea851d795fee3db757bda200278f95305c6baa"
+        }
+      ]
+    },
+    {
+      "course": "sml",
+      "slug": "mashhad-real-estate",
+      "title": "پروژهٔ داده‌های املاک مشهد",
+      "description": "پیش‌پردازش داده، EDA و بررسی مدل‌های پیش‌بینی برای داده‌های املاک.",
+      "kind": "پروژهٔ درسی",
+      "topics": [
+        "EDA",
+        "Preprocessing",
+        "Regression"
+      ],
+      "note": "دادهٔ خام املاک در آرشیو عمومی قرار نگرفته است.",
+      "files": [
+        {
+          "name": "MHD-Real-State.ipynb",
+          "path": "courses/sml/mashhad-real-estate/MHD-Real-State.ipynb",
+          "bytes": 20900,
+          "sha256": "50a2de636990a9870c23223f9b73826de7167c16808ee82d80f621c7b28f9de2"
+        },
+        {
+          "name": "MHD-Real-State_notebook.py",
+          "path": "courses/sml/mashhad-real-estate/MHD-Real-State_notebook.py",
+          "bytes": 9707,
+          "sha256": "358ebf9997147c8ee167feece1e6ccfe74571ea9ca42610b423b24460e8f6f1c"
+        },
+        {
+          "name": "MHD-Real-State.py",
+          "path": "courses/sml/mashhad-real-estate/MHD-Real-State.py",
+          "bytes": 9843,
+          "sha256": "38f2c57a545d73e2fb15ca943549f04229d8af537c7e59be1b064cc8513e67f7"
+        },
+        {
+          "name": "PreProcessing.ipynb",
+          "path": "courses/sml/mashhad-real-estate/PreProcessing.ipynb",
+          "bytes": 4660,
+          "sha256": "78e18df59d8bc796604f89280c243b445c529510d5298acfaa046ac6a4ae1d12"
+        },
+        {
+          "name": "PreProcessing_notebook.py",
+          "path": "courses/sml/mashhad-real-estate/PreProcessing_notebook.py",
+          "bytes": 2148,
+          "sha256": "ecdc078187e248719dfd8d8c12e19067fe504af76d847313139b2e3534928f1a"
+        },
+        {
+          "name": "pre-process.ipynb",
+          "path": "courses/sml/mashhad-real-estate/pre-process.ipynb",
+          "bytes": 36456,
+          "sha256": "8c0b7cb25706ca188ca4e606980c97af0fed946ac990bef27cca9ae9a10722b5"
+        },
+        {
+          "name": "pre-process_notebook.py",
+          "path": "courses/sml/mashhad-real-estate/pre-process_notebook.py",
+          "bytes": 19165,
+          "sha256": "555b05af2377321bf5c68a52158fb67ed18f4397880a22986f389e4c96696291"
+        },
+        {
+          "name": "pre-process.py",
+          "path": "courses/sml/mashhad-real-estate/pre-process.py",
+          "bytes": 19654,
+          "sha256": "431d528df3e47632bf4d00eac5fc7c4462d5d2cd88689c00499a6bc2f0415661"
+        }
+      ]
+    },
+    {
+      "course": "sml",
+      "slug": "study-notes",
+      "title": "یادداشت‌های مرور SML",
+      "description": "یادداشت‌ها و ترجمه‌های مطالعه دربارهٔ مباحث یادگیری ماشین آماری؛ برگرفته از منابع درس.",
+      "kind": "یادداشت مطالعه",
+      "topics": [
+        "Bayes",
+        "Kernel Methods",
+        "PCA"
+      ],
+      "note": "جزوهٔ اصلی درس متعلق به دکتر محمود امین‌طوسی و گروه علوم کامپیوتر فردوسی است؛ لینک منبع اصلی در صفحهٔ درس آمده است. این بخش پژوهش یا نتایج جدید معرفی نمی‌کند.",
+      "files": [
+        {
+          "name": "Bayesian Decision Theory — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Bayesian Decision Theory — Statistical Machine Learning/translation.tex",
+          "bytes": 30987,
+          "sha256": "7540ee85d4f7015293cc0928c0e89ad243ba1d15bcd521144ebcdfbc9801cedb"
+        },
+        {
+          "name": "Feature Maps_ Bridging to Kernel Methods — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Feature Maps_ Bridging to Kernel Methods — Statistical Machine Learning/translation.tex",
+          "bytes": 10506,
+          "sha256": "2d2120752cbc21f39785ad3266883a06814e9d87cd7bb6ba2edb07e8ef2716a5"
+        },
+        {
+          "name": "Gaussian Mixture Model, Part 2 — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Gaussian Mixture Model, Part 2 — Statistical Machine Learning/translation.tex",
+          "bytes": 14044,
+          "sha256": "2aff99a20e507a3023463717af27ee2346040e1e7d5958df09d54d01f55e164e"
+        },
+        {
+          "name": "Kernel Regression_ From Linear to Nonlinear Modeling — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Kernel Regression_ From Linear to Nonlinear Modeling — Statistical Machine Learning/translation.tex",
+          "bytes": 14957,
+          "sha256": "7182d6f7358618eb6a57459a4da2d33c98bb081fb7af87e0bef4717c6e68ef59"
+        },
+        {
+          "name": "Linear models — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Linear models — Statistical Machine Learning/translation.tex",
+          "bytes": 25457,
+          "sha256": "1d0a674fb6f515d7c888446d3cabe617ab1439a2cdd0ff8605047acc51587137"
+        },
+        {
+          "name": "Mahalanobis Distance — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Mahalanobis Distance — Statistical Machine Learning/translation.tex",
+          "bytes": 17247,
+          "sha256": "1a9e190cf51437006d21c30124f9e4b39e9ec86a53b4504b63a0a97998969d5f"
+        },
+        {
+          "name": "Maximum Likelihood Estimation (MLE) — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Maximum Likelihood Estimation (MLE) — Statistical Machine Learning/translation.tex",
+          "bytes": 12024,
+          "sha256": "53375db350a784cdef460d27cd8b4ae408b5a9c62cb9543588c3a27708ec8234"
+        },
+        {
+          "name": "Naive Bayes Classification — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Naive Bayes Classification — Statistical Machine Learning/translation.tex",
+          "bytes": 12370,
+          "sha256": "9d8a4f68206a5559452dd909e94519d8085e3169b8b53c1bee513f56ab5a772d"
+        },
+        {
+          "name": "Principal Component Analysis, Part 2 — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Principal Component Analysis, Part 2 — Statistical Machine Learning/translation.tex",
+          "bytes": 12572,
+          "sha256": "28cd70aecc8f3e7181c0010fce5df1de7cd7c8b91452fd397c38d354d2a7ce7b"
+        },
+        {
+          "name": "The Kernel Method (Kernel Trick) — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/The Kernel Method (Kernel Trick) — Statistical Machine Learning/translation.tex",
+          "bytes": 14312,
+          "sha256": "b22538af6255432d5a4fbf571fbdb562b15cd033badbbce4425bab7b74d7f40a"
+        },
+        {
+          "name": "Understanding the Covariance Matrix — Statistical Machine Learning/translation.tex",
+          "path": "courses/sml/study-notes/Understanding the Covariance Matrix — Statistical Machine Learning/translation.tex",
+          "bytes": 10326,
+          "sha256": "8bd91ada45b304a5ac6475ec153e5ee6f3c21d8e2190f5ea21ea71b5f3d6d30e"
+        },
+        {
+          "name": "Chapter9.md",
+          "path": "courses/sml/study-notes/Chapter9.md",
+          "bytes": 7553,
+          "sha256": "4910f0bafc9c1a2198b75e173d63b5bd72176dc48647a5d6a2296a9118de8667"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw1-language-models",
+      "title": "تمرین ۱: N-gram و Naive Bayes",
+      "description": "پاسخ‌های مکتوب دربارهٔ مدل زبانی، Smoothing و دسته‌بندی متن.",
+      "kind": "پاسخ مکتوب",
+      "topics": [
+        "N-gram",
+        "Smoothing",
+        "Naive Bayes"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q1/HW1_Q1.tex",
+          "path": "courses/nlp/hw1-language-models/Q1/HW1_Q1.tex",
+          "bytes": 9683,
+          "sha256": "fcd994592b813108ba707759aaecf36ea1aa97e53da38c57c99f63dc16723dba"
+        },
+        {
+          "name": "Q2/HW1_Q2.tex",
+          "path": "courses/nlp/hw1-language-models/Q2/HW1_Q2.tex",
+          "bytes": 5845,
+          "sha256": "0469f96ab504722fdd0b949cad46d45d5a79efa491d91ae1ecfa85cd2891b72d"
+        },
+        {
+          "name": "Q3/Q3.tex",
+          "path": "courses/nlp/hw1-language-models/Q3/Q3.tex",
+          "bytes": 10673,
+          "sha256": "6d2a020dfb84fec0d3efcf6059698a71859c23a03bbcca318fd0f116f181fcf3"
+        },
+        {
+          "name": "Q4/Q4.tex",
+          "path": "courses/nlp/hw1-language-models/Q4/Q4.tex",
+          "bytes": 11936,
+          "sha256": "9489f9eaf7be940828b268d56c6d4498e519393b50f1902fed5d5f6a0551f057"
+        },
+        {
+          "name": "Q5/Q5.tex",
+          "path": "courses/nlp/hw1-language-models/Q5/Q5.tex",
+          "bytes": 9188,
+          "sha256": "b6f5dc44d3a8944dbcd746ebf25ca1a170cd625b51c0177c115d731c9318994d"
+        },
+        {
+          "name": "Q6/Q6.tex",
+          "path": "courses/nlp/hw1-language-models/Q6/Q6.tex",
+          "bytes": 8044,
+          "sha256": "4f38904cb0ee3a894e9e994ff7b0176d9e9c8c90778f0ed50d74ed1306ee6fa2"
+        },
+        {
+          "name": "Q7/Q7.tex",
+          "path": "courses/nlp/hw1-language-models/Q7/Q7.tex",
+          "bytes": 6482,
+          "sha256": "da7c7e576475ca9c7033337b94fa9bbcc2100e4a82c0f8dea5ea607c793038a7"
+        },
+        {
+          "name": "Q8/Q8.tex",
+          "path": "courses/nlp/hw1-language-models/Q8/Q8.tex",
+          "bytes": 7847,
+          "sha256": "0c5222132b1b2fdb13a910ad5386e9e3f6522574af92accaf11c4179b7083af8"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw2-embeddings",
+      "title": "تمرین ۲: Logistic Regression و Embedding",
+      "description": "پاسخ‌های مکتوب دربارهٔ دسته‌بندی متن و نمایش برداری واژه‌ها.",
+      "kind": "پاسخ مکتوب",
+      "topics": [
+        "Logistic Regression",
+        "Word2Vec",
+        "Embedding"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q2/Q2.tex",
+          "path": "courses/nlp/hw2-embeddings/Q2/Q2.tex",
+          "bytes": 6416,
+          "sha256": "abc24e4579a7abd3998fabbd486149fb6122c63b727adb0e079f3daf16ad25ac"
+        },
+        {
+          "name": "Q3/Q3.tex",
+          "path": "courses/nlp/hw2-embeddings/Q3/Q3.tex",
+          "bytes": 8606,
+          "sha256": "cd1a45fbce8151bb25b66003bff5ddae3ff0dcd297ffa1e74d004c1f10be4888"
+        },
+        {
+          "name": "Q4/Q4.tex",
+          "path": "courses/nlp/hw2-embeddings/Q4/Q4.tex",
+          "bytes": 11955,
+          "sha256": "2d267ee27966ce2bb852a1bc9cbc1d8e0e4ef1e102e76ec748a0eea4547c773c"
+        },
+        {
+          "name": "Q5/Q5.tex",
+          "path": "courses/nlp/hw2-embeddings/Q5/Q5.tex",
+          "bytes": 6695,
+          "sha256": "b609eb592a1e98d16d7dcf198643f04b04faac362a2f03779d46ef141c04205f"
+        },
+        {
+          "name": "Q6/Q6.tex",
+          "path": "courses/nlp/hw2-embeddings/Q6/Q6.tex",
+          "bytes": 6301,
+          "sha256": "736befae1d2915cf77c7944730bf393dfa62c3743c0ce613946c38edf5a5be51"
+        },
+        {
+          "name": "Q7/Q7.tex",
+          "path": "courses/nlp/hw2-embeddings/Q7/Q7.tex",
+          "bytes": 11063,
+          "sha256": "4357f0b339bba32e24853a815391ce7d42bad663947e00c6b070b6f8d7712d4b"
+        },
+        {
+          "name": "Q8/Q8.tex",
+          "path": "courses/nlp/hw2-embeddings/Q8/Q8.tex",
+          "bytes": 10626,
+          "sha256": "614bc759037e446375388f2ab43f602d1c77675c6c1574b48175c08d58e63cd9"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw3-neural-models",
+      "title": "تمرین ۳: مدل‌های عصبی",
+      "description": "پاسخ‌های تمرین دربارهٔ مدل‌های عصبی پردازش زبان طبیعی.",
+      "kind": "پاسخ مکتوب",
+      "topics": [
+        "Neural Networks",
+        "NLP"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q1/Q1.tex",
+          "path": "courses/nlp/hw3-neural-models/Q1/Q1.tex",
+          "bytes": 7943,
+          "sha256": "fba26a696514ac81c1bcc15d63a225fe2f0665f93531075e01041a636a594a33"
+        },
+        {
+          "name": "Q2/Q2.tex",
+          "path": "courses/nlp/hw3-neural-models/Q2/Q2.tex",
+          "bytes": 5724,
+          "sha256": "f63362af3deb08b6f9f3267c4a926e8442c037b94ab34351955d99cd2047816d"
+        },
+        {
+          "name": "Q3/Q3.tex",
+          "path": "courses/nlp/hw3-neural-models/Q3/Q3.tex",
+          "bytes": 6457,
+          "sha256": "8552f1989a8e07485d97ea5277abf455cd8f0a9be1541775e9465499266d838b"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw4-rnn",
+      "title": "تمرین ۴: طراحی RNN",
+      "description": "تعریف فضاها و ماتریس‌ها و محاسبهٔ قدم‌به‌قدم یک شبکهٔ بازگشتی.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "RNN",
+        "NumPy"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "exercise_1.ipynb",
+          "path": "courses/nlp/hw4-rnn/exercise_1.ipynb",
+          "bytes": 61858,
+          "sha256": "588528883cc8020d990e9329a8ea57b02e45dbdd511b53fce41117ba7a11ab85"
+        },
+        {
+          "name": "exercise_1_notebook.py",
+          "path": "courses/nlp/hw4-rnn/exercise_1_notebook.py",
+          "bytes": 35438,
+          "sha256": "8a4a59abfbaf213ea5f351539824acf5c173da7b705640d1974d7c00961dd807"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw4-attention",
+      "title": "تمرین ۴: Attention و Transformer",
+      "description": "محاسبهٔ Q، K و V، وزن‌های Attention و نمایش تصویری مراحل.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "Transformer",
+        "Attention",
+        "Softmax"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "exercise_2.ipynb",
+          "path": "courses/nlp/hw4-attention/exercise_2.ipynb",
+          "bytes": 19240,
+          "sha256": "6d03a1ee4c717d2ca442429729487209f80bbddfb63f9256253bdefeeaf4d19f"
+        },
+        {
+          "name": "exercise_2_notebook.py",
+          "path": "courses/nlp/hw4-attention/exercise_2_notebook.py",
+          "bytes": 9074,
+          "sha256": "2a8d76631e4833fd1ed20306ad39b883da9db96015a61f9beb253964c28201eb"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw4-gpt2",
+      "title": "تمرین ۴: Fine-Tuning مدل GPT-2",
+      "description": "نوت‌بوک آموزش مدل زبانی و مقایسهٔ راهبردهای تولید متن.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "GPT-2",
+        "Fine-Tuning",
+        "Text Generation"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "exercise_3.ipynb",
+          "path": "courses/nlp/hw4-gpt2/exercise_3.ipynb",
+          "bytes": 12659,
+          "sha256": "114bbe5eb6697312c2b93633635bdf80a0b58943f75ccfa846e684c6c863c4f9"
+        },
+        {
+          "name": "exercise_3_notebook.py",
+          "path": "courses/nlp/hw4-gpt2/exercise_3_notebook.py",
+          "bytes": 4685,
+          "sha256": "dbc33fa6a8b8589b25aa38a1e271c90522f442989d3017a76e603e6d5f28aaa9"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw5-bert",
+      "title": "تمرین ۵: BERT برای Sentiment Analysis",
+      "description": "نوت‌بوک و گزارش دسته‌بندی احساسات روی SST-2.",
+      "kind": "نوت‌بوک و گزارش",
+      "topics": [
+        "BERT",
+        "SST-2",
+        "Sentiment Analysis"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Part_1_MLM.ipynb",
+          "path": "courses/nlp/hw5-bert/Part_1_MLM.ipynb",
+          "bytes": 13087,
+          "sha256": "41162523b380784db2f7933e9ed63b82cef43e997ba09baa11e64dfe1010475e"
+        },
+        {
+          "name": "Part_1_MLM_notebook.py",
+          "path": "courses/nlp/hw5-bert/Part_1_MLM_notebook.py",
+          "bytes": 4874,
+          "sha256": "e05e4a2e9fe6d9e98bb2259b7e525298e2986cd8d01bddb4be21dba0e3c420bc"
+        },
+        {
+          "name": "report.md",
+          "path": "courses/nlp/hw5-bert/report.md",
+          "bytes": 8161,
+          "sha256": "b4b4c0f7da96b1e038867e919d86d7cd707c743d291752f1309272cfc886639c"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw5-post-training",
+      "title": "تمرین ۵: Post-Training با SFT و LoRA",
+      "description": "آماده‌سازی Instruction Data و آموزش Adapter روی Qwen2.5-0.5B.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "SFT",
+        "LoRA",
+        "Qwen"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Part_2_Post_Training.ipynb",
+          "path": "courses/nlp/hw5-post-training/Part_2_Post_Training.ipynb",
+          "bytes": 16878,
+          "sha256": "03394839e6bfcd90d537b2f61cefbf2c918ed25c127b8b7706abe606fc8b1333"
+        },
+        {
+          "name": "Part_2_Post_Training_notebook.py",
+          "path": "courses/nlp/hw5-post-training/Part_2_Post_Training_notebook.py",
+          "bytes": 6596,
+          "sha256": "f95de031e66c00c7a0ffe8ca980b24da9539f95297cec10b6b0469d95d183017"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "hw6-rag-translation",
+      "title": "تمرین ۶: RAG و Machine Translation",
+      "description": "ساخت مسیر بازیابی با FAISS و تولید پاسخ، همراه با بخش ترجمهٔ ماشینی.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "RAG",
+        "FAISS",
+        "Machine Translation"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "rag_and_translation.ipynb",
+          "path": "courses/nlp/hw6-rag-translation/rag_and_translation.ipynb",
+          "bytes": 113483,
+          "sha256": "2eb112035495a54bcc1b1a05e2b58408160f2f169fcb4da2fe4f2653e561b2f9"
+        },
+        {
+          "name": "rag_and_translation_notebook.py",
+          "path": "courses/nlp/hw6-rag-translation/rag_and_translation_notebook.py",
+          "bytes": 44254,
+          "sha256": "322a896ddb23ff0d734deb889596834c23cc5612f2a3d46363cf55ac62fa5339"
+        }
+      ]
+    },
+    {
+      "course": "nlp",
+      "slug": "study-notes",
+      "title": "یادداشت‌های مرور NLP",
+      "description": "خلاصهٔ مباحث و تمرین‌ها برای مرور درس.",
+      "kind": "یادداشت مطالعه",
+      "topics": [
+        "Language Models",
+        "Course Notes"
+      ],
+      "note": "یادداشت‌های مطالعه‌اند؛ ارزیابی مستقل ادعاهای عددی یا مرور منابعِ آن‌ها در این انتشار انجام نشده است.",
+      "files": [
+        {
+          "name": "HW_Summaries.md",
+          "path": "courses/nlp/study-notes/HW_Summaries.md",
+          "bytes": 8609,
+          "sha256": "b0e0e6189c7ed2a262990b4b50b34f0b386c537abe8b428d050e4a66291be03f"
+        },
+        {
+          "name": "LLM.md",
+          "path": "courses/nlp/study-notes/LLM.md",
+          "bytes": 35886,
+          "sha256": "c6ff4d9e407d3deca063aff3564fd133297730994a2e7e77b4e2fa54b4b0e141"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw1-assignment",
+      "title": "تمرین ۱: مسئلهٔ تخصیص",
+      "description": "مدل‌سازی مسئلهٔ Assignment و مقایسهٔ IP و LP.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "Assignment",
+        "Integer Programming",
+        "LP"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "HW1Q2.ipynb",
+          "path": "courses/optimization/hw1-assignment/HW1Q2.ipynb",
+          "bytes": 10954,
+          "sha256": "28b862b05ca1c22be051ec4b18287a53c4d68e79e5bcb3f4e64a8c399e2c3140"
+        },
+        {
+          "name": "HW1Q2_notebook.py",
+          "path": "courses/optimization/hw1-assignment/HW1Q2_notebook.py",
+          "bytes": 3194,
+          "sha256": "447d56697b7ce5790fd2d48ec3fbab19d954c1ae90bfb314325d85b02054520a"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw2-vertex-cover",
+      "title": "تمرین ۲: Vertex Cover",
+      "description": "مدل ILP، رهاسازی LP و مستندات تمرین.",
+      "kind": "نوت‌بوک و گزارش",
+      "topics": [
+        "Vertex Cover",
+        "ILP",
+        "LP Relaxation"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q1.ipynb",
+          "path": "courses/optimization/hw2-vertex-cover/Q1.ipynb",
+          "bytes": 4331,
+          "sha256": "47d5d9d05c66241986478a275e52c2450fc657b041a9eb3208f51a464c610dde"
+        },
+        {
+          "name": "Q1_notebook.py",
+          "path": "courses/optimization/hw2-vertex-cover/Q1_notebook.py",
+          "bytes": 2811,
+          "sha256": "a2d41e5333683c915c7ad4001b5c3725e0ce39da156b3f09727a76d4ce6fb4c7"
+        },
+        {
+          "name": "HW2_Q1_Doc.tex",
+          "path": "courses/optimization/hw2-vertex-cover/HW2_Q1_Doc.tex",
+          "bytes": 10513,
+          "sha256": "5684f3608a5b82dd07e8e62266cea2a3171c1e5c05b5e7ed4497898beff8edc8"
+        },
+        {
+          "name": "Q2.tex",
+          "path": "courses/optimization/hw2-vertex-cover/Q2.tex",
+          "bytes": 8726,
+          "sha256": "e362ee8d63aff6d7f5aef804386186fe49e409970543f30149ae35ed58432e13"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw3-local-search",
+      "title": "تمرین ۳: Local Search برای TSP و Graph Partitioning",
+      "description": "نوت‌بوک، کد و نسخه‌های تکمیلی جست‌وجوی محلی و همسایگی‌ها.",
+      "kind": "نوت‌بوک و کد",
+      "topics": [
+        "TSP",
+        "Graph Partitioning",
+        "Local Search"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "TSP&GP.ipynb",
+          "path": "courses/optimization/hw3-local-search/TSP&GP.ipynb",
+          "bytes": 78818,
+          "sha256": "524c2d8e0ff21699a5f09c2a6849255773a0609e415cb28ff7718280c3923fd9"
+        },
+        {
+          "name": "TSP&GP_notebook.py",
+          "path": "courses/optimization/hw3-local-search/TSP&GP_notebook.py",
+          "bytes": 46137,
+          "sha256": "9e528e5b3ccf8fb31dcc866427c8a716469bfce828f8906750dc1a20e80a2d19"
+        },
+        {
+          "name": "TSP&GP_Refactored.py",
+          "path": "courses/optimization/hw3-local-search/TSP&GP_Refactored.py",
+          "bytes": 61894,
+          "sha256": "bb3f9e8a6cc479773e934a56015c89e35710a5926b387ed3d10267ad64359c5c"
+        },
+        {
+          "name": "variants/TSP&GP.ipynb",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP.ipynb",
+          "bytes": 35772,
+          "sha256": "92a1a61b0575e2b1ad5a49bfd7d29b94bb324cf4705b7b54902d07cc028d9ec8"
+        },
+        {
+          "name": "variants/TSP&GP_notebook.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP_notebook.py",
+          "bytes": 26479,
+          "sha256": "833b4066b3f6712f3f17de63641b316614f797ea2521d8962cafa60f35e0af37"
+        },
+        {
+          "name": "variants/TSP&GP.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP.py",
+          "bytes": 14266,
+          "sha256": "6652f7e9df85156ba59000edd3ec506ef7a3d6939a0bc77713bd92ccfd6e2b91"
+        },
+        {
+          "name": "variants/TSP&GP_Doc.md",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP_Doc.md",
+          "bytes": 6860,
+          "sha256": "a649295fb86a74aa23f1027ecac0b1ddee109529dae7028d60326cfc68268d2d"
+        },
+        {
+          "name": "variants/TSP&GP_Refactored.ipynb",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP_Refactored.ipynb",
+          "bytes": 71395,
+          "sha256": "f0d4e60df2f753cf54d202ec3e38f7df7c95f80e276d847eb2a634c0ad80f115"
+        },
+        {
+          "name": "variants/TSP&GP_Refactored_notebook.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP_Refactored_notebook.py",
+          "bytes": 45179,
+          "sha256": "661a6636601d36963cdd5d273c8bce489bf6be54007f72e40ce0c9042ab2affa"
+        },
+        {
+          "name": "variants/TSP&GP_Summary.md",
+          "path": "courses/optimization/hw3-local-search/variants/TSP&GP_Summary.md",
+          "bytes": 3333,
+          "sha256": "c5aee68a497e005f3b96d6ea0021ad8e5f774a487ef2956ae3c9469c6bb09f36"
+        },
+        {
+          "name": "variants/TSP_GP_CORRECT_DELTA.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_CORRECT_DELTA.py",
+          "bytes": 12915,
+          "sha256": "3bc1878204f9a19bce19c4e84d7f57040aaaff3b427c33e04f8506c8a8e9eb10"
+        },
+        {
+          "name": "variants/TSP_GP_Clean.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Clean.py",
+          "bytes": 11167,
+          "sha256": "060bac309824ecaa19732f97f0797a0d03a9e92923837c902e68c63499bee07d"
+        },
+        {
+          "name": "variants/TSP_GP_Final_Clean.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Final_Clean.py",
+          "bytes": 10550,
+          "sha256": "28be446be553bf98419313b7c145a43a13911131fe38559f37b7ab5947d12c70"
+        },
+        {
+          "name": "variants/TSP_GP_Fixed_Final.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Fixed_Final.py",
+          "bytes": 10407,
+          "sha256": "8ec3de33edccd8c798f953ff36fec13e6b2b59c1a556fb450b6686860683f3bb"
+        },
+        {
+          "name": "variants/TSP_GP_INTEGER_ONLY.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_INTEGER_ONLY.py",
+          "bytes": 11349,
+          "sha256": "e6c76fc2f895931a67f8ed9eac406a2bc155f0179e6747f3830b59278fc5d029"
+        },
+        {
+          "name": "variants/TSP_GP_JUPYTER_FINAL.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_JUPYTER_FINAL.py",
+          "bytes": 9118,
+          "sha256": "b8af94cc195d87f204af2924625b3d6f5ebddcb9ae583e3421c928474d5ecbde"
+        },
+        {
+          "name": "variants/TSP_GP_Jupyter.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Jupyter.py",
+          "bytes": 10680,
+          "sha256": "adc98c04223e83377f29924484923fffc176c3a840f3c58fc31ae4f70266e491"
+        },
+        {
+          "name": "variants/TSP_GP_Jupyter_Clean.ipynb",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Jupyter_Clean.ipynb",
+          "bytes": 12781,
+          "sha256": "3c2adfb8a69a20ab4d4c5dd61cb3c4d35f4e6cac43b6db38cacede84f15f795f"
+        },
+        {
+          "name": "variants/TSP_GP_Jupyter_Clean_notebook.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Jupyter_Clean_notebook.py",
+          "bytes": 9045,
+          "sha256": "fa4d9ad974c96a9e38646f43724ae100ae4edfdd5373884895f11fde54375797"
+        },
+        {
+          "name": "variants/TSP_GP_Jupyter_Ready.py",
+          "path": "courses/optimization/hw3-local-search/variants/TSP_GP_Jupyter_Ready.py",
+          "bytes": 8277,
+          "sha256": "476a66e70682a351c5661550cbb9f46c65a5be0860e60f7bd6b361cdf889a4ca"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw4-tsp",
+      "title": "تمرین ۴: مقایسهٔ 2-opt و 3-opt",
+      "description": "نوت‌بوک و کد مقایسهٔ همسایگی‌های جست‌وجوی محلی در TSP.",
+      "kind": "نوت‌بوک و کد",
+      "topics": [
+        "TSP",
+        "2-opt",
+        "3-opt"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q1.ipynb",
+          "path": "courses/optimization/hw4-tsp/Q1.ipynb",
+          "bytes": 24903,
+          "sha256": "57e3c1d28de295158f698f27626595393409f8ce9b7a7549be99e8cb08abbce6"
+        },
+        {
+          "name": "Q1_notebook.py",
+          "path": "courses/optimization/hw4-tsp/Q1_notebook.py",
+          "bytes": 19814,
+          "sha256": "c445939a93aa9b0894b88391cff888dffa41813f395b1bee44f33fef265c8c38"
+        },
+        {
+          "name": "Q1.py",
+          "path": "courses/optimization/hw4-tsp/Q1.py",
+          "bytes": 19752,
+          "sha256": "da5061f829896cecc1535ff8f24ede8fdfd9c92329479e19c4b63fd05e19cf03"
+        },
+        {
+          "name": "HW4_Q1.ipynb",
+          "path": "courses/optimization/hw4-tsp/HW4_Q1.ipynb",
+          "bytes": 21193,
+          "sha256": "4f5c16747f7a59121e0eaad86ffff1bc010ec696c055026809bb9c6b64f4e016"
+        },
+        {
+          "name": "HW4_Q1_notebook.py",
+          "path": "courses/optimization/hw4-tsp/HW4_Q1_notebook.py",
+          "bytes": 16554,
+          "sha256": "8b6d65965fb635e77ccbd68e1ceeac74f7434378deb0b1019ca0c823b4ae4bcf"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw4-msls",
+      "title": "تمرین ۴: Multi-Start Local Search",
+      "description": "پیاده‌سازی جست‌وجوی محلی چندشروعی برای Graph Coloring و UFLP.",
+      "kind": "نوت‌بوک",
+      "topics": [
+        "MSLS",
+        "Graph Coloring",
+        "UFLP"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "HW4_Q2.ipynb",
+          "path": "courses/optimization/hw4-msls/HW4_Q2.ipynb",
+          "bytes": 26869,
+          "sha256": "04af6d167f682a63cd8587f2429a4da03f9a9a8c5b375e5737d0e2a544440af0"
+        },
+        {
+          "name": "HW4_Q2_notebook.py",
+          "path": "courses/optimization/hw4-msls/HW4_Q2_notebook.py",
+          "bytes": 20826,
+          "sha256": "811ed054f3d0eb5fe9c7ec5f144eaa881477d8bd4f72e7e483d017de259ab6d1"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw4-cplex",
+      "title": "تمرین ۴: روش‌های محلی و مقایسه با CPLEX",
+      "description": "کدها و گزارش آزمایش‌های Graph Coloring و Facility Location.",
+      "kind": "نوت‌بوک و کد",
+      "topics": [
+        "CPLEX",
+        "Local Search",
+        "UFLP"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Q3.ipynb",
+          "path": "courses/optimization/hw4-cplex/Q3.ipynb",
+          "bytes": 43883,
+          "sha256": "ec3495f2a0f1868b4044c2f65667c3bd5b3580f443b1cf21d524bd72780316cd"
+        },
+        {
+          "name": "Q3_notebook.py",
+          "path": "courses/optimization/hw4-cplex/Q3_notebook.py",
+          "bytes": 35563,
+          "sha256": "0e62958d229324c4ca6d3fefc19e2ad21f0ce03db030b09ccef74b553e4a14f2"
+        },
+        {
+          "name": "Q3.py",
+          "path": "courses/optimization/hw4-cplex/Q3.py",
+          "bytes": 35501,
+          "sha256": "d9c02d927d7146977204b717148b90f42ebe07e75219a08a4c377cf2db04224c"
+        },
+        {
+          "name": "HW4_Q3.ipynb",
+          "path": "courses/optimization/hw4-cplex/HW4_Q3.ipynb",
+          "bytes": 43154,
+          "sha256": "a1865c448fdaf2929f5153353042c88c39b77d76d35822503a22e3cd4a9848c5"
+        },
+        {
+          "name": "HW4_Q3_notebook.py",
+          "path": "courses/optimization/hw4-cplex/HW4_Q3_notebook.py",
+          "bytes": 16885,
+          "sha256": "a70737a7d8c0a937a2a0c2d10c87e14da9ce9c415307e321583edd53f0e838dc"
+        },
+        {
+          "name": "cplex_comparison.py",
+          "path": "courses/optimization/hw4-cplex/cplex_comparison.py",
+          "bytes": 18438,
+          "sha256": "cd755fab587565c6059a34139339b263cd8f03132134f5f959d71f50345974d4"
+        },
+        {
+          "name": "HW4_Q3_Report.tex",
+          "path": "courses/optimization/hw4-cplex/HW4_Q3_Report.tex",
+          "bytes": 11791,
+          "sha256": "75bdba9175b56abb552c4873457dfbc20693a9a78668634f1cc7941a9a99c818"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw5-neighborhoods",
+      "title": "تمرین ۵: تحلیل همسایگی N2 و N3",
+      "description": "گزارش مکتوب تحلیل و مقایسهٔ همسایگی‌های جست‌وجو.",
+      "kind": "گزارش",
+      "topics": [
+        "Neighborhoods",
+        "TSP"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "HW5_N2_vs_N3.tex",
+          "path": "courses/optimization/hw5-neighborhoods/HW5_N2_vs_N3.tex",
+          "bytes": 11426,
+          "sha256": "b831f662a0d4aa8215e106e4cb857d5e800c3bcae48def29164c1d499d26f3f1"
+        },
+        {
+          "name": "HW5_N2_vs_N3_FA.tex",
+          "path": "courses/optimization/hw5-neighborhoods/HW5_N2_vs_N3_FA.tex",
+          "bytes": 14493,
+          "sha256": "d1fe874cf513fcf4a32774eca9233ccc5fb7895c2a23fab23368f8a3f9b933a5"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "hw6-weighted-vertex-cover",
+      "title": "تمرین ۶: Weighted Vertex Cover",
+      "description": "نوت‌بوک و متن آماده‌سازی ارائه دربارهٔ پوشش رأس وزن‌دار.",
+      "kind": "نوت‌بوک و گزارش",
+      "topics": [
+        "Weighted Vertex Cover",
+        "Approximation"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "Weighted_Vertex_Cover.ipynb",
+          "path": "courses/optimization/hw6-weighted-vertex-cover/Weighted_Vertex_Cover.ipynb",
+          "bytes": 38173,
+          "sha256": "51feb4d8e2e560a681672aab3f1776f6d030f2655171ff8a00a79aecbeeb28c6"
+        },
+        {
+          "name": "Weighted_Vertex_Cover_notebook.py",
+          "path": "courses/optimization/hw6-weighted-vertex-cover/Weighted_Vertex_Cover_notebook.py",
+          "bytes": 16608,
+          "sha256": "e6788478d4aa1a60fd7f13ed4996d3a607d4183191cabeff57a5386aac674858"
+        },
+        {
+          "name": "wvc_presentation_guide.tex",
+          "path": "courses/optimization/hw6-weighted-vertex-cover/wvc_presentation_guide.tex",
+          "bytes": 13750,
+          "sha256": "076c9719a765e0b57a736f0c041d8e4292d418fffd0f7f8a968bf6013b1e4c2c"
+        }
+      ]
+    },
+    {
+      "course": "optimization",
+      "slug": "cohesive-bin-packing",
+      "title": "پروژهٔ پایانی: Cohesive Bin Packing",
+      "description": "مدل‌سازی، پیاده‌سازی الگوریتم، آزمایش‌های محاسباتی و گزارش پروژه.",
+      "kind": "پروژهٔ پایانی",
+      "topics": [
+        "Bin Packing",
+        "ILP",
+        "Robustness"
+      ],
+      "note": "جدول‌های موجود، خروجی‌های ذخیره‌شدهٔ پروژه‌اند و در ساخت سایت دوباره اجرا نشده‌اند.",
+      "files": [
+        {
+          "name": "BinPacking_Cohesive.ipynb",
+          "path": "courses/optimization/cohesive-bin-packing/BinPacking_Cohesive.ipynb",
+          "bytes": 9385,
+          "sha256": "38ac66de91e130ddac3769b68ecc3eef20cd251d60698febbd7dc73d9b49493f"
+        },
+        {
+          "name": "BinPacking_Cohesive_notebook.py",
+          "path": "courses/optimization/cohesive-bin-packing/BinPacking_Cohesive_notebook.py",
+          "bytes": 3357,
+          "sha256": "a6abf9e452485b4d9686568ace95db09e7ab00c5b4845b006e854e75627ff6ef"
+        },
+        {
+          "name": "BinPacking_Cohesive.py",
+          "path": "courses/optimization/cohesive-bin-packing/BinPacking_Cohesive.py",
+          "bytes": 1373,
+          "sha256": "56f4992cfe7aa899f20efd19fa9f6c0d215070d117d74946bef45895255ed1dc"
+        },
+        {
+          "name": "ILP_Combinatorial_Model.tex",
+          "path": "courses/optimization/cohesive-bin-packing/ILP_Combinatorial_Model.tex",
+          "bytes": 4635,
+          "sha256": "f88929eb6cea1763956275920373ba0cf1b2e31de2d2910762aedf0832877111"
+        },
+        {
+          "name": "README.md",
+          "path": "courses/optimization/cohesive-bin-packing/README.md",
+          "bytes": 1539,
+          "sha256": "746851278a14658efe0e0992b5c8bc4725b5a6b0ddfc12ae59d252f7884f7d6c"
+        },
+        {
+          "name": "build_notebook.py",
+          "path": "courses/optimization/cohesive-bin-packing/build_notebook.py",
+          "bytes": 7253,
+          "sha256": "d5269e2b5daef5b73c9ba3d961ba244f19c95435a6259b50a3184f2ab2ae872b"
+        },
+        {
+          "name": "cohesive_bin_packing.py",
+          "path": "courses/optimization/cohesive-bin-packing/cohesive_bin_packing.py",
+          "bytes": 18034,
+          "sha256": "7bb07063dd821512ab8d4f905909503a30f6b3f6c057ea67f59b5de32ee37528"
+        },
+        {
+          "name": "generate_report_artifacts.py",
+          "path": "courses/optimization/cohesive-bin-packing/generate_report_artifacts.py",
+          "bytes": 10458,
+          "sha256": "562e75fba1db919054a9a6f137be0c252aa7d5b01c8b8c3a122d9ea142ad18c8"
+        },
+        {
+          "name": "instances/hard/n=180_C=300_pairs=30_hard.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard/n=180_C=300_pairs=30_hard.txt",
+          "bytes": 860,
+          "sha256": "fe127944b607020c3b49a6b18b559f2098a3a216a6f372e91b4a0b8920d75f05"
+        },
+        {
+          "name": "instances/hard_large/hard_n=300_C=500_pairs=50.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_large/hard_n=300_C=500_pairs=50.txt",
+          "bytes": 1499,
+          "sha256": "62447a13e4fa6706ab3a425291bbc8074a6af4f3153d6c3664de611629405c09"
+        },
+        {
+          "name": "instances/hard_large/hard_n=500_C=500_pairs=80.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_large/hard_n=500_C=500_pairs=80.txt",
+          "bytes": 2474,
+          "sha256": "d8435d34918565b5b4eecea5921880a26bead623a447b8185e80fdf747c15b90"
+        },
+        {
+          "name": "instances/hard_medium/hard_n=100_C=200_pairs=20.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_medium/hard_n=100_C=200_pairs=20.txt",
+          "bytes": 461,
+          "sha256": "49e13f6456146ed7199b9eabda29474d9a479d3ce48ab5076f7602f3dbba84ed"
+        },
+        {
+          "name": "instances/hard_medium/hard_n=150_C=200_pairs=30.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_medium/hard_n=150_C=200_pairs=30.txt",
+          "bytes": 700,
+          "sha256": "a76b7690e71adc829b42ec07f4042f03af51efc0135f855ff1eb43fcc0f5dfb9"
+        },
+        {
+          "name": "instances/hard_medium/hard_n=50_C=200_pairs=10.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_medium/hard_n=50_C=200_pairs=10.txt",
+          "bytes": 241,
+          "sha256": "4469afa9818f0dffcee435d04ab332c158c270b045f1a7bb43d4bc7799fa8a40"
+        },
+        {
+          "name": "instances/hard_small/hard_n=10_C=100_pairs=2.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_small/hard_n=10_C=100_pairs=2.txt",
+          "bytes": 63,
+          "sha256": "e3da7c7346ba558beab982ed73519a6e462c6c9f7c4ba52e327d16de86489195"
+        },
+        {
+          "name": "instances/hard_small/hard_n=20_C=100_pairs=5.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_small/hard_n=20_C=100_pairs=5.txt",
+          "bytes": 108,
+          "sha256": "928cc8d63a86977ac2b1b67608c0617aebc7443811f90f0ba3044110d55ca246"
+        },
+        {
+          "name": "instances/hard_small/hard_n=30_C=100_pairs=8.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/hard_small/hard_n=30_C=100_pairs=8.txt",
+          "bytes": 155,
+          "sha256": "03744f9b914babe4e7c5db9606e601427aa7c5f2e7b2780dbecea27268ff8ad0"
+        },
+        {
+          "name": "instances/large/n=1000_C=1000_pairs=200.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/large/n=1000_C=1000_pairs=200.txt",
+          "bytes": 5222,
+          "sha256": "d5fdcdaf73d45c268ba31ced73670819ed78b77f97ada186505dc02dad45f1d8"
+        },
+        {
+          "name": "instances/large/n=300_C=500_pairs=80.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/large/n=300_C=500_pairs=80.txt",
+          "bytes": 1637,
+          "sha256": "53067c550dc47588c3803b73ae59c0b00b873f4d350f094902544c66fd7b2a1d"
+        },
+        {
+          "name": "instances/large/n=500_C=500_pairs=120.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/large/n=500_C=500_pairs=120.txt",
+          "bytes": 2612,
+          "sha256": "de2dbcaf0ac299576110f8ed7f2d7c116effe844d6a9b86b17a4961afa818cc4"
+        },
+        {
+          "name": "instances/medium/n=100_C=200_pairs=30.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/medium/n=100_C=200_pairs=30.txt",
+          "bytes": 486,
+          "sha256": "1267eff010ec50ad795d285167d12e80d04f4096db22f7acaeb7ec522d309c8d"
+        },
+        {
+          "name": "instances/medium/n=150_C=200_pairs=45.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/medium/n=150_C=200_pairs=45.txt",
+          "bytes": 751,
+          "sha256": "3c8638c19f365ede20b0050a610fe047070a0b430dc1d4cdadcedd5268840eb1"
+        },
+        {
+          "name": "instances/medium/n=50_C=200_pairs=15.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/medium/n=50_C=200_pairs=15.txt",
+          "bytes": 255,
+          "sha256": "56d0aa3bde7cdc0589ed22cb0ebb0bc79b0ceb87ee691adfd778a30503f80ca5"
+        },
+        {
+          "name": "instances/small/n=10_C=100_pairs=3.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/small/n=10_C=100_pairs=3.txt",
+          "bytes": 63,
+          "sha256": "250a3a6eae737869439dc637c59171595bdb7fa6919687492a0e86dbbd5b6205"
+        },
+        {
+          "name": "instances/small/n=20_C=100_pairs=7.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/small/n=20_C=100_pairs=7.txt",
+          "bytes": 113,
+          "sha256": "49c85d73e3774ef71d22b60add8f5a2094851853e211611e2a623cb6e4fd56b3"
+        },
+        {
+          "name": "instances/small/n=30_C=100_pairs=10.txt",
+          "path": "courses/optimization/cohesive-bin-packing/instances/small/n=30_C=100_pairs=10.txt",
+          "bytes": 160,
+          "sha256": "ce7ca316ed0c61c38d79d276a6970f5f91f532da18b98e6fd15127d3343f3dbb"
+        },
+        {
+          "name": "report/main.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/main.tex",
+          "bytes": 1429,
+          "sha256": "79cd411a9574b19792b02839cc4060297f5b3d61a993093a1be826d21cea9747"
+        },
+        {
+          "name": "report/references.bib",
+          "path": "courses/optimization/cohesive-bin-packing/report/references.bib",
+          "bytes": 3193,
+          "sha256": "c3eb07762dfd54d401f35c32e79495f5fb9796c96d9542ff5c58ee77e60e7baa"
+        },
+        {
+          "name": "report/sections/abstract.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/abstract.tex",
+          "bytes": 2141,
+          "sha256": "9d5122ee70202d2f1354a64156a79a1c598437fe427bee759a8278262d5acdd9"
+        },
+        {
+          "name": "report/sections/algorithm.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/algorithm.tex",
+          "bytes": 6486,
+          "sha256": "efc27ba3b5ace70a5e7fc6af6a7ec388b323ccbce75b748e831a20991207788b"
+        },
+        {
+          "name": "report/sections/applications.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/applications.tex",
+          "bytes": 3903,
+          "sha256": "a3c6e1a2a534a12f0e2c922a60400130ec1745be5abe0dbea72ad33d7a3f6692"
+        },
+        {
+          "name": "report/sections/conclusion.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/conclusion.tex",
+          "bytes": 2104,
+          "sha256": "fcc4246ad0aaf048a95dc633385c119f956e71c4565cd32fcdd4c3f95b00e98e"
+        },
+        {
+          "name": "report/sections/introduction.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/introduction.tex",
+          "bytes": 3225,
+          "sha256": "1b8db162efdec6e52bec7087f30175436b70787b2e6bb89ac6dbfa2a3f1d1705"
+        },
+        {
+          "name": "report/sections/problem_model.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/problem_model.tex",
+          "bytes": 7562,
+          "sha256": "60196cecb5af9ef826760d21781a60bd5da62221e77e8584e3a44ce8994bd5e9"
+        },
+        {
+          "name": "report/sections/results.tex",
+          "path": "courses/optimization/cohesive-bin-packing/report/sections/results.tex",
+          "bytes": 8629,
+          "sha256": "b0119db15bb428a15f9a3e96d217a15e32409b3d077fc8639540ed68d824319d"
+        },
+        {
+          "name": "requirements.txt",
+          "path": "courses/optimization/cohesive-bin-packing/requirements.txt",
+          "bytes": 152,
+          "sha256": "23032f17765a3ecb016a553c9cff4be10cf4fdde811f54cc5fbebb45cc8770d8"
+        },
+        {
+          "name": "results/hard_results_table.tex",
+          "path": "courses/optimization/cohesive-bin-packing/results/hard_results_table.tex",
+          "bytes": 1208,
+          "sha256": "fb119b42b15b81ecc0da88291755ceffd9cc9dddbcb3ee42ff8d0c214df271a1"
+        },
+        {
+          "name": "results/histories.json",
+          "path": "courses/optimization/cohesive-bin-packing/results/histories.json",
+          "bytes": 2328,
+          "sha256": "66ba2b76f148381f182eca9af7e459ece878a76bda7198d5c23cb2f245888429"
+        },
+        {
+          "name": "results/results_final.csv",
+          "path": "courses/optimization/cohesive-bin-packing/results/results_final.csv",
+          "bytes": 2334,
+          "sha256": "1975f008c9bfbec35404029ad729fa67cf00ce5db2c32a9e2f581f1702607b51"
+        },
+        {
+          "name": "results/results_table.tex",
+          "path": "courses/optimization/cohesive-bin-packing/results/results_table.tex",
+          "bytes": 1256,
+          "sha256": "9223f38089320d8b561cc6c5ddfef995d706da2f85dfd10e0e8ff438af7627a8"
+        },
+        {
+          "name": "results/robustness.csv",
+          "path": "courses/optimization/cohesive-bin-packing/results/robustness.csv",
+          "bytes": 12669,
+          "sha256": "e06fe8ab957f8d7e7d114887896678c2959625a6e550498879b6369def8dd1af"
+        },
+        {
+          "name": "results/robustness_summary.csv",
+          "path": "courses/optimization/cohesive-bin-packing/results/robustness_summary.csv",
+          "bytes": 721,
+          "sha256": "f0d4a0f4018181f9bc05d00674f9adbbe941fcd71c5fd7ef21ee685814128303"
+        },
+        {
+          "name": "results/robustness_table.tex",
+          "path": "courses/optimization/cohesive-bin-packing/results/robustness_table.tex",
+          "bytes": 839,
+          "sha256": "b948661bc7c1c9c26e4b0a91d1ef27aaf5841711e6198f2e0ddfe6c4c8a32250"
+        },
+        {
+          "name": "run_experiments_final.py",
+          "path": "courses/optimization/cohesive-bin-packing/run_experiments_final.py",
+          "bytes": 7069,
+          "sha256": "5687860fefa78e1227f0a66610b06508c6b1afcd9414a1fac5908c3c315adacd"
+        },
+        {
+          "name": "run_robustness.py",
+          "path": "courses/optimization/cohesive-bin-packing/run_robustness.py",
+          "bytes": 4297,
+          "sha256": "c3d048c5864b1526099899e24fa5693d54518107ca4403b433ffda6e3d88a3ab"
+        },
+        {
+          "name": "tests/test_cohesive_bin_packing.py",
+          "path": "courses/optimization/cohesive-bin-packing/tests/test_cohesive_bin_packing.py",
+          "bytes": 2968,
+          "sha256": "ad3f94e97bfdbf85de01b41eb4b6efe7028a1ec385d6a5ec59fa16e1d5a8a50b"
+        }
+      ]
+    },
+    {
+      "course": "database",
+      "slug": "design-practice",
+      "title": "تمرین طراحی پایگاه داده",
+      "description": "متن آموزشی تمرین طراحی و مدل‌سازی پایگاه داده.",
+      "kind": "طراحی تمرین آموزشی",
+      "topics": [
+        "Database Design",
+        "Modeling"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "database_design_practice.tex",
+          "path": "courses/database/design-practice/database_design_practice.tex",
+          "bytes": 8376,
+          "sha256": "8ef1cf3575b2b6a435188d877ce28ffb622c2e4a305c6957e1788c39f24de9e7"
+        }
+      ]
+    },
+    {
+      "course": "database",
+      "slug": "urban-routing",
+      "title": "طراحی پروژهٔ سامانهٔ مسیریابی شهری",
+      "description": "صورت پروژه و پرسش‌های ارائه برای طراحی پایگاه دادهٔ سامانهٔ مسیریابی.",
+      "kind": "طراحی پروژهٔ آموزشی",
+      "topics": [
+        "Database Design",
+        "Urban Routing"
+      ],
+      "note": "این بخش طراحی صورت پروژه و پرسش‌های آموزشی است؛ پیاده‌سازی کامل یک سامانهٔ مسیریابی معرفی نمی‌شود. همکار درج‌شده در سند: یگانه راد.",
+      "files": [
+        {
+          "name": "project.tex",
+          "path": "courses/database/urban-routing/project.tex",
+          "bytes": 13835,
+          "sha256": "2a71e9a6220e20f20c8d0dca2f53dadc4d8c05a9e4a7b113a12f45793b0715ca"
+        },
+        {
+          "name": "presentation_questions.md",
+          "path": "courses/database/urban-routing/presentation_questions.md",
+          "bytes": 9951,
+          "sha256": "464317f5c6e55447fcd29259bb1093a1076422959049b8dfe8e947ccdbbd3218"
+        },
+        {
+          "name": "presentation_questions.tex",
+          "path": "courses/database/urban-routing/presentation_questions.tex",
+          "bytes": 11258,
+          "sha256": "ed741c0456b4eec54fe3acf3e4754e4e498b5fa0e650b225a0a4477ec932cbc1"
+        }
+      ]
+    },
+    {
+      "course": "data-mining",
+      "slug": "hw3-recommenders",
+      "title": "تمرین ۳: Recommender Systems",
+      "description": "صورت تمرین محاسبهٔ Collaborative Filtering و ارزیابی سیستم توصیه‌گر.",
+      "kind": "صورت تمرین آموزشی",
+      "topics": [
+        "Collaborative Filtering",
+        "Recommender Systems"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "HW3.tex",
+          "path": "courses/data-mining/hw3-recommenders/HW3.tex",
+          "bytes": 7206,
+          "sha256": "183ec0009c54a2f41b2573bf80da29378ceaf2e819559048535116f13e403fe1"
+        }
+      ]
+    },
+    {
+      "course": "data-mining",
+      "slug": "recommender-template",
+      "title": "قالب پروژهٔ سیستم توصیه‌گر کتاب",
+      "description": "اسکلت نوت‌بوک EDA، نمایش ویژگی‌ها و مدل‌های توصیه‌گر؛ دارای بخش‌های TODO.",
+      "kind": "قالب پروژه ـ ناتمام",
+      "topics": [
+        "Recommender Systems",
+        "Word2Vec",
+        "TF-IDF"
+      ],
+      "note": "این فایل قالب آموزشی با ۴۶ نشانگر TODO است و به‌عنوان پروژهٔ تکمیل‌شده یا آزمایش موفق معرفی نمی‌شود.",
+      "files": [
+        {
+          "name": "Advanced_Recommender_Systems_Project.ipynb",
+          "path": "courses/data-mining/recommender-template/Advanced_Recommender_Systems_Project.ipynb",
+          "bytes": 43366,
+          "sha256": "fcb2a11cf11701fa83cce358fbef8597bbb866ec28bebc671be0f42bd8f43546"
+        },
+        {
+          "name": "Advanced_Recommender_Systems_Project_notebook.py",
+          "path": "courses/data-mining/recommender-template/Advanced_Recommender_Systems_Project_notebook.py",
+          "bytes": 21589,
+          "sha256": "11fa059bb06336ecaa0bf21da7e9c0c95e9b6b3d3d073f6b3bc37616eefafa77"
+        }
+      ]
+    },
+    {
+      "course": "graph-mining",
+      "slug": "graph-preprocessing",
+      "title": "ارائهٔ Graph Data Preprocessing",
+      "description": "مرور آماده‌سازی داده‌های گرافی از دید الگوریتمی و سخت‌افزاری، همراه با مثال‌های کد.",
+      "kind": "ارائه",
+      "topics": [
+        "Graph Mining",
+        "Preprocessing",
+        "Feature Engineering"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "presentation.html",
+          "path": "courses/graph-mining/graph-preprocessing/presentation.html",
+          "bytes": 56209,
+          "sha256": "f4c51d34309c631d7d03b1f9baeb7199e68b19f46eb6b6fd26560a7a19db716c"
+        }
+      ]
+    },
+    {
+      "course": "algorithms",
+      "slug": "potential-method",
+      "title": "تحلیل سرشکن به روش پتانسیل",
+      "description": "یادداشت آموزشی دربارهٔ هزینهٔ عملیات و روش Potential در Amortized Analysis.",
+      "kind": "یادداشت و ارائه",
+      "topics": [
+        "Amortized Analysis",
+        "Potential Method"
+      ],
+      "note": "",
+      "files": [
+        {
+          "name": "notes.md",
+          "path": "courses/algorithms/potential-method/notes.md",
+          "bytes": 19964,
+          "sha256": "2027134424812ba41535ad1247abd565059c441da871d96855ab15215d2958b0"
+        },
+        {
+          "name": "presentation.html",
+          "path": "courses/algorithms/potential-method/presentation.html",
+          "bytes": 58303,
+          "sha256": "d123325a2a1cdc79b415f5a45a41703c8f2a13225f5d54f30bf9a145ffc591b3"
+        }
+      ]
+    }
+  ]
+}

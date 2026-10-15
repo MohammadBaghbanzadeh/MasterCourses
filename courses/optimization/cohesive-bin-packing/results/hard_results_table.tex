@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\scriptsize
+\begin{tabular}{r l r r r r l r r}
+\toprule
+ردیف & نمونه & $n$ & \lr{FFD} & \lr{Tabu} & مقدار مرجع & مرجع & شکاف (\%) & زمان (s) \\
+\midrule
+1 & \lr{hard\_n=10\_C=100\_pairs=2.txt} & 10 & 4 & 4 & 4 & \lr{ILP} & 0.00 & 0.0001 \\
+2 & \lr{hard\_n=20\_C=100\_pairs=5.txt} & 20 & 8 & 8 & 8 & \lr{ILP} & 0.00 & 0.0000 \\
+3 & \lr{hard\_n=30\_C=100\_pairs=8.txt} & 30 & 11 & 11 & 11 & \lr{ILP} & 0.00 & 0.0000 \\
+4 & \lr{hard\_n=50\_C=200\_pairs=10.txt} & 50 & 17 & 17 & 17 & کران پایین & 0.00 & 0.0000 \\
+5 & \lr{hard\_n=100\_C=200\_pairs=20.txt} & 100 & 33 & 33 & 33 & کران پایین & 0.00 & 0.0001 \\
+6 & \lr{hard\_n=150\_C=200\_pairs=30.txt} & 150 & 50 & 50 & 49 & کران پایین & 2.04 & 0.1152 \\
+7 & \lr{hard\_n=300\_C=500\_pairs=50.txt} & 300 & 100 & 99 & 99 & کران پایین & 0.00 & 0.0130 \\
+8 & \lr{hard\_n=500\_C=500\_pairs=80.txt} & 500 & 167 & 166 & 166 & کران پایین & 0.00 & 0.3166 \\
+\bottomrule
+\end{tabular}
+\caption{نتایج نمونه‌های مصنوعی دشوار؛ نوع مقدار مرجع در ستون «مرجع» مشخص شده است.}
+\label{tab:hard-results}
+\end{table}
