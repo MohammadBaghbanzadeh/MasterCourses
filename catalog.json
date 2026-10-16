@@ -21,8 +21,8 @@
     },
     {
       "id": "graph-mining",
-      "title": "گراف‌کاوی",
-      "english": "Graph Mining",
+      "title": "یادگیری ماشین روی گراف",
+      "english": "Graph Machine Learning (GML)",
       "description": "ارائهٔ پیش‌پردازش گراف و آماده‌سازی داده‌های گرافی."
     },
     {
@@ -1319,7 +1319,7 @@
       "description": "مرور آماده‌سازی داده‌های گرافی از دید الگوریتمی و سخت‌افزاری، همراه با مثال‌های کد.",
       "kind": "ارائه",
       "topics": [
-        "Graph Mining",
+        "Graph Machine Learning (GML)",
         "Preprocessing",
         "Feature Engineering"
       ],
@@ -1328,8 +1328,8 @@
         {
           "name": "presentation.html",
           "path": "courses/graph-mining/graph-preprocessing/presentation.html",
-          "bytes": 56209,
-          "sha256": "f4c51d34309c631d7d03b1f9baeb7199e68b19f46eb6b6fd26560a7a19db716c"
+          "bytes": 56233,
+          "sha256": "f97b7ab1569ec2553e9fc2e4eddaf65b82971e33a5bb58e739f36acd43989711"
         }
       ]
     },

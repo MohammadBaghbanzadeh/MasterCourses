@@ -39,7 +39,7 @@
 - [تمرین ۶: Weighted Vertex Cover](courses/optimization/hw6-weighted-vertex-cover) — نوت‌بوک و گزارش
 - [پروژهٔ پایانی: Cohesive Bin Packing](courses/optimization/cohesive-bin-packing) — پروژهٔ پایانی
 
-### گراف‌کاوی — Graph Mining
+### یادگیری ماشین روی گراف — Graph Machine Learning (GML)
 
 - [ارائهٔ Graph Data Preprocessing](courses/graph-mining/graph-preprocessing) — ارائه
 
